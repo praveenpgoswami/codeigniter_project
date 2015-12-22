@@ -1,0 +1,23 @@
+<?php 
+$config['currency_id'] = '12'; 
+$config['currency_contid'] = 'OC'; 
+$config['currency_country_code'] = 'AU'; 
+$config['currency_country_mobile_code'] = '+61'; 
+$config['currency_name'] = 'Australia'; 
+$config['currency_seourl'] = 'australia'; 
+$config['currency_currency_type'] = 'AUD'; 
+$config['currency_currency_symbol'] = '0'; 
+$config['currency_shipping_cost'] = '0.00'; 
+$config['currency_shipping_tax'] = '0.00'; 
+$config['currency_meta_title'] = ''; 
+$config['currency_meta_keyword'] = ''; 
+$config['currency_meta_description'] = ''; 
+$config['currency_description'] = ''; 
+$config['currency_status'] = 'Active'; 
+$config['currency_dateAdded'] = '2015-05-19 00:44:21'; 
+$config['currency_currency_default'] = 'Yes'; 
+$config['currency_slider_image'] = '0'; 
+$config['currency_logo'] = '0'; 
+$config['currency_map'] = '0'; 
+$config['currency_thumb'] = ''; 
+$config['currency_language_code'] = 'en';  ?>

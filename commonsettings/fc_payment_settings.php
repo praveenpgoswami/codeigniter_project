@@ -1,0 +1,4 @@
+<?php 
+$config['payment_0'] = 'a:4:{s:2:"id";s:1:"1";s:12:"gateway_name";s:10:"Paypal IPN";s:8:"settings";s:76:"a:2:{s:4:"mode";s:4:"live";s:14:"merchant_email";s:18:"stayrove@gmail.com";}";s:6:"status";s:6:"Enable";}'; 
+$config['payment_1'] = 'a:4:{s:2:"id";s:1:"4";s:12:"gateway_name";s:11:"Credit Card";s:8:"settings";s:98:"a:3:{s:4:"mode";s:4:"live";s:12:"merchantcode";s:6:"M07244";s:11:"merchantkey";s:10:"DbQhpCuQpP";}";s:6:"status";s:7:"Disable";}'; 
+$config['payment_2'] = 'a:4:{s:2:"id";s:1:"5";s:12:"gateway_name";s:6:"Stripe";s:8:"settings";s:152:"a:3:{s:4:"mode";s:7:"sandbox";s:10:"secret_key";s:32:"sk_test_0tTTuvYsRdKGPkZ0McunhY4P";s:15:"publishable_key";s:32:"pk_test_PT3XNxa5eYTVkfGBqmslDEMX";}";s:6:"status";s:7:"Disable";}';  ?>

@@ -1,0 +1,282 @@
+	/** Responsive CSS **/
+
+/* ============================= 1024px ====================== */
+@media only screen and (min-width:1024px) and (max-width: 1250px) {
+.logo-container .inpt-head-place {
+    width: 32%;
+}
+
+.host-list li{width: 88%}
+.sidebar{top: 59px;}
+.map{top: 58px;}
+.filter-primary-item.span2 {
+    margin: 0;
+    width: 154px;
+}
+.span2 {
+    width: 91px;
+}
+.filter-primary-item.span2 {
+    margin: 0;
+    width: 152px;
+}	
+li .filter-primary-item input[type="checkbox"]{ margin: 32px 27px 0 0;}	
+.sidebar .ui-slider-horizontal{width: 100%}
+#amount_pricefilter{float: right;}
+.right-arel label span{width: 100px}
+.navbar .nav > li > a{ padding: 10px 9px;}
+.showlist2.useclas{   right: 32px;}
+.wishlist-header-badge.one-line{
+	width: 97%;
+}
+
+
+
+
+
+
+}
+
+/* ============================= 768px ====================== */
+
+@media screen and (min-width: 768px) and (max-width: 1023px){
+.nav-collapse, .nav-collapse.collapse {
+    height: auto;
+    overflow: visible;
+}
+
+.logo {    width: 140px;}
+.header .container2 .col-md-5{
+    float: left;
+    width: 50%;
+}
+.inpt-head-place {    width: 39%;}
+
+.brows-loop {
+    margin: 0;
+    padding: 8px 0 0;
+    width: 19%;
+}
+.navbar-collapse.my-nav #broswe_box1 {
+    float: left;
+    padding: 12px 0px 8px 0;
+    position: relative;
+    width: 46%;
+}
+
+.navbar .nav > li > a.request-trip {
+     font-size: 12px;
+    margin: 8px 0 0 10px;
+    padding: 4px 0;
+    width: 119px;
+}
+
+.navbar .nav{width: 100%}
+.nav-collapse .nav > li {
+    float: left;
+}
+
+.btn.btn-navbar{display: none;}
+.nav-collapse .nav > li > a, .nav-collapse .dropdown-menu a{ padding: 9px 11px;
+}
+
+#broswe_box1 a {
+    float: left;
+    height: auto !important;
+    overflow: hidden;
+    padding: 0;
+    width: 95%;
+}
+
+
+/* ============================= show ====================== */
+
+
+.profile-page .col-sm-3{
+	width: 30%;
+}
+.profile-page .col-sm-7{
+	width: 70%;
+}
+.namd-space{
+	width: 100%;
+}
+.listig-areasli li{	
+	width: 41%;
+}
+
+
+.profile-page .col-sm-9{
+	width: 69%;
+}
+.browsefriendsbannner #carousel-example-generic{
+	height: 380px !important;
+}
+
+
+
+}
+
+
+/* ============================= 736px ====================== */
+
+@media screen and (min-width: 736px) and (max-width: 767px){
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 250px !important;
+}
+.text-center h1.listing-text{
+	line-height: 48px;
+	font-size: 34px;
+}
+
+
+}
+
+
+/* ============================= 667px ====================== */
+
+
+@media screen and (min-width: 667px) and (max-width: 735px){
+
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 252px !important;
+}
+.text-center h1.listing-text{
+	line-height: 48px;
+	font-size: 34px;
+}
+.payment_right label{
+	clear: both;
+}
+
+
+
+
+
+
+
+
+}
+
+/* ============================= 600px ====================== */
+
+
+@media screen and (min-width: 600px) and (max-width: 666px){
+
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 255px !important;
+}
+.text-center h1.listing-text{
+	line-height: 48px;
+	font-size: 34px;
+}
+.payment_right label{
+	clear: both;
+}
+
+
+
+
+
+}
+
+/* ============================= 568px ====================== */
+
+@media screen and (min-width: 568px) and (max-width: 599px){
+
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 250px !important;
+}
+.text-center h1.listing-text{
+	line-height: 48px;
+	font-size: 34px;
+}
+.listyourspace .apart_hide span{
+	font-size: 12px;
+}
+.payment_right label{
+	clear: both;
+}
+
+
+}
+
+/* ============================= 480px ====================== */
+
+
+@media screen and (min-width: 480px) and (max-width: 567px){
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 191px !important;
+}
+
+
+}
+
+/* ============================= 414px ====================== */
+
+@media screen and (min-width: 414px) and (max-width: 479px){
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 191px !important;
+}
+
+
+}
+
+/* ============================= 384px ====================== */
+
+
+@media screen and (min-width: 384px) and (max-width: 413px){
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 174px !important;
+}
+
+
+
+}
+
+/* ============================= 375px ====================== */
+
+
+@media screen and (min-width: 375px) and (max-width: 383px){
+
+.browsefriendsbannner #carousel-example-generic {
+    height: 171px !important;
+}
+
+
+}
+/* ============================= 320px ====================== */
+
+
+@media screen and (min-width: 320px) and (max-width: 374px){
+
+.logo {
+    float: left;
+    padding: 10px 0 0;
+    text-align: center;
+    width: 100%;
+}
+.logo a img {
+    display: inline-block;
+    margin: -14px 6px 0 0;
+    width: 68%;
+	float: none;
+}
+.inpt-head-place{
+	width: 91%;
+}
+.browsefriendsbannner #carousel-example-generic {
+    height: 142px !important;
+}
+
+
+}
+
+
