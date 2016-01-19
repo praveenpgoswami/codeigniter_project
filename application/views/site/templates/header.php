@@ -9,17 +9,17 @@ if ($heading == ''){?>
 	<?php }else {?>
 	<title><?php echo $heading;?></title>
 	<?php }?>
-	
+
 <meta property="og:image" content="<?php echo base_url(); ?>images/logo/<?php echo $this->config->item('logo_image');?>"/>
 <meta name="title" content="<?php echo $meta_title;?>" />
 <meta name="keywords" content="<?php echo $meta_keyword; ?>" />
 <meta name="description" content="<?php echo $meta_description; ?>" />
 <meta name="viewport" content="width=device-width, user-scalable=no">
-<link rel="shortcut icon" type="image/x-icon" href="images/logo/<?php echo $this->config->item('fevicon_image'); ?>">	
+<link rel="shortcut icon" type="image/x-icon" href="images/logo/<?php echo $this->config->item('fevicon_image'); ?>">
 <base href="<?php echo base_url(); ?>" />
-<?php 
+<?php
 	$by_creating_accnt = str_replace("{SITENAME}",$siteTitle);
-	$this->load->view('site/templates/css_files',$this->data); 
+	$this->load->view('site/templates/css_files',$this->data);
 ?>
 <script type="text/javascript" src="js/site/1.10.min.js"></script>
 <script type="text/javascript" src="js/site/bootstrap.min.js"></script>
@@ -36,6 +36,7 @@ if ($heading == ''){?>
 <link rel="stylesheet" media="all" href="css/style.css" type="text/css" />
 <link rel="stylesheet" media="all" href="css/ie8-css.css" type="text/css" />
 <link rel="stylesheet" media="all" href="css/site/1.css" type="text/css" />
+<link rel="stylesheet" media="all" href="css/hover-min.css" type="text/css" />
 
 
 <link rel="stylesheet" href="css/site/style-responsive-only.css">
@@ -50,7 +51,7 @@ if ($heading == ''){?>
 
 
 <style type="text/css">
-	 
+
 .popup_header {
     background-color: #EFEFEF;
     border-bottom: 1px solid #DBDBDB;
@@ -322,8 +323,14 @@ input, textarea, select, .uneditable-input {
 #cboxClose {
   right: -4px;
      top: 3px;}
+
+.manu-box-right .showlist2.useclas{ right:-29px!important; width: 200px !important;}
+.manu-box-right .browse {
+    width: 100px !important;
+}
+
 </style>
-	 
+
 <script>
 jQuery.fn.extend({
  propAttr: $.fn.prop || $.fn.attr
@@ -352,15 +359,15 @@ source: function( request, response ) {
             }
         },
 		select: function(event,ui){
-		
+
 		var city=ui.item.value;
 		city=city.replace(" ", "+");
 		if($(this).attr('id')=='autocomplete')
 		{
 		window.location='<?php echo base_url()?>property?city='+city+'';
 		}
-		
-        
+
+
     },
 	min_length: 10,
     delay: 1
@@ -369,7 +376,7 @@ source: function( request, response ) {
 });
 </script>
 <!-- Autosuggestion Script End-->
-    
+
 </head>
 
 <body <?php if($this->uri->segment(1) == 'property' ){echo 'onload="initialize();"'; } else {echo 'onload="initializeMap()"';} ?>>
@@ -389,7 +396,7 @@ $reUrl = $this->session->userdata('rUrl');
 $this->session->unset_userdata('rUrl');
 redirect ($reUrl);
 }
-		
+
 ?>
 <!-- Popup_signin_start -->
 <div style='display:none'>
@@ -397,13 +404,13 @@ redirect ($reUrl);
   <div id='inline_login' style='background:#fff;'>
 		<div id="login_error" style="background:grey; display:none;"></div>
   		<div class="popup_page">
- 
+
   			<div class="popup_header"><?php if($this->lang->line('header_login') != '') { echo stripslashes($this->lang->line('header_login')); } else echo "Log in"; ?></div>
-            
+
 			<script>
 			function fbLogon()
 			{
-				<?php 
+				<?php
 				$pageURL = 'http';
 				if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
 				$pageURL .= "://";
@@ -418,15 +425,15 @@ redirect ($reUrl);
 				type: 'POST',
 				url: "<?php echo base_url();?>site/landing/fbLogin",
 				data: { rUrl : "<?php echo $pageURL;?>" },
-				success: function(data) 
-				{		
+				success: function(data)
+				{
 					window.location.href='<?php echo base_url()."facebook/user.php"; ?>';
 				}
 				});
 			}
 			function gglLogon()
 			{
-				<?php 
+				<?php
 				$pageURL = 'http';
 				if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
 				$pageURL .= "://";
@@ -441,60 +448,60 @@ redirect ($reUrl);
 				type: 'POST',
 				url: "<?php echo base_url();?>site/landing/fbLogin",
 				data: { rUrl : "<?php echo $pageURL;?>" },
-				success: function(data) 
-				{		
+				success: function(data)
+				{
 					window.location.href='<?php echo $authUrl; ?>';
 				}
 				});
 			}
 			</script>
-			
+
             <div class="popup_detail">
-            
+
             	<div class="banner_signup">
-                            	
+
                                 <a href="javascript:void(0);" onclick="fbLogon();" class="popup_facebook"><?php if($this->lang->line('login_facebook') != '') { echo stripslashes($this->lang->line('login_facebook')); } else echo "Login with Facebook"; ?></a>
-                                	
+
                                  <a href="javascript:void(0);" class="popup_google" onclick="gglLogon();"><?php if($this->lang->line('login_google') != '') { echo stripslashes($this->lang->line('login_google')); } else echo "Login with Google"; ?></a>
 								 <span class="popup_signup_or">OR</span>
-                                 
+
                                  <input type="text" name="email" id="signin_email_address" value="" class="decorative-input" placeholder="<?php if($this->lang->line('signup_emailaddrs') != '') { echo stripslashes($this->lang->line('signup_emailaddrs')); } else echo "Email Address"; ?>" onblur="if(this.value=='')this.value=this.defaultValue;"  />
-                                 
+
                                  <input type="password" id="signin_password"  placeholder="<?php if($this->lang->line('signup_password') != '') { echo stripslashes($this->lang->line('signup_password')); } else echo "Password"; ?>" value="" class="decorative-input1" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
-                                 
+
 								 <input type="hidden" name="bpath" id="bpath" value="<?php echo $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]; ?>" />
-								 
+
                                 <span class="popup_stay"><input class="check" id="remember" type="checkbox" /><?php if($this->lang->line('remember_me') != '') { echo stripslashes($this->lang->line('remember_me')); } else echo "Remember Me";?></span>
                                  <a href="javascript:void(0);" class="all-link1 forgot-popup"><?php if($this->lang->line('forgot_passsword') != '') { echo stripslashes($this->lang->line('forgot_passsword')); } else echo "Forgot Password"; ?>?</a>
                                  <button class="btn btn-block btn-primary large btn-large padded-btn-block" type="submit" onclick="javascript:signin();" id="signin_click" ><?php if($this->lang->line('header_login') != '') { echo stripslashes($this->lang->line('header_login')); } else echo "Log in"; ?></button>
-                                 <span class="popup_stay"><?php if($this->lang->line('dont_account') != '') { echo stripslashes($this->lang->line('dont_account')); } else echo "Don't have an account?"; ?><a href="javascript:void(0);" style="font-size:13px; margin:0 0 0 3px" class="all-link reg-popup"><?php if($this->lang->line('login_signup') != '') { echo stripslashes($this->lang->line('login_signup')); } else echo "Create  Account"; ?></a></span>
+                                 <!-- <span class="popup_stay"><?php if($this->lang->line('dont_account') != '') { echo stripslashes($this->lang->line('dont_account')); } else echo "Don't have an account?"; ?><a href="javascript:void(0);" style="font-size:13px; margin:0 0 0 3px" class="all-link reg-popup"><?php if($this->lang->line('login_signup') != '') { echo stripslashes($this->lang->line('login_signup')); } else echo "Create  Account"; ?></a></span> -->
                             </div>
-                    
-                    	
+
+
             </div>
-     
+
         </div>
-        
+
   </div>
-  
+
 </div>
 
 <div style='display:none'>
 
   <div id='inline_reg' style='background:#fff;'>
-  
+
   		<div class="popup_page">
-  
+
   			<div class="popup_header"><?php if($this->lang->line('login_signup') != '') { echo stripslashes($this->lang->line('login_signup')); } else echo "Create  Account"; ?></div>
-            
+
             <div class="popup_detail">
-            
+
             	<div class="banner_signup">
-                            	
-                                           	
+
+
                                 <a class="popup_facebook" onclick="window.location.href='<?php echo base_url().'facebook/user.php'; ?>'"><?php if($this->lang->line('facebook_signup') != '') { echo stripslashes($this->lang->line('facebook_signup')); } else echo "Sign Up with Facebook"; ?></a>
                                 <a class="popup_google" onclick="window.location.href='<?php echo $authUrl; ?>'"><?php if($this->lang->line('signup_google') != '') { echo stripslashes($this->lang->line('signup_google')); } else echo "Sign Up with Google"; ?></a>
-                                	
+
                                  <span class="popup_signup_or">OR</span>
                                  <button class="btn btn-block btn-primary large btn-large padded-btn-block mail-btn register-popup" type="submit"><?php if($this->lang->line('signup_email') != '') { echo stripslashes($this->lang->line('signup_email')); } else echo "Sign up with Email"; ?></button>
                                  <p style="font-size:11px; margin:10px 0"><?php if($this->lang->line('signup_cont1') != '') { echo stripslashes($this->lang->line('signup_cont1')); } else echo 'By Signing up, you confirm that you accept the';?> <a target="_blank" data-popup="true" href="pages/privacy-policy"><?php if($this->lang->line('header_terms_service') != '') { echo stripslashes($this->lang->line('header_terms_service')); } else echo "Terms of Service";?></a> <?php if($this->lang->line('header_and') != '') { echo stripslashes($this->lang->line('header_and')); } else echo "and"; ?> <a target="_blank" data-popup="true" href="pages/policy"><?php if($this->lang->line('header_privacy_policy') != '') { echo stripslashes($this->lang->line('header_privacy_policy')); } else echo "Privacy Policy";?></a>.</p>
@@ -502,9 +509,9 @@ redirect ($reUrl);
                     </div>
         		<span class="popup_stay"><?php if($this->lang->line('already_member') != '') { echo stripslashes($this->lang->line('already_member')); } else echo "Already a member?";?><a href="javascript:void(0);" style="font-size:13px; margin:0 0 0 3px" class="all-link login-popup"><?php if($this->lang->line('header_login') != '') { echo stripslashes($this->lang->line('header_login')); } else echo "Log in"; ?></a></span>
         </div>
-        
+
   </div>
-  
+
 </div>
 
 <!-- contact me popupwindow -->
@@ -514,31 +521,31 @@ redirect ($reUrl);
 <div style='display:none'>
 
   <div id='inline_register' style='background:#fff;'>
-  
+
   		<div class="popup_page">
-  
+
   			<div class="popup_header"><?php if($this->lang->line('login_signup') != '') { echo stripslashes($this->lang->line('login_signup')); } else echo "Create Account"; ?></div>
-            
+
             <div class="popup_detail">
-            
+
             	<div class="banner_signup">
-                                           	
+
                                 <a class="popup_facebook" onclick="window.location.href='<?php echo base_url().'facebook/user.php'; ?>'"><?php if($this->lang->line('facebook_signup') != '') { echo stripslashes($this->lang->line('facebook_signup')); } else echo "Sign up with Facebook"; ?></a>
-                               	
+
 								<a class="popup_google" onclick="window.location.href='<?php echo $authUrl; ?>'"><?php if($this->lang->line('signup_google') != '') { echo stripslashes($this->lang->line('signup_google')); } else echo "Sign up with Google"; ?></a>
                                  <span class="popup_signup_or">(OR)</span>
-                                 
+
                                  <input type="text" id="first_name" value="<?php if($this->lang->line('signup_full_name') != '') { echo stripslashes($this->lang->line('signup_full_name')); } else echo "First name"; ?>" class="decorative-input2" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
                                  <input type="text" id="last_name" value="<?php if($this->lang->line('signup_user_name') != '') { echo stripslashes($this->lang->line('signup_user_name')); } else echo "Last name"; ?>" class="decorative-input2" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
-                                 
+
                                  <input type="text" id="email" value="<?php if($this->lang->line('signup_emailaddrs') != '') { echo stripslashes($this->lang->line('signup_emailaddrs')); } else echo "Email Address"; ?>" class="decorative-input" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
-                                 
+
                                  <input type="password" id="password" value=""  placeholder="<?php if($this->lang->line('signup_password') != '') { echo stripslashes($this->lang->line('signup_password')); } else echo "Password"; ?>" class="decorative-input1" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
                                   <input type="password" id="cnf_password"  placeholder="<?php if($this->lang->line('change_conf_pwd') != '') { echo stripslashes($this->lang->line('change_conf_pwd')); } else echo "Confirm Password"; ?>" value="" class="decorative-input1" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
-                                  
+
                                  <div class="test" style="float:left; width:100%; margin:5px 0"> <input type="checkbox" checked="checked" id="checkbox" style="float:left; width:auto; margin:0 5px 0 0px" /><label class="news-stay" style="float:left"><?php if($this->lang->line('staynest_news') != '') { echo stripslashes($this->lang->line('staynest_news')); } else echo "Tell me about latest news";?> </label></div>
-                                 
-                                
+
+
 
 <p style="font-size:11px; text-align:left; margin:10px 0"><?php if($this->lang->line('simplesignup_cont1') != '') { echo stripslashes($this->lang->line('simplesignup_cont1')); } else echo 'By clicking "Sign up" you confirm that you accept the';?> <a data-popup="true" href="pages/privacy-policy"><?php if($this->lang->line('header_terms_service') != '') { echo stripslashes($this->lang->line('header_terms_service')); } else echo "Terms of Service";?></a> <?php if($this->lang->line('header_and') != '') { echo stripslashes($this->lang->line('header_and')); } else echo "and"; ?> <a data-popup="true" href="pages/policy"><?php if($this->lang->line('header_privacy_policy') != '') { echo stripslashes($this->lang->line('header_privacy_policy')); } else echo "Privacy Policy";?></a>.</p>
 <br />
@@ -550,52 +557,52 @@ redirect ($reUrl);
 
                                  <div style="display:none;" id="loading_signup_image" ><img  src="images/ajax-loader/ajax-loader(4).gif" id="loading_signup_image" ></div>
                                  <button type="submit" id="loading_signup" class="btn btn-block btn-primary large btn-large padded-btn-block register-popup cboxElement" onclick="javascript:register_user();" ><?php if($this->lang->line('login_signup') != '') { echo stripslashes($this->lang->line('login_signup')); } else echo "Create Account"; ?></button>
-								 
+
 								 <div class="remembr" style="display:none;">
 								 <input class="new-chek" type="checkbox"><span class="remember-me"><?php if($this->lang->line('remember_me') != '') { echo stripslashes($this->lang->line('remember_me')); } else echo "Remember Me";?></span>
 								 </div>
                                  <span class="popup_stay"><?php if($this->lang->line('already_member') != '') { echo stripslashes($this->lang->line('already_member')); } else echo "Already member?";?><a href="javascript:void(0);" style="font-size:13px; margin:0 0 0 3px" class="all-link login-popup"><?php if($this->lang->line('header_login') != '') { echo stripslashes($this->lang->line('header_login')); } else echo "log in"; ?></a></span>
                             </div>
-                    
-                    	
+
+
             </div>
-        
+
         </div>
-        
+
   </div>
-  
+
 </div>
 
 <div style='display:none'>
 
   <div id='inline_forgot' style='background:#fff;'>
-  
+
   		<div class="popup_page">
-  
+
   			<div class="popup_header"> <?php if($this->lang->line('forgot_reset_pwd') != '') { echo stripslashes($this->lang->line('forgot_reset_pwd')); } else echo "Reset Password";?> </div>
-            
+
             <div class="popup_detail">
-            
+
             	<div class="banner_signup">
                             	<p style="font-size:12px; text-align:left; margin:10px 0"><?php if($this->lang->line('contant_reset_pwd') != '') { echo stripslashes($this->lang->line('contant_reset_pwd')); } else echo "Enter the email address associated with your account, and we'll email you a link to reset your password.";?></p>
-                                
+
                                  <input type="text" id="forgot_email" value="" placeholder="<?php if($this->lang->line('header_enter_email') != '') { echo stripslashes($this->lang->line('header_enter_email')); } else echo "Email Address"; ?>" class="decorative-input" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;" />
-                                 
+
                               <button class="btn btn-primary" style="height:25px;" type="submit" onclick="javascript:forgot_password();" >
 							  <span id="load-img-forgot" style="display:none;">
 							  <img src="images/ajax-loader/ajax-loader(2).gif" alt="Loading..." />
 							  </span>
 							  <?php if($this->lang->line('send_reset_pwd') != '') { echo stripslashes($this->lang->line('send_reset_pwd')); } else echo "Send Reset Link";?></button>
-                               
+
                             </div>
-                    
-                    	
+
+
             </div>
-        
+
         </div>
-        
+
   </div>
-  
+
 </div>
 
 
@@ -608,21 +615,16 @@ redirect ($reUrl);
 		<div class="col-md-6">
 			<div class="logo-container">
         <h1 class="logo"><a href="<?php echo base_url();?>"><img src="images/logo/<?php echo $this->config->item('logo_image');?>" alt=""></a></h1>
-		<?php $temp = $this->uri->segment(1); if($temp != '') {?>
-        <div class="inpt-head-place">
-		<!--<input type="text" style="width: 85%;" class="auto-tet" placeholder="<?php if($this->lang->line('Where_are') != '') { echo stripslashes($this->lang->line('Where_are')); } else echo "Where are you going?";?>" id="autocomplete">-->
-		
-		<input class="auto-tet" name="city" id="autocompleteNew" placeholder="<?php if($this->lang->line('search_where') != '') { echo stripslashes($this->lang->line('search_where')); } else echo "Where do you want to go?"; ?>" onFocus="geolocate()" type="text" onkeyup="findLocation(event);">
-		<div id="autoCompImg" style="float: right; margin: 15px; display:none;"><img src="images/ajax-loader/ajax-loader.gif" alt="Loading..."></div>
-        </div><?php } ?>
-       <div class="brows-loop"> <label class="browse"><?php if($this->lang->line('browse') != '') { echo stripslashes($this->lang->line('browse')); } else echo "Browse"; ?><i class="caret"></i>
+       <div class="brows-loop"> <label class="browse"><?php if($this->lang->line('browse') != '') { echo stripslashes($this->lang->line('browse')); } else echo "Home"; ?><i class="caret"></i>
 <ul class="showlist2 useclas">
 <span class="ard"></span>
-<li><a href="popular"><?php if($this->lang->line('popular') != '') { echo stripslashes($this->lang->line('popular')); } else echo "Popular"; ?></a></li>
+<!-- <li><a href="popular"><?php if($this->lang->line('popular') != '') { echo stripslashes($this->lang->line('popular')); } else echo "Popular"; ?></a></li> -->
+<li><a href="popular"><?php echo "Available Pet Sitters"; ?></a></li>
+<li><a href="popular"><?php echo "Pet Sitters Wanted"; ?></a></li>
 <?php if($loginCheck!='') { ?>
- <li><a href="browsefriends"><?php if($this->lang->line('Friends') != '') { echo stripslashes($this->lang->line('Friends')); } else echo "Friends"; ?></a></li> 
+ <li><a href="browsefriends"><?php if($this->lang->line('Friends') != '') { echo stripslashes($this->lang->line('Friends')); } else echo "Friends"; ?></a></li>
  <li><a href="users/<?php echo $userDetails->row()->id; ?>/wishlists"><?php if($this->lang->line('MyWishLists') != '') { echo stripslashes($this->lang->line('MyWishLists')); } else echo "My Wish Lists"; ?></a></li>
-<?php } ?> 
+<?php } ?>
 </ul></label>
 </div>
 
@@ -632,28 +634,39 @@ redirect ($reUrl);
 		<div class="col-md-6">
       <div style="margin:0" class="navbar">
         <div class="navbar-inner">
-            
+
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 			<span>Menu</span>
 			<span class="icon-bar"></span>
-			
+
             </a>
             <div class="nav-collapse navbar-collapse my-nav">
-			
+
                 <ul class="nav">
-				<?php if ($loginCheck == ''){?> 
+				<?php if ($loginCheck == ''){?>
                    <!-- <li ><a href="javascript:void(0);" class="reg-popup">sign up</a></li> -->
-				   
-				   <li ><a href="javascript:void(0);" class="reg-popup"><?php if($this->lang->line('signup') != '') { echo stripslashes($this->lang->line('signup')); } else echo "sign up"; ?></a></li>
-                    
+
+				   <!-- <li ><a href="javascript:void(0);" class="reg-popup"><?php if($this->lang->line('signup') != '') { echo stripslashes($this->lang->line('signup')); } else echo "sign up"; ?></a></li> -->
+
 					<!-- <li><a href="javascript:void(0);" class="login-popup">login</a></li> -->
-					<li ><a href="javascript:void(0);" class="login-popup"><?php if($this->lang->line('header_login') != '') { echo stripslashes($this->lang->line('header_login')); } else echo "login"; ?></a></li>
-					
-                    <li><a href="pages/help" ><?php if($this->lang->line('footer_follow_help') != '') { echo stripslashes($this->lang->line('footer_follow_help')); } else echo "Help"; ?></a>
+					         <li ><a href="javascript:void(0);" class="login-popup"><?php if($this->lang->line('header_login') != '') { echo stripslashes($this->lang->line('header_login')); } else echo "login"; ?></a></li>
+
+                    <!-- <li><a href="pages/help" ><?php if($this->lang->line('footer_follow_help') != '') { echo stripslashes($this->lang->line('footer_follow_help')); } else echo "Help"; ?></a> -->
                     <li><a href="https://stayrove.freshdesk.com/support/home" target="_blank"><?php echo "FAQs"; ?></a>
                     <li><a href="contact-us">Contact us</a> </li>
+
+                <li class="manu-box-right">
+                  <div class="brows-loop"> <label class="browse">Sign Up<i class="caret"></i>
+                    <ul class="showlist2 useclas">
+                        <span class="ard"></span>
+                        <li><a href="site/register/pet_sitter_registration"> Pet sitter registration</a></li>
+                        <li><a href="site/register/pet_owner_registration"> Pet Owner Registration</a></li>
+                    </ul></label>
+                  </div>
+                </li>
+
 				 <ul class="showlist2" >
-                	<?php 
+          <?php
 						if ($cmsList->num_rows() > 0){
 							foreach ($cmsList->result() as $row){
 								if($row->hidden_page == 'No' && $row->category == 'Sub' && $row->parent == '71') {
@@ -662,9 +675,9 @@ redirect ($reUrl);
                 </ul>
 					</li>
 					<?php }else {?>
-					
+
                <div class="browse_div2" id="broswe_box1">
-            	 <a href="javascript:void(0);"><img width="20" src="<?php if($userDetails->row()->loginUserType == 'google'){ echo $userDetails->row()->image;} elseif($userDetails->row()->image == '' ){ echo base_url();?>images/site/profile.png<?php } else { echo base_url().'images/users/'.$userDetails->row()->image;}?>" style="float:left; margin:0 5px;" id="showlist_test" alt=""/><label class="user-name"><?php if($this->lang->line('login_hi') != '') { echo stripslashes($this->lang->line('login_hi')); } else echo "Hi"; ?><?php echo " ".$userDetails->row()->firstname.$userDetails->row()->lastname;?></label><i class="caret"></i></a>              
+            	 <a href="javascript:void(0);"><img width="20" src="<?php if($userDetails->row()->loginUserType == 'google'){ echo $userDetails->row()->image;} elseif($userDetails->row()->image == '' ){ echo base_url();?>images/site/profile.png<?php } else { echo base_url().'images/users/'.$userDetails->row()->image;}?>" style="float:left; margin:0 5px;" id="showlist_test" alt=""/><label class="user-name"><?php if($this->lang->line('login_hi') != '') { echo stripslashes($this->lang->line('login_hi')); } else echo "Hi"; ?><?php echo " ".$userDetails->row()->firstname.$userDetails->row()->lastname;?></label><i class="caret"></i></a>
                 <ul class="showlist3" >
                     <span class="ard"></span>
                     <li><a href="<?php echo base_url();?>dashboard"><?php if($this->lang->line('header_dashboard') != '') { echo stripslashes($this->lang->line('header_dashboard')); } else echo "Dashboard"; ?></a></li>
@@ -676,11 +689,11 @@ redirect ($reUrl);
                     <li><a href="<?php echo base_url();?>account"><?php if($this->lang->line('referrals_account') != '') { echo stripslashes($this->lang->line('referrals_account')); } else echo "Account"; ?></a></li>
                     <li><a href="logout"><?php if($this->lang->line('header_signout') != '') { echo stripslashes($this->lang->line('header_signout')); } else echo "Log Out"; ?></a></li>
                 </ul>
-               
+
           </div>
-		  
+
 		   <div class="browse_di">
-                 <?php 
+                 <?php
 				 $result = 0;
 				 if($userDetails->row()->id != '') {
 				 $this->db->select('*');
@@ -690,19 +703,19 @@ redirect ($reUrl);
 				 $result = $this->db->get()->num_rows();
 				 //$this->db->last_query();die;
 				 }
-				 
+
 				 if($result == 0){?>
                 <a href="<?php echo base_url();?>inbox"><img src="images/site/mail.png" alt="" /></a>
 				<?php } else {?>
 				<a href="<?php echo base_url();?>inbox"><img src="images/site/mail-unread.png" alt="" /></a>
 				<?php }?>
-				
-           </div> 
-                    
+
+           </div>
+
 					<?php }?>
-					<li><a class="request-trip" href="list_space"><?php if($this->lang->line('list_your') != '') { echo stripslashes($this->lang->line('list_your')); } else echo "List Your Space";?></a></li>
+					<!-- <li><a class="request-trip" href="list_space"><?php if($this->lang->line('list_your') != '') { echo stripslashes($this->lang->line('list_your')); } else echo "List Your Space";?></a></li> -->
                 </ul>
-				
+
             </div>
         </div>
     </div>
@@ -721,7 +734,7 @@ redirect ($reUrl);
                     </div>
                     <?php } ?>
 <!---HEADER-->
-                 
+
 					<script type="text/javascript">
 					function showView()
 					{
@@ -731,21 +744,21 @@ redirect ($reUrl);
 					$('.showlist3').css('display','block')
 					}
 					}
-					
-      $('body').click(function(){    
+
+      $('body').click(function(){
 				   if($(this).attr('id')!= "showlist_test")
 				   {
 				   //alert();
 				   $('.showlist3').css('display','none')
 				   }
-				  
-          
+
+
             });
-			
+
 $('#signin_email_address,#signin_password').keypress(function(e)
 {
 if(e.keyCode == 13)$( "#signin_click" ).click();
-});			
+});
 </script>
 <!--<script src="https://code.jquery.com/jquery-migrate-1.0.0.js"></script>-->
 
@@ -764,11 +777,11 @@ $(document).ready(function(){
 <div class="dashboard yourlisting dash-home bgcolor">
 
 <div class="top-listing-head">
- <div class="main">   
+ <div class="main">
             <ul id="nav">
                 <li <?php if ($this->uri->segment(1)=='pages'){?>class="active"<?php }?>><a href="pages/about-us">About Us</a></li>
                 <li <?php if ($this->uri->segment(1)=='contact-us'){?>class="active"<?php }?>><a href="contact-us">Contact Us</a></li>
-                <?php 
+                <?php
 				if ($cmsList->num_rows() > 0){
 				foreach ($cmsList->result() as $row){
 				if(in_array($row->seourl,array('business-travel')) && $row->hidden_page =='No' && $row->status == 'Publish' && $row->category == 'Main') {
@@ -783,7 +796,7 @@ $(document).ready(function(){
 <div class="dashboard yourlisting dash-home bgcolor">
 
 <div class="top-listing-head">
- <div class="main">   
+ <div class="main">
             <ul id="nav">
                 <li <?php if ($this->uri->segment(2)=='live-like-locals'){?>class="active"<?php }?>><a href="pages/live-like-locals"><?php if($this->lang->line('Live_Like') != '') { echo stripslashes($this->lang->line('Live_Like')); } else echo "Live Like Locals";?></a></li>
                 <li <?php if ($this->uri->segment(3)=='learnmore'){?>class="active"<?php }?>><a href="site/cms/learnmore">Learn more about hosting</a></li>
@@ -796,7 +809,7 @@ $(document).ready(function(){
 <div class="dashboard yourlisting dash-home bgcolor">
 
 <div class="top-listing-head">
- <div class="main">   
+ <div class="main">
             <ul id="nav">
                 <li <?php if ($this->uri->segment(2)=='faq'){?>class="active"<?php }?>><a href="pages/faq">Frequently Asked Question</a></li>
                 <li <?php if ($this->uri->segment(2)=='policy'){?>class="active"<?php }?>><a href="pages/policy">Policy</a></li>
@@ -811,7 +824,7 @@ $(document).ready(function(){
 <div class="dashboard yourlisting dash-home bgcolor">
 
 <div class="top-listing-head">
- <div class="main">   
+ <div class="main">
             <ul id="nav">
                 <li <?php if ($this->uri->segment(2)=='live-like-locals'){?>class="active"<?php }?>><a href="pages/live-like-locals">Live like locals</a></li>
                 <li <?php if ($this->uri->segment(3)=='learnmore'){?>class="active"<?php }?>><a href="site/cms/learnmore">Learn More about Hosting</a></li>
@@ -835,7 +848,7 @@ var componentForm = {
   postal_code: 'short_name'
 };
 
-function initializeMap() { 
+function initializeMap() {
   // Create the autocomplete object, restricting the search
   // to geographical location types.
   autocomplete = new google.maps.places.Autocomplete(

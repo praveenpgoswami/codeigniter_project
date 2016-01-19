@@ -84,7 +84,7 @@ input.auto-tet[type="text"]:focus {
     color: #131313;
     float: right;
     font-size: 14px;
-    padding: 5px 0 12px;
+    padding: 3px 0 12px;
     width: 22%;
 }
 .browse .caret {
@@ -175,6 +175,7 @@ input.auto-tet[type="text"]:focus {
     font-size: 14px;
     padding: 12px 0 2px;
     text-align: center;
+    font-weight: bold;
 }
 .host-list li {
     background: url("../images/don.png") no-repeat scroll 0 7px transparent;
@@ -218,6 +219,7 @@ input.auto-tet[type="text"]:focus {
     font-size: 15px;
     margin-bottom: 10px;
     width: 100%;
+    font-weight: bold;
 }
 .inputfoot input[type="text"] {
     background: url("../images/caret.png") no-repeat scroll 93% 50% #525657;
@@ -248,6 +250,8 @@ input.auto-tet[type="text"]:focus {
     font-size: 40px;
     font-weight: bold;
     text-shadow: 0 0 3px #000;
+    text-transform: uppercase;
+
 }
 .text-center h3 {
     font-family: opensanssemibold;
@@ -271,10 +275,10 @@ input.auto-tet[type="text"]:focus {
     float: none;
     left: 0;
     margin: 140px auto 0;
-    padding: 27px 12px 18px;
+    padding: 18px 12px;
     position: absolute;
     text-align: center;
-    width: 103%;
+    width: 100%;
 }
 .searching-section input {
     height: 43px;
@@ -1255,7 +1259,7 @@ button.btn.btn-block.btn-primary.large:hover {
 }
 .logo a img {
     float: left;
-    margin: -10px 4px;
+    margin: -11px 4px;
 	width: 100%;
 }
 input.auto-tet[type="text"] {
@@ -6355,7 +6359,7 @@ div#container-wrapper bg-gray {
     padding: 10px 30px;
 }
 .modal {
-    
+
    outline: medium none;
 }
 .reviw-loop {
@@ -6438,4 +6442,45 @@ div#container-wrapper bg-gray {
 }
 .overview_title small {
     padding-left: 8px;
+}
+.register-btn .btn {
+    background: #0976BB;
+    color: #fff;
+    border-radius: 0px !important;
+    border: none;
+    font-weight: normal;
+    padding: 10px 24px;
+    font-size: 15px;
+    text-transform: none;
+    font-weight: 700;
+}
+.register-btn .btn:last-child{
+    background:#ff5a5f;
+    color: #fff;
+}
+.register-btn .btn i{
+    display: block;
+    font-style: normal;
+    font-size:11px;
+    font-weight: normal;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+  }
+@media (min-width: 768px) and (max-width: 991px) {
+    .searching-section{
+    height: 98px;
+    }
+    .text-center h1 {
+        font-size: 27px;
+        }
+   .text-center h3{
+    font-size: 21px;
+   }
+}
+@media (max-width: 767px) {
+.register-btn .btn{
+    margin: 5px 0px;
+}
 }

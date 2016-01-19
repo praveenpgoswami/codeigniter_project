@@ -18,9 +18,9 @@ $this->load->view('admin/templates/header.php');
             </div>
           </div>
           <div class="widget_content">
-            <?php 
+            <?php
 				$attributes = array('class' => 'form_container left_label', 'id' => 'settings_form', 'enctype' => 'multipart/form-data');
-				echo form_open_multipart('admin/adminlogin/admin_global_settings',$attributes) 
+				echo form_open_multipart('admin/adminlogin/admin_global_settings',$attributes)
 			?>
 			<input type="hidden" name="form_mode" value="main_settings"/>
             <div id="tab1">
@@ -125,7 +125,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
+
 				<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="site_pagination_per_page">Pagination Limit Per Page</label>
@@ -134,7 +134,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
+
 				<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="twilio_account_sid">Twilio Account SID</label>
@@ -143,7 +143,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
+
 				<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="twilio_account_token">Twilio Account Auth Token</label>
@@ -152,7 +152,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
+
 				<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="twilio_phone_number">Twilio Phone Number</label>
@@ -161,7 +161,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
+
 				<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="google_map_api">Google Map API Key</label>
@@ -178,12 +178,23 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
-				<li>
+
+				        <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="home_title_2">Home Title 2</label>
                     <div class="form_input">
                       <input name="home_title_2" id="home_title_2" type="text" value="<?php echo htmlentities($admin_settings->row()->home_title_2);?>" tabindex="7" class="large tipTop" title="Please enter google map api key"/>
+                    </div>
+                  </div>
+                </li>
+
+                 <li>
+                  <div class="form_grid_12">
+                    <label class="field_title" for="font-style">Font Style</label>
+                    <div class="form_input">
+                        <?php
+                        $js = 'id="font_style" class="large"';
+                        echo form_dropdown('font_style', $dropdown, $admin_settings->row()->font_style, $js); ?>
                     </div>
                   </div>
                 </li>
@@ -219,21 +230,21 @@ $this->load->view('admin/templates/header.php');
 			</div></li></ul>
 			</div>
             </form>
-             <?php 
+             <?php
 				$attributes = array('class' => 'form_container left_label', 'id' => 'settings_form');
-				echo form_open('admin/adminlogin/admin_global_settings',$attributes) 
+				echo form_open('admin/adminlogin/admin_global_settings',$attributes)
 			?>
 			<input type="hidden" name="form_mode" value="social"/>
             <div id="tab2">
-            
+
               <ul>
               <!--<div class="form_grid_12">
               <label class="error">Note: To create google api refer this   <a href="http://www.sanwebe.com/2012/10/creating-google-oauth-api-key" target="_blank">Reference Link</a>  </label>
               </div>
-              <div class="form_grid_12">              
+              <div class="form_grid_12">
               <label class="error">Note: To create Facebook api click below url, click Apps then Create New App <a href="https://developers.facebook.com/" target="_blank">Facebook Link</a>  </label>
               </div>
-               <div class="form_grid_12">              
+               <div class="form_grid_12">
               <label  class="error">Note: To create Twitter api refer this <a href="https://dev.twitter.com/discussions/631" target="_blank">Reference Link</a>  </label>
               </div>-->
               <div class="form_grid_12">
@@ -245,7 +256,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
+
                 <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="googleplus_link">Google plus</label>
@@ -270,7 +281,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-				
+
 				<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="pinterest">Pintrest Link</label>
@@ -279,7 +290,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
+
                 <!--<li>
                   <div class="form_grid_12">
                     <label class="field_title" for="consumer_key">Twitter Consumer Key</label>
@@ -287,10 +298,10 @@ $this->load->view('admin/templates/header.php');
                       <input name="consumer_key" id="consumer_key" type="text" tabindex="11" value="<?php echo $admin_settings->row()->consumer_key;?>" class="large tipTop" title="Please enter the twitter consumer key"/>
                        <label class="error">Note: For Twitter Callback URL Copy This Url and Paste It.  - <?php echo base_url();?>twtest/callback </label>
                     </div>
-                   
+
                   </div>
                 </li>
-                
+
                 <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="consumer_secret">Twitter Secret Key</label>
@@ -299,7 +310,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>-->
-                
+
                  <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="google_client_id">Google Client Id</label>
@@ -308,7 +319,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
+
                  <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="google_redirect_url">Google Redirect Url</label>
@@ -318,7 +329,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
+
                 <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="google_client_secret">Google Secret Key</label>
@@ -327,7 +338,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
+
                 <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="google_developer_key">Google Developer Key</label>
@@ -336,9 +347,9 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
-                
-                
+
+
+
                  <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="facebook_app_id">Facebook App ID</label>
@@ -347,7 +358,7 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
+
                <li>
                   <div class="form_grid_12">
                     <label class="field_title" for="facebook_app_secret">Facebook App Secret</label>
@@ -364,8 +375,8 @@ $this->load->view('admin/templates/header.php');
                     </div>
                   </div>
                 </li>
-                
-                
+
+
               </ul>
              <ul><li><div class="form_grid_12">
 				<div class="form_input">
@@ -374,9 +385,9 @@ $this->load->view('admin/templates/header.php');
 			</div></li></ul>
 			</div>
             </form>
-             <?php 
+             <?php
 				$attributes = array('class' => 'form_container left_label', 'id' => 'settings_form');
-				echo form_open('admin/adminlogin/admin_global_settings',$attributes) 
+				echo form_open('admin/adminlogin/admin_global_settings',$attributes)
 			?>
 			<input type="hidden" name="form_mode" value="seo"/>
             <div id="tab3">
@@ -458,6 +469,6 @@ $this->load->view('admin/templates/header.php');
   </div>
   <span class="clear"></span> </div>
 </div>
-<?php 
+<?php
 $this->load->view('admin/templates/footer.php');
 ?>

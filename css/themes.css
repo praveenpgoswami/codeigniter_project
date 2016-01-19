@@ -58,7 +58,7 @@ body#theme-default {
 	box-shadow: 0 0 3px #999;
 */}
 #theme-default #primary_nav {
-	
+
 	border-right:#0e4169 1px solid;
 }
 #theme-default #primary_nav ul{ border-bottom:#01132a 1px solid;}
@@ -134,6 +134,14 @@ background: #3481c9;
 }
 #theme-default .nav_icon, #theme-default .p_dashboard{
 	background:url(../images/sprite-icons/icon-black.png) no-repeat;}
+
+#theme-default	.nav_icon-2 {
+    height: 20px;
+    width: 20px;
+    display: block;
+    position: absolute;
+    left: 13px;
+}
 
 #theme-default .widget_wrap {
 	background:#f5f5f5;

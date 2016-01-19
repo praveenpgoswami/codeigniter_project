@@ -1,0 +1,224 @@
+
+
+/*=========================================================
+Pet owner Registration css start here
+===========================================================*/
+.site-register-section .main-box{ padding-bottom:50px; padding-top:20px; background:#fff ; font-size:13px; }
+.site-register-section .top-box{ width:100%; height:auto; padding:10px; border:1px solid #c5c5c5; margin-bottom:10px;}
+.site-register-section .crl{ clear:both;}
+.site-register-section .top-box h2{ margin-bottom:15px; background:#e4e4e4; padding-left:15px;}
+input, textarea, select, .uneditable-input{ width: auto ; font-size:13px;}
+.site-register-section .gends.select-box1{ margin-top:5px; margin-bottom:15px;}
+.site-register-section .help-block1{ text-align:center; margin-top:15px;}
+.site-register-section .btn-in{ width:100px; margin:0px auto ; float:none; margin-bottom:15px;}
+.site-register-section .tag-line1{ font-size:16px; margin-bottom:15px;}
+.site-register-section .pet-title{ font-size:24px;}
+.site-register-section .required .control-label:after { content:"*";color:red; padding-left:5px;}
+.site-register-section .padding-15{ padding-top:6px; padding-bottom:10px;}
+.site-register-section .top1{ padding-top:10px; padding-bottom:10px;}
+
+.site-register-section h1{font-size: 35px; color:#0976BB!important}
+
+.site-register-section .form-horizontal label.radio-box input[type=number] {width: 38%;}
+
+.site-register-section .checkbox input {width: auto;max-width:auto;}
+
+.site-register-section input[type="file"]{ clear: both; border: none;box-shadow:none;}
+#register-pet-owner .pniw-number-prefix {-moz-border-bottom-colors: none;-moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; border-color: #bbb;
+    border-image: none; border-radius: 2px 0 0 2px; border-style: solid; border-width: 1px 0 1px 1px; color: #393c3d; float: left; line-height: 39px; min-width: 30px;padding: 0 4px;
+}
+.site-register-section input#o_mobile_number{width:100%;max-width: 364px;}
+.site-register-section .loader-img img{display: none;}
+.site-register-section .error-msg label.error {font-weight: normal;background-color: #f2dede; border-color: #eed3d7;color: #b94a48; background:url("../../images/unchecked.gif") no-repeat 0px 8px;padding-left: 20px;
+    border: none; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);font-size: 12px;}
+.site-register-section .error-msg {margin-top: 2px;}
+#register-pet-owner .error{color: #b94a48;padding-top: 8px;}
+.site-register-section .section-Benefits ul{ padding-left: 20px; padding-bottom: 20px;}
+.site-register-section .section-Benefits li {list-style-type: circle;}
+.site-register-section h3{ padding: 0px; margin: 0px;font-size: 18px;}
+.site-register-section .section-how-it-work {line-height: 20px;}
+h1,.site-register-section  h2, .site-register-section h3 { line-height: 30px;}
+
+.site-register-section .form-horizontal .form-group{margin-left: 15px;margin-right: 0px;}
+
+.site-register-section .form-horizontal .control-label{color: #000;float: left; max-width: 153px; padding-top: 5px; text-align: left;width: 100%; padding-left: 0px;}
+
+/*=====================================================
+Pet Sitter Registration Css start here
+=====================================================*/
+
+
+.site-register-section .main-box{ padding-bottom:50px; padding-top:20px; background:#fff ; font-size:13px; }
+.site-register-section .top-box{ width:100%; height:auto; padding:10px; border:1px solid #c5c5c5; margin-bottom:10px;}
+.site-register-section .crl{ clear:both;}
+.site-register-section .top-box h2{ margin-bottom:15px; background:#e4e4e4; padding-left:15px;}
+
+.site-register-section input[type=radio]{ width: auto ; font-size:13px; margin: -3px 0 0;}
+
+.site-register-section .form-horizontal .radio-inline{
+padding-left: 0px;
+}
+.site-register-section .form-horizontal label.radio-box{
+      display: block;
+}
+
+.site-register-section .form-horizontal .radio-inline input[type=radio]{
+  display: inline-block;
+    float: none;
+    margin:-2px 1px 0 0;
+}
+
+.site-register-section .form-horizontal .radio-inline input[type=text]{
+width: auto;
+max-width: auto;
+min-height: 100%;
+
+}
+
+.site-register-section .gends.select-box1{ margin-top:5px; margin-bottom:15px;}
+.site-register-section .help-block1{ text-align:center; margin-top:15px;}
+.site-register-section .btn-in{ width:100px; margin:0px auto ; float:none; margin-bottom:15px;}
+.site-register-section .tag-line1 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #737373;
+    margin-top: 15px;
+    font-weight: bold;
+}
+.site-register-section .pet-title{ font-size:24px;}
+.site-register-section .required .control-label:after { content:"*";color:red; padding-left:5px;}
+.site-register-section .padding-15{ padding-top:6px; padding-bottom:10px;}
+.site-register-section .top1{ padding-top:10px; padding-bottom:10px;}
+.site-register-section .top-box { line-height: 22px;}
+
+
+.site-register-section .top-box textarea,
+.site-register-section .top-box select,
+.site-register-section .top-box .uneditable-input {font-size: 13px; max-width: 398px;width: 100%; border-radius: 0;}
+
+.site-register-section .top-box select,
+.site-register-section .top-box input[type=text],
+.site-register-section .top-box input[type=password],
+.site-register-section .top-box input[type=tel],
+.site-register-section .top-box input[type=email],
+.site-register-section .top-box input[type=subject],
+.site-register-section .top-box input[type=phone],
+.site-register-section .top-box input[type=number]
+{ min-height: 41px;border-radius: 0; font-size: 13px; max-width: 398px;width: 100%;}
+
+
+.site-register-section .chack-full input {width: auto;max-width:auto;}
+.site-register-section .checkbox input {width: auto;max-width:auto;}
+.site-register-section .radio-inline > input{width: auto;max-width:auto;}
+
+#s_other_comfortable_with{display: none;}
+#s_other_location{display: none;}
+.section-Benefits ul{ padding-left: 20px; padding-bottom: 20px;}
+.section-Benefits li {list-style-type: circle;}
+.site-register-section h3 {
+    padding: 0px;
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 500;
+}
+.section-how-it-work {line-height: 20px;}
+.site-register-section  h1,.site-register-section  h2, .site-register-section h3 {line-height: 30px; color: #737373;}
+.site-register-section input[type="file"]{ clear: both; border: none;box-shadow:none;}
+
+.first-box{ padding-bottom:10px;}
+#register-pet-sitter .pniw-number-prefix {-moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none;-moz-border-top-colors: none; border-color: #bbb;
+    border-image: none; border-radius: 0px 0 0 0px;border-style: solid; border-width: 1px 0 1px 1px; color: #393c3d; float: left; line-height: 39px; min-width: 30px; padding: 0 4px;
+}
+.site-register-section input#s_mobile_number{max-width: 364px; width: 100%;}
+.loader-img img{display: none;}
+.error-msg label.error { font-weight: normal;background-color: #f2dede; border-color: #eed3d7; color: #b94a48; background:url("../../images/unchecked.gif") no-repeat 0px 2px;padding-left: 20px;
+    border: none;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); font-size: 12px;}
+.error-msg { margin-top: 2px;}
+#register-pet-sitter .error{color: #b94a48; padding-top: 8px;}
+#register-pet-sitter textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], select{width: 100%;}
+
+
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+
+}
+
+@media (max-width: 767px) {
+
+.site-register-section .form-horizontal .form-group label.control-label{
+float: none;
+ padding-left: 15px;
+  padding-bottom: 9px;
+width: 100%;
+display: block;
+   max-width: 100%;
+}
+
+.site-register-section .form-horizontal .form-group{
+margin-left: 0px;
+
+}
+
+.site-register-section .top-box select, .site-register-section .top-box input[type="text"],
+.site-register-section .top-box input[type="password"],
+.site-register-section .top-box input[type="tel"],
+.site-register-section .top-box input[type="email"],
+.site-register-section .top-box input[type="subject"],
+.site-register-section .top-box input[type="phone"],
+.site-register-section .top-box input[type="number"]{
+width: 100%!important;
+}
+
+.site-register-section input#s_mobile_number {
+  max-width: 270px;
+  width: 80% !important;
+}
+
+
+
+.site-register-section .form-horizontal .form-group label{
+display: inline-block;
+}
+
+#register-pet-sitter .error{
+display: block;
+white-space: normal;
+text-align: left;
+
+}
+
+
+}
+
+
+#loader-img {
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: #fefefe;
+ z-index: 99;
+ height: 100%;
+ }
+#status-load {
+ width: 200px;
+ height: 200px;
+ position: absolute;
+ left: 50%;
+ top: 50%;
+ background-image: url("../../images/Preloader_4.gif");
+ background-repeat: no-repeat;
+ background-position: center;
+ margin: -100px 0 0 -100px;
+ }
+.red{
+color:red;
+}
+body{
+background: url(http://infotuts.com/<span id="IL_AD4" class="IL_AD">demo</span>/website-preloader-jquery/bg.jpg);
+background-repeat: no-repeat;
+width: 100%;
+background-size: 100%;
+}

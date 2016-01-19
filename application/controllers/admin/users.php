@@ -1,8 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * 
- * This controller contains the functions related to user management 
+ *
+ * This controller contains the functions related to user management
  * @author Teamtweaks
  *
  */
@@ -12,42 +12,64 @@ class Users extends MY_Controller {
 	function __construct(){
         parent::__construct();
 		$this->load->helper(array('cookie','date','form'));
-		$this->load->library(array('encrypt','form_validation'));		
+		$this->load->library(array('encrypt','form_validation'));
 		$this->load->model('user_model');
 		if ($this->checkPrivileges('Members',$this->privStatus) == FALSE){
 			redirect('admin');
 		}
     }
-    
+
     /**
-     * 
+     *
      * This function loads the users list page
      */
-   	public function index(){	
+   	public function index(){
 		if ($this->checkLogin('A') == ''){
 			redirect('admin');
 		}else {
 			redirect('admin/users/display_user_list');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the users list page
 	 */
 	public function display_user_list(){
+
 		if ($this->checkLogin('A') == ''){
 			redirect('admin');
 		}else {
 			$this->data['heading'] = 'Members List';
-			$condition = array('group'=>'User');
-			$this->data['usersList'] = $this->user_model->get_all_details(USERS,$condition);
+			#$condition = array('group'=>'User');
+			$condition = 'where `group`="User" AND `user_role` = "pet_owner" OR `user_role` = "pet_sitter"  order by `created` desc';
+			#$this->data['usersList'] = $this->user_model->get_all_details(USERS,$condition);
+			$this->data['usersList'] = $this->user_model->get_users_details($condition);
+
+			$this->db->select('t1.id,t1.mobile_number,t1.full_name,t1.user_name,t1.profile_name,t1.user_role,t1.mobile_verification_code,t1.group,t1.email,t1.status,t1.email,t1.last_login_date,t1.last_login_ip, t2.*')
+			   ->from('fc_users as t1')
+			   ->join('user_pet_owner as t2', 't1.id = t2.user_id', LEFT)
+			   ->where_in('t1.user_role',array('pet_owner'));
+
+			$query = $this->db->get();
+			$result = $query->result_array();
+
+			$this->db->select('t1.id,t1.mobile_number,t1.full_name,t1.user_name,t1.profile_name,t1.user_role,t1.mobile_verification_code,t1.group,t1.email,t1.status,t1.email,t1.last_login_date,t1.last_login_ip, t2.*')
+			   ->from('fc_users as t1')
+			   ->join('user_pet_sitter as t2', 't1.id = t2.user_id', LEFT)
+			   ->where_in('t1.user_role',array('pet_sitter'));
+
+			$query2 = $this->db->get();
+			$result2 = $query2->result_array();
+
+			$this->data['data'] = array_merge($result, $result2);
+
 			$this->load->view('admin/users/display_userlist',$this->data);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the users dashboard
 	 */
 	public function display_user_dashboard(){
@@ -55,14 +77,15 @@ class Users extends MY_Controller {
 			redirect('admin');
 		}else {
 			$this->data['heading'] = 'Members Dashboard';
-			$condition = 'where `group`="User" order by `created` desc';
+			$condition = 'where `group`="User" AND `user_role` = "pet_owner" OR `user_role` = "pet_sitter"  order by `created` desc';
+
 			$this->data['usersList'] = $this->user_model->get_users_details($condition);
 			$this->load->view('admin/users/display_user_dashboard',$this->data);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the add new user form
 	 */
 	public function add_user_form(){
@@ -73,9 +96,9 @@ class Users extends MY_Controller {
 			$this->load->view('admin/users/add_user',$this->data);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function insert and edit a user
 	 */
 	public function insertEditUser(){
@@ -88,12 +111,7 @@ class Users extends MY_Controller {
 			$password = md5($this->input->post('new_password'));
 			$email = $this->input->post('email');
 			if ($user_id == ''){
-				//$unameArr = $this->config->item('unameArr');
-				/*if (!preg_match('/^\w{1,}$/', trim($firstname))){
-					$this->setErrorMessage('error','User name not valid. Only alphanumeric allowed');
-					echo "<script>window.history.go(-1);</script>";exit;
-				}*/
-				
+
 				$condition = array('firstname' => $firstname);
 				$duplicate_name = $this->user_model->get_all_details(USERS,$condition);
 				if ($duplicate_name->num_rows() > 0){
@@ -109,18 +127,18 @@ class Users extends MY_Controller {
 				}
 			}
 			$excludeArr = array("user_id","image","new_password","confirm_password","group","status");
-			
+
 			$user_group = 'User';
-			
+
 			if ($this->input->post('status') != ''){
 				$user_status = 'Active';
 			}else {
 				$user_status = 'Inactive';
 			}
 			$inputArr = array('group' => $user_group, 'status' => $user_status, 'user_name' => $user_name);
-			
+
 			$inputArr['request_status'] = 'Approved';
-			
+
 			$datestring = "%Y-%m-%d";
 			$time = time();
 			//$config['encrypt_name'] = TRUE;
@@ -156,9 +174,9 @@ class Users extends MY_Controller {
 			redirect('admin/users/display_user_list');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the edit user form
 	 */
 	public function edit_user_form(){
@@ -176,9 +194,9 @@ class Users extends MY_Controller {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function change the user status
 	 */
 	public function change_user_status(){
@@ -195,9 +213,46 @@ class Users extends MY_Controller {
 			redirect('admin/users/display_user_list');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * This function change the pet owner status
+	 */
+	public function change_pet_owner_status(){
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$mode = $this->uri->segment(4,0);
+			$user_id = $this->uri->segment(5,0);
+			$status = ($mode == '0')?'Inactive':'Active';
+			$newdata = array('status' => $status);
+			$condition = array('id' => $user_id);
+			$this->user_model->update_details(USERS,$newdata,$condition);
+			$this->setErrorMessage('success','Pet owner Status Changed Successfully');
+			redirect('admin/users/display_pet_owner_list');
+		}
+	}
+
+	/**
+	 *
+	 * This function change the pet sitter status
+	 */
+	public function change_pet_sitter_status(){
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$mode = $this->uri->segment(4,0);
+			$user_id = $this->uri->segment(5,0);
+			$status = ($mode == '0')?'Inactive':'Active';
+			$newdata = array('status' => $status);
+			$condition = array('id' => $user_id);
+			$this->user_model->update_details(USERS,$newdata,$condition);
+			$this->setErrorMessage('success','Pet sitter Status Changed Successfully');
+			redirect('admin/users/display_pet_sitter_list');
+		}
+	}
+	/**
+	 *
 	 * This function loads the user view page
 	 */
 	public function view_user(){
@@ -205,19 +260,75 @@ class Users extends MY_Controller {
 			redirect('admin');
 		}else {
 			$this->data['heading'] = 'View User';
+
+			//get config value
+			$this->data['owner_registration_fields'] = $this->config->item('pet_owner_registration_fields');
+			$this->data['sitter_registration_fields'] = $this->config->item('pet_sitter_registration_fields');
+
 			$user_id = $this->uri->segment(4,0);
 			$condition = array('id' => $user_id);
 			$this->data['user_details'] = $this->user_model->get_all_details(USERS,$condition);
-			if ($this->data['user_details']->num_rows() == 1){
-				$this->load->view('admin/users/view_user',$this->data);
-			}else {
-				redirect('admin');
+			$check_role = $this->check_user_role($user_id);
+
+			//get user data using user id
+			if($check_role == 'pet_owner'){
+				$this->db->select('t1.id,t1.mobile_number,t1.full_name,t1.user_name,t1.profile_name,t1.user_role,t1.mobile_verification_code,t1.group,t1.email,t1.status,t1.email,t1.last_login_date,t1.last_login_ip,t1.profile_pictures,t2.*')
+				   ->from('fc_users as t1')
+				   ->join('user_pet_owner as t2', 't1.id = t2.user_id', LEFT)
+				   ->where('t1.id',$user_id)
+				   ->where('t1.user_role','pet_owner');
+
+				$query = $this->db->get();
+				$this->data['data'] = $query->result_array();
+				$this->load->view('admin/users/pet_owner',$this->data);
+
+			}else if($check_role == 'pet_sitter'){
+
+				$this->db->select('t1.id,t1.mobile_number,t1.full_name,t1.user_name,t1.profile_name,t1.user_role,t1.mobile_verification_code,t1.group,t1.email,t1.status,t1.email,t1.last_login_date,t1.last_login_ip,t1.profile_pictures,t2.*')
+				   ->from('fc_users as t1')
+				   ->join('user_pet_sitter as t2', 't1.id = t2.user_id', LEFT)
+				   ->where('t1.id',$user_id)
+				   ->where('t1.user_role','pet_sitter');
+
+				$query = $this->db->get();
+				$this->data['data'] = $query->result_array();
+				$this->load->view('admin/users/pet_sitter',$this->data);
+
+			} else {
+				redirect('admin/users/display_user_list');
 			}
+
+			// if ($this->data['user_details']->num_rows() == 1){
+			// 	$this->load->view('admin/users/view_user',$this->data);
+			// }else {
+			// 	redirect('admin');
+			// }
 		}
 	}
-	
+
+
 	/**
-	 * 
+	 *
+	 * Check user type using user id
+	 */
+
+	function check_user_role($userid){
+			//query to get user_role using user id from user table
+			if(!$userid)
+					redirect('admin/users/display_user_list');
+
+			$this->db->select('user_role')
+							 ->from('fc_users as t1')
+							 ->where('id', $userid);
+			$query 	= $this->db->get();
+			$result = $query->result_array();
+
+			if(!empty($result))
+					return $result[0]['user_role'];
+	}
+
+	/**
+	 *
 	 * This function delete the user record from db
 	 */
 	public function delete_user(){
@@ -231,9 +342,40 @@ class Users extends MY_Controller {
             redirect('admin/users/display_user_list');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
+	 * This function delete the pet owner record from db
+	 */
+	public function delete_pet_owner(){
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$user_id = $this->uri->segment(4,0);
+			$condition = array('id' => $user_id);
+			$this->user_model->commonDelete(USERS,$condition);
+			$this->setErrorMessage('success','User deleted successfully');
+            redirect('admin/users/display_pet_owner_list');
+		}
+	}
+
+	/**
+	 *
+	 * This function delete the pet sitter record from db
+	 */
+	public function delete_pet_sitter(){
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$user_id = $this->uri->segment(4,0);
+			$condition = array('id' => $user_id);
+			$this->user_model->commonDelete(USERS,$condition);
+			$this->setErrorMessage('success','User deleted successfully');
+            redirect('admin/users/display_pet_sitter_list');
+		}
+	}
+	/**
+	 *
 	 * This function change the user status, delete the user record
 	 */
 	public function change_user_status_global(){
@@ -247,7 +389,7 @@ class Users extends MY_Controller {
 			redirect('admin/users/display_user_list');
 		}
 	}
-	
+
 	public function export_user_details()
 	{
 	$fields_wanted=array('firstname','lastname','email','created','last_login_date','last_login_ip');
@@ -256,6 +398,91 @@ class Users extends MY_Controller {
 	$this->data['users_detail']=$users['users_detail']->result();
 	$this->load->view('admin/users/export_user',$this->data);
 	}
+
+	/**
+	 *
+	 * This function loads the pet owner dashboard
+	 */
+	public function display_pet_owner_dashboard(){
+
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$this->data['heading'] = 'Pet Owner Dashboard';
+			$condition = 'where `group`="User" AND `user_role` = "pet_owner" order by `created` desc';
+			$this->data['usersList'] = $this->user_model->get_users_details($condition);
+
+			$this->load->view('admin/users/display_pet_owner_dashboard',$this->data);
+		}
+	}
+
+	/**
+	 *
+	 * This function loads the pet owner list page
+	 */
+	public function display_pet_owner_list(){
+
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$this->data['heading'] = 'Members List';
+			$condition = 'where `group`="User" AND `user_role` = "pet_owner" order by `created` desc';
+			$this->data['usersList'] = $this->user_model->get_users_details($condition);
+
+			$this->db->select('t1.id,t1.mobile_number,t1.full_name,t1.user_name,t1.profile_name,t1.user_role,t1.mobile_verification_code,t1.group,t1.email,t1.status,t1.email,t1.last_login_date,t1.last_login_ip, t2.*')
+			   ->from('fc_users as t1')
+			   ->join('user_pet_owner as t2', 't1.id = t2.user_id', LEFT)
+			   ->where_in('t1.user_role',array('pet_owner'));
+
+			$query 	= $this->db->get();
+			$this->data['data'] = $query->result_array();
+
+			$this->load->view('admin/users/display_pet_owner_list',$this->data);
+		}
+	}
+
+	/**
+	 *
+	 * This function loads the pet sitter dashboard
+	 */
+	public function display_pet_sitter_dashboard(){
+
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$this->data['heading'] = 'Pet Sitter Dashboard';
+			$condition = 'where `group`="User" AND `user_role` = "pet_sitter" order by `created` desc';
+			$this->data['usersList'] = $this->user_model->get_users_details($condition);
+
+			$this->load->view('admin/users/display_pet_sitter_dashboard',$this->data);
+		}
+	}
+
+	/**
+	 *
+	 * This function loads the pet sitter list page
+	 */
+	public function display_pet_sitter_list(){
+
+		if ($this->checkLogin('A') == ''){
+			redirect('admin');
+		}else {
+			$this->data['heading'] = 'Members List';
+			$condition = 'where `group`="User" AND `user_role` = "pet_sitter" order by `created` desc';
+			$this->data['usersList'] = $this->user_model->get_users_details($condition);
+
+			$this->db->select('t1.id,t1.mobile_number,t1.full_name,t1.user_name,t1.profile_name,t1.user_role,t1.mobile_verification_code,t1.group,t1.email,t1.status,t1.email,t1.last_login_date,t1.last_login_ip, t2.*')
+			   ->from('fc_users as t1')
+			   ->join('user_pet_sitter as t2', 't1.id = t2.user_id', LEFT)
+			   ->where_in('t1.user_role',array('pet_sitter'));
+
+			$query 	= $this->db->get();
+			$this->data['data'] = $query->result_array();
+
+			$this->load->view('admin/users/display_pet_sitter_list',$this->data);
+		}
+	}
+
 }
 
 /* End of file users.php */

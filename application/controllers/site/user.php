@@ -1,11 +1,11 @@
 <?php if (! defined ( 'BASEPATH' ))exit ( 'No direct script access allowed' );
 
-/** 
+/**
  *
  * User related functions
- * 
+ *
  * @author Teamtweaks
- *        
+ *
  */
 class User extends MY_Controller {
 	function __construct() {
@@ -16,13 +16,13 @@ class User extends MY_Controller {
 				'date',
 				'form',
 				'email',
-				'url' 
+				'url'
 		) );
 		$this->load->library ( array (
 				'encrypt',
 				'form_validation',
 				'linkedin',
-				'session' 
+				'session'
 		) );
 		$this->load->model ( array (
 				'user_model',
@@ -37,37 +37,37 @@ class User extends MY_Controller {
 		if ($_SESSION ['sMainCategories'] == '') {
 			$sortArr1 = array (
 					'field' => 'cat_position',
-					'type' => 'asc' 
+					'type' => 'asc'
 			);
 			$sortArr = array (
-					$sortArr1 
+					$sortArr1
 			);
 			$_SESSION ['sMainCategories'] = $this->product_model->get_all_details ( CATEGORY, array (
 					'rootID' => '0',
-					'status' => 'Active' 
+					'status' => 'Active'
 			), $sortArr );
 		}
 		$this->data ['mainCategories'] = $_SESSION ['sMainCategories'];
-		
+
 		if ($_SESSION ['sColorLists'] == '') {
 			$_SESSION ['sColorLists'] = $this->user_model->get_all_details ( LIST_VALUES, array (
-					'list_id' => '1' 
+					'list_id' => '1'
 			) );
 		}
 		$this->data ['mainColorLists'] = $_SESSION ['sColorLists'];
-		
+
 		$this->data ['loginCheck'] = $this->checkLogin ( 'U' );
 		$this->data ['likedProducts'] = array ();
 		if ($this->data ['loginCheck'] != '') {
 			$this->data ['WishlistUserDetails'] = $this->user_model->get_all_details ( USERS, array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			) );
 			$this->data ['likedProducts'] = $this->user_model->get_all_details ( PRODUCT_LIKES, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 		}
 	}
-	
+
 	/**
 	 * Function for quick signup
 	 */
@@ -76,7 +76,7 @@ class User extends MY_Controller {
 		$returnStr ['success'] = '0';
 		if (valid_email ( $email )) {
 			$condition = array (
-					'email' => $email 
+					'email' => $email
 			);
 			$duplicateMail = $this->user_model->get_all_details ( USERS, $condition );
 			if ($duplicateMail->num_rows () > 0) {
@@ -84,7 +84,7 @@ class User extends MY_Controller {
 			} else {
 				$fullname = substr ( $email, 0, strpos ( $email, '@' ) );
 				$checkAvail = $this->user_model->get_all_details ( USERS, array (
-						'user_name' => $fullname 
+						'user_name' => $fullname
 				) );
 				if ($checkAvail->num_rows () > 0) {
 					$avail = FALSE;
@@ -95,7 +95,7 @@ class User extends MY_Controller {
 				while ( ! $avail ) {
 					$username = $fullname . rand ( 1111, 999999 );
 					$checkAvail = $this->user_model->get_all_details ( USERS, array (
-							'user_name' => $username 
+							'user_name' => $username
 					) );
 					if ($checkAvail->num_rows () > 0) {
 						$avail = FALSE;
@@ -120,7 +120,7 @@ class User extends MY_Controller {
 		}
 		echo json_encode ( $returnStr );
 	}
-	
+
 	/**
 	 * Function for quick signup update
 	 */
@@ -136,7 +136,7 @@ class User extends MY_Controller {
 			$email = $this->input->post ( 'email' );
 			$condition = array (
 					'user_name' => $username,
-					'email !=' => $email 
+					'email !=' => $email
 			);
 			$duplicateName = $this->user_model->get_all_details ( USERS, $condition );
 			if ($duplicateName->num_rows () > 0) {
@@ -156,21 +156,21 @@ class User extends MY_Controller {
 		if ($this->checkLogin ( 'U' ) != '') {
 			redirect ( base_url () );
 		} else {
-			
+
 			$quick_user_name = $this->session->userdata ( 'quick_user_email' );
 			if ($quick_user_name == '') {
 				redirect ( base_url () );
 			} else {
 				$condition = array (
-						'email' => $quick_user_name 
+						'email' => $quick_user_name
 				);
 				$userDetails = $this->user_model->get_all_details ( USERS, $condition );
-				
-				
-				
+
+
+
 				if ($userDetails->num_rows () == 1) {
 					$this->send_confirm_mail ( $userDetails );
-					
+
 					$this->setErrorMessage ( 'success', 'Registration  Successfully Completed. Please Check Your Mail to Verify Registration.' );
 					redirect ( base_url () );
 				} else {
@@ -209,7 +209,7 @@ class User extends MY_Controller {
 		 * $returnStr['msg'] = 'Email id already exists';
 		 * }else {
 		 */
-		
+
 		$this->user_model->insertUserQuick_social ( $fullname, $username, $email, $pwd, $thumbnail );
 		$this->session->set_userdata ( 'quick_user_email', $email );
 		$returnStr ['msg'] = 'Successfully registered';
@@ -225,9 +225,9 @@ class User extends MY_Controller {
 		echo json_encode ( $returnStr );
 	}
 	public function registerUser() {
-	
+
 	 // echo '<pre>'; print_r($_POST); die;
-	
+
 		$returnStr ['success'] = '0';
 		$firstname = $this->input->post ( 'firstname' );
 		$lastname = $this->input->post ( 'lastname' );
@@ -236,26 +236,26 @@ class User extends MY_Controller {
 		$news_signup = $this->input->post ( 'news_signup' );
 		if (valid_email ( $email )) {
 			$condition = array (
-					'email' => $email 
+					'email' => $email
 			);
 			$duplicateMail = $this->user_model->get_all_details( USERS, $condition );
 			if ($duplicateMail->num_rows () > 0) {
-				$returnStr ['msg'] = 'Email id already exists'; 
+				$returnStr ['msg'] = 'Email id already exists';
 			} else {
 
-	            $expireddate = date ( 'Y-m-d', strtotime ( '+15 days' ) );
+	      $expireddate = date ( 'Y-m-d', strtotime ( '+15 days' ) );
 				$this->user_model->insertUserQuick ( $firstname, $lastname, $email, $pwd, $news_signup, $expireddate );
 				$this->session->set_userdata ( 'quick_user_name', $firstname );
-				
+
 				$this->session->set_userdata ( 'quick_user_email', $email );
-				
+
 				$usrDetails = $this->user_model->get_all_details ( USERS, $condition );
 				$this->send_confirm_mail ( $usrDetails );
 				//die;
 				$returnStr ['msg'] = 'Successfully registered';
 				//$returnStr ['success'] = '1';
 				//$this->login_user();
-				
+
 
 			}
 			$email = $this->input->post ( 'email' );
@@ -263,25 +263,25 @@ class User extends MY_Controller {
 			if (valid_email ( $email )) {
 			$condition = array (
 					'email' => $email
-					 
+
 			);
-			
+
 			$checkUser = $this->user_model->get_all_details(USERS, $condition);
 			if ($checkUser->num_rows () == '1') {
 				$userdata = array (
 						'fc_session_user_id' => $checkUser->row ()->id,
-						
-						'session_user_email' => $checkUser->row ()->email 
+
+						'session_user_email' => $checkUser->row ()->email
 				);
 				$this->session->set_userdata ( $userdata );
 				$datestring = "%Y-%m-%d %h:%i:%s";
 				$time = time ();
 				$newdata = array (
 						'last_login_date' => mdate ( $datestring, $time ),
-						'last_login_ip' => $this->input->ip_address () 
+						'last_login_ip' => $this->input->ip_address ()
 				);
 				$condition = array (
-						'id' => $checkUser->row ()->id 
+						'id' => $checkUser->row ()->id
 				);
 				$this->user_model->update_details ( USERS, $newdata, $condition );
 				if ($remember != '') {
@@ -290,34 +290,34 @@ class User extends MY_Controller {
 							'name' => 'admin_session',
 							'value' => $userid,
 							'expire' => 86400,
-							'secure' => FALSE 
+							'secure' => FALSE
 					);
 					$this->input->set_cookie ( $cookie );
-				} 
+				}
 
 				 $activities = array('user_id' => $checkUser->row ()->id, 'user_ip' => $this->input->ip_address (), 'name' => 'Registration', 'description' => "Registered", 'date' => date('Y-m-d H:i:s') );
-                       
+
                  //$this->user_model->update_user_activity($activities);
 
 				 $this->setErrorMessage ( 'success', 'You are Logged In ... !' );
-			}else{ 
+			}else{
 			$returnStr ['msg'] = 'Successfully failed 1';
 			}
 			}else{
 			$returnStr ['msg'] = 'Successfully failed 2';
-			}	
+			}
 		} else {
 			$returnStr ['msg'] = "Invalid email id";
 		}
 		echo json_encode ( $returnStr );
 
-		
+
 	}
-	
-	
-	
+
+
+
 	public function registerUser_bck(){
-	
+
 		$returnStr['success'] = '0';
 		$firstname = $this->input->post ( 'firstname' );
 		$lastname = $this->input->post ( 'lastname' );
@@ -333,8 +333,8 @@ class User extends MY_Controller {
 							$this->setErrorMessage('error','Email id already exists');
 							redirect('sign_up');
 						}else {
-							
-						
+
+
 						$returnMail = $this->user_model->get_all_details(USERS,$condition);
 						//echo "<pre>"; print_r($returnMail->result_array());		 die;
 						if($returnMail->num_rows()>0){
@@ -346,23 +346,23 @@ class User extends MY_Controller {
 							$this->send_confirm_mail($usrDetails);
 							$this->setErrorMessage('success','Successfully registered');
 							//$returnStr['success'] = '1';
-							
+
 							/* auto login */
-							
+
 							$returnStr['status_code'] = 0;
 							$returnStr['message'] = 'welcome';
-			
-			
-									 $email = $this->input->post('email'); 
+
+
+									 $email = $this->input->post('email');
 									// print_r($email);  die;
-									 
+
 									$pwd = md5($this->input->post('pwd'));
 									//$remember = $this->input->post('remember');
-									
+
 									if (valid_email($email)){
 									$condition = array('email'=>$email,'password'=>$pwd,'status'=>'Active');
 									$checkUser = $this->user_model->get_all_details(USERS,$condition);
-									 $str = $this->db->last_query(); 
+									 $str = $this->db->last_query();
 									if ($checkUser->num_rows() == '1')
 										{
 											$userdata = array(
@@ -390,31 +390,31 @@ class User extends MY_Controller {
 											);
 											$this->input->set_cookie($cookie);
 										}
-										
+
 										$this->setErrorMessage('success','Welcome back!');
 										$returnStr['status_code'] = 1;
 										redirect(base_url());
 									}else {
 										$this->setErrorMessage('error','Invalid login details');
 									}
-			
-			
-			
-			
+
+
+
+
 			}
 			else {
 				$this->setErrorMessage('error','Invalid email id');
 			}
-							
-							
-							
-							
+
+
+
+
 							/* auto login End */
-							
-							
-							
-							
-							
+
+
+
+
+
 						}
 			}else {
 				$this->setErrorMessage('error','Invalid email id');
@@ -422,14 +422,14 @@ class User extends MY_Controller {
 
 		redirect(base_url());
 	}
-	
+
 	public function resend_confirm_mail() {
 		$mail = $this->input->post ( 'mail' );
 		if ($mail == '') {
 			echo '0';
 		} else {
 			$condition = array (
-					'email' => $mail 
+					'email' => $mail
 			);
 			$userDetails = $this->user_model->get_all_details ( USERS, $condition );
 			$this->send_confirm_mail ( $userDetails );
@@ -439,9 +439,9 @@ class User extends MY_Controller {
 	public function dashboard_resend_confirm_mail() {
 		$mail = $this->data ['userDetails']->row ()->email;
 		if ($mail != '') {
-			
+
 			$condition = array (
-					'email' => $mail 
+					'email' => $mail
 			);
 			$userDetails = $this->user_model->get_all_details (USERS,$condition );
 			$this->send_confirm_mail ( $userDetails );
@@ -459,24 +459,24 @@ class User extends MY_Controller {
 		}
 		echo json_encode ( $returnStr );
 	}
-	public function send_confirm_mail($userDetails = '') {	
-	
+	public function send_confirm_mail($userDetails = '') {
+
 		$uid = $userDetails->row ()->id;
 		$email = $userDetails->row ()->email;
 		$name = $userDetails->row ()->firstname."    ".$userDetails->row ()->lastname;
-		
+
 		$randStr = $this->get_rand_str ('10');
 		$condition = array (
-				'id' => $uid 
+				'id' => $uid
 		);
 		$dataArr = array (
-				'verify_code' => $randStr 
+				'verify_code' => $randStr
 		);
 		$this->user_model->update_details ( USERS, $dataArr, $condition );
 		//$newsid = '3'; local
 		$newsid = '35';
 		$template_values = $this->user_model->get_newsletter_template_details( $newsid );
-		
+
 		$user=$userDetails->row ()->firstname."     ".$userDetails->row ()->lastname;
 		$cfmurl = base_url () . 'site/user/confirm_register/' . $uid . "/" . $randStr . "/confirmation";
 		$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
@@ -489,13 +489,13 @@ class User extends MY_Controller {
 		extract ( $adminnewstemplateArr );
 		//echo $this->data ['siteContactMail'];die;
 		$header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-		
+
 		$message .= '<body>';
 		include ('./newsletter/registeration' . $newsid . '.php');
-		
+
 		$message .= '</body>
 			';
-		
+
 		if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 			$sender_email = $this->data ['siteContactMail'];
 			$sender_name = $this->data ['siteTitle'];
@@ -504,10 +504,10 @@ class User extends MY_Controller {
 			$sender_name = $template_values ['sender_name'];
 			$sender_email = $template_values ['sender_email'];
 		}
-		
+
 		// add inbox from mail
 		// $this->product_model->simple_insert(INBOX,array('sender_id'=>$sender_email,'user_id'=>$email,'mailsubject'=>$template_values['news_subject'],'description'=>stripslashes($message)));
-		
+
 		$email_values = array (
 				'mail_type' => 'html',
 				'from_mail_id' => $sender_email,
@@ -516,25 +516,25 @@ class User extends MY_Controller {
 				'subject_message' => $template_values ['news_subject'],
 				'body_messages' => trim($message)
 		);
-		
+
 		//print_r(stripslashes($message));die;
-		
+
 		$email_send_to_common = $this->user_model->common_email_send ( $email_values );
 	}
-	
+
 	public function send_verify_mail($userDetails = '') {
-	
+
 	   // echo "<script>alert('hi')</script>";die;
 		$uid = $userDetails->row ()->id;
 		$username = $userDetails->row ()->user_name;
 		$email = $userDetails->row ()->email;
-		
+
 		$randStr = $this->get_rand_str ( '10' );
 		$condition = array (
-				'user_id' => $uid 
+				'user_id' => $uid
 		);
 		$dataArr = array (
-				'verify_code' => $randStr 
+				'verify_code' => $randStr
 		);
 		$user_id_exist=$this->user_model->get_all_details(REQUIREMENTS,array('user_id'=>$uid));
 		//echo " hgdfh".$uid.$user_id_exist->num_rows(); die;
@@ -556,7 +556,7 @@ class User extends MY_Controller {
 		}
 		$newsid = '18';
 		$template_values = $this->user_model->get_newsletter_template_details( $newsid );
-		
+
 		$user=$userDetails->row ()->firstname.' '.$userDetails->row ()->lastname;
 		$cfmurl = base_url () . 'site/user/confirm_verify/' . $uid . "/" . $randStr . "/confirmation";
 		$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
@@ -569,17 +569,17 @@ class User extends MY_Controller {
 		extract ( $adminnewstemplateArr );
 		//echo $this->data ['siteContactMail'];die;
 		$header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-		
+
 		$message .= '<!DOCTYPE HTML>
 			<html>
 			<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 			<meta name="viewport" content="width=device-width"/><body>';
 		include ('./newsletter/registeration' . $newsid . '.php');
-		
+
 		$message .= '</body>
 			</html>';
-		
+
 		if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 			$sender_email = $this->data ['siteContactMail'];
 			$sender_name = $this->data ['siteTitle'];
@@ -588,7 +588,7 @@ class User extends MY_Controller {
 			$sender_name = $template_values ['sender_name'];
 			$sender_email = $template_values ['sender_email'];
 		}
-		
+
 		// add inbox from mail
 		// $this->product_model->simple_insert(INBOX,array('sender_id'=>$sender_email,'user_id'=>$email,'mailsubject'=>$template_values['news_subject'],'description'=>stripslashes($message)));
 		/* $adminDetails=$this->user_model->get_all_details(ADMIN_SETTINGS,array('id'=>1));
@@ -600,7 +600,7 @@ class User extends MY_Controller {
 				'to_mail_id' => $email,
 				'cc_mail_id' => $sender_email,
 				'subject_message' => $template_values ['news_subject'],
-				'body_messages' => $message 
+				'body_messages' => $message
 		);
 		 /* foreach($email_values as $emailV)
 		{
@@ -608,10 +608,10 @@ class User extends MY_Controller {
 		echo '<br>';
 		}die;   */
 		//print_r(stripslashes($message));die;
-		
+
 		$email_send_to_common = $this->user_model->common_email_send ( $email_values );
 	}
-	
+
 	public function signup_form() {
 		if ($this->checkLogin ( 'U' ) != '') {
 			redirect ( base_url () );
@@ -620,7 +620,7 @@ class User extends MY_Controller {
 			$this->load->view ( 'site/user/signup.php', $this->data );
 		}
 	}
-	
+
 	/**
 	 * Loading login page
 	 */
@@ -638,26 +638,26 @@ class User extends MY_Controller {
 		$returnStr ['message'] = 'welcome';
 		//print_r($_POST);die;
 		$email = $this->input->post ( 'email' );
-		
+
 		$pwd = md5 ( $this->input->post ( 'password' ) );
-		
+
 		$bpath = $this->input->post ('bpath');
-		
+
 		$remember = $this->input->post ( 'remember' );
-		
+
 		if (valid_email($email)) {
 			$condition = array (
 					'email' => $email,
 					'password' => $pwd,
-					'status' => 'Active' 
+					'status' => 'Active'
 			);
 			$checkUser = $this->user_model->get_all_details ( USERS, $condition );
 			//echo $this->db->last_query();die;
 			if ($checkUser->num_rows () == '1') {
 				$userdata = array (
 						'fc_session_user_id' => $checkUser->row ()->id,
-						
-						'session_user_email' => $checkUser->row ()->email 
+
+						'session_user_email' => $checkUser->row ()->email
 				);
 				$this->session->set_userdata ( $userdata );
 				$datestring = "%Y-%m-%d %h:%i:%s";
@@ -668,7 +668,7 @@ class User extends MY_Controller {
 						'login_hit' => 0
 				);
 				$condition = array (
-						'id' => $checkUser->row ()->id 
+						'id' => $checkUser->row ()->id
 				);
 				$this->user_model->update_details ( USERS, $newdata, $condition );
 				if ($remember != '') {
@@ -677,28 +677,28 @@ class User extends MY_Controller {
 							'name' => 'admin_session',
 							'value' => $userid,
 							'expire' => 86400,
-							'secure' => FALSE 
+							'secure' => FALSE
 					);
 					$this->input->set_cookie ( $cookie );
 				}
 
 				 $activities = array('user_id' => $checkUser->row ()->id, 'user_ip' => $this->input->ip_address (), 'name' => 'Login', 'description' => "Logged on", 'date' => date('Y-m-d H:i:s') );
-                       
+
                  //$this->user_model->update_user_activity($activities);
-				
+
 				$this->setErrorMessage ( 'success', 'You are Logged In ... !' );
 				$returnStr ['status_code'] = 1;
-			} 
+			}
 			else
-			{	
+			{
 				$condition = array (
 					'email' => $email,
-					'status' => 'Active' 
+					'status' => 'Active'
 				);
 			$checkUser = $this->user_model->get_all_details ( USERS, $condition );
 			//echo $this->db->last_query();die;
 			$login_hit = 0;
-			if ($checkUser->num_rows () == '1') 
+			if ($checkUser->num_rows () == '1')
 			{
 				$login_hit = $checkUser->row()->login_hit;
 				$login_hit = $login_hit+1;
@@ -706,7 +706,7 @@ class User extends MY_Controller {
 						'login_hit' => $login_hit
 				);
 				$condition = array (
-						'id' => $checkUser->row ()->id 
+						'id' => $checkUser->row ()->id
 				);
 				$this->user_model->update_details ( USERS, $newdata, $condition );
 			}
@@ -718,10 +718,10 @@ class User extends MY_Controller {
 			{
 			$pwd = $this->get_rand_str ( '6' );
 			$newdata = array (
-				'password' => md5 ( $pwd ) 
+				'password' => md5 ( $pwd )
 			);
 			$condition = array (
-				'email' => $email 
+				'email' => $email
 			);
 			$this->user_model->update_details ( USERS, $newdata, $condition );
 			$this->send_user_password ( $pwd, $checkUser );
@@ -729,14 +729,14 @@ class User extends MY_Controller {
 			$returnStr ['message'] = 'New password sent to your email';
 			$returnStr ['status_code'] = 1;
 			}
-			
+
 			}
 		} else {
 			$returnStr ['message'] = "Invalid email id";
 		}
 		echo json_encode ( $returnStr );
 	}
-	
+
 	/**
 	 * ************************* added 14/05/2014 --------------------------------
 	 */
@@ -746,29 +746,29 @@ class User extends MY_Controller {
 		$paypalemail = $this->input->post ( 'paypalemail' );
 		$bank_name = $this->input->post ( 'bank_name' );
 		$bank_no = $this->input->post ( 'bank_no' );
-		
+
 		$condition = array (
-				'id' => $this->checkLogin ( 'U' ) 
+				'id' => $this->checkLogin ( 'U' )
 		);
 		$dataArr = array (
 				'bank_name' => $bank_name,
 				'bank_no' => $bank_no,
 				'bank_code' => $bank_code,
-				'paypal_email' => $paypalemail 
+				'paypal_email' => $paypalemail
 		);
 		$this->user_model->update_details ( USERS, $dataArr, $condition );
 		$returnStr ['message'] = "success" . $bank_code . $paypalemail;
-		
+
 		echo json_encode ( $returnStr );
 	}
-	
+
 	/* -------------------- Rental enquiry added 15/04/2014 ----- */
 	public function rentalEnquiry() {
 		$returnStr ['status_code'] = 1;
-		
+
 		$NoOfDays = $this->getDatesFromRange ( date ( 'Y-m-d', strtotime ( $_REQUEST ['checkin'] ) ), date ( 'Y-m-d', strtotime ( $_REQUEST ['checkout'] ) ) );
 		$dateCheck = $this->user_model->get_all_details ( CALENDARBOOKING, array (
-				'PropId' => $_REQUEST ['prd_id'] 
+				'PropId' => $_REQUEST ['prd_id']
 		) );
 		// echo $this->db->last_query();
 		// print_r($NoOfDays);die;
@@ -795,19 +795,19 @@ class User extends MY_Controller {
 					'user_id' => $this->checkLogin ( 'U' ),
 					'renter_id' => $this->input->post ( 'renter_id' ),
 					'NoofGuest' => $this->input->post ( 'NoofGuest' ),
-					'prd_id' => $this->input->post ( 'prd_id' ) 
+					'prd_id' => $this->input->post ( 'prd_id' )
 			);
 			$booking_status = array (
-					'booking_status' => 'Enquiry' 
+					'booking_status' => 'Enquiry'
 			);
 			$dataArr = array_merge ( $dataArr, $booking_status );
 			$this->user_model->commonInsertUpdate ( RENTALENQUIRY, 'insert', array (), $dataArr, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			$insertid = $this->db->insert_id ();
 			$this->session->set_userdata ( 'EnquiryId', $insertid );
 			$returnStr ['message'] = "Contact not send.";
-			
+
 			$rentalArr = $this->user_model->view_product_details_email ( $_REQUEST ['prd_id'] );
 			// echo $this->db->last_query();die;
 			$proImages = base_url () . PRODUCTPATH . $rentalArr->row ()->product_image;
@@ -819,7 +819,7 @@ class User extends MY_Controller {
 					'rental_name' => $rentalArr->row ()->product_title,
 					'rental_image' => $proImages,
 					'owner_email' => $rentalArr->row ()->email,
-					'owner_phone' => $rentalArr->row ()->phone_no 
+					'owner_phone' => $rentalArr->row ()->phone_no
 			);
 			$dataArr = array_merge ( $dataArr, $rental_Details );
 			// echo json_encode($returnStr);
@@ -829,17 +829,17 @@ class User extends MY_Controller {
 		echo json_encode ( $returnStr );
 	}
 	public function rentalEnquiry_booking() {
-	
+
 		$returnStr ['status_code'] = 1;
-		
+
 		$NoOfDays = $this->getDatesFromRange(date('Y-m-d', strtotime($_REQUEST['checkin'])),date('Y-m-d',strtotime($_REQUEST['checkout'])));
 		$dateCheck = $this->user_model->get_all_details ( CALENDARBOOKING, array ('PropId'=>$_REQUEST['prd_id']));
-		
+
 		if ($dateCheck->num_rows () > 0) {
-			
+
 			foreach ( $dateCheck->result () as $dateCheckStr ) {
 				if (in_array ( $dateCheckStr->the_date, $NoOfDays )) {
-					
+
 					$returnStr ['status_code'] = '';
 					$returnStr ['message'] = "Rental date already booked";
 					$returnStr ['status_code'] = 10;
@@ -847,61 +847,61 @@ class User extends MY_Controller {
 				}
 			}
 		}
-		
-		
+
+
 		if ($returnStr ['status_code'] != 10) {
-			
+
 			$dataArr = array (
 					'checkin' => date ( 'Y-m-d H:i:s', strtotime ( str_replace ( '-', '/', $this->input->post ( 'checkin' ) ) ) ),
 					'checkout' => date ( 'Y-m-d H:i:s', strtotime ( str_replace ( '-', '/', $this->input->post ( 'checkout' ) ) ) ),
 					'Enquiry' => $this->input->post ( 'Enquiry' ),
 					'numofdates' => $this->input->post ( 'numofdates' ),
-					
+
 					'caltophone' => $this->input->post ( 'caltophone' ),
 					'enquiry_timezone' => $this->input->post ( 'enquiry_timezone' ),
 					'user_id' => $this->checkLogin ( 'U' ),
 					'renter_id' => $this->input->post ( 'renter_id' ),
 					'NoofGuest' => $this->input->post ( 'NoofGuest' ),
-					'prd_id' => $this->input->post ( 'prd_id' ) 
+					'prd_id' => $this->input->post ( 'prd_id' )
 			);
-			
-			
+
+
 			$booking_status = array (
 					'booking_status' => 'Enquiry'
-						
+
 			);
 			$dataArr1 = array_merge ( $dataArr, $booking_status );
-			
+
 			//echo '<pre>'; print_r($dataArr1);die;
-			
-			
-			
-			
-			
+
+
+
+
+
 			$this->user_model->commonInsertUpdate (RENTALENQUIRY, 'insert', array (), $dataArr1, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
-			
-			
-			
+
+
+
 			//echo $this->db->last_query();die;
 			$insertid = $this->db->insert_id ();
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
 			$this->data['bookingno']=$this->user_model->get_all_details(RENTALENQUIRY,array('id'=>$insertid));
 			//echo $this->db->last_query();die;
 			if($this->data['bookingno']->row()->Bookingno=='' || $this->data['bookingno']->row()->Bookingno==NULL) {
-			
+
 			$val = 10*$insertid+8;
 			$val = 1500000+$val;
 			// $bval ="150000".$val;
 			$bookingno ="EN".$val;
-			
-			
+
+
 			$newdata = array (
 						'Bookingno' => $bookingno
 				);
@@ -909,26 +909,26 @@ class User extends MY_Controller {
 						'id' => $insertid
 				);
 				$this->user_model->update_details (RENTALENQUIRY,$newdata,$condition);
-			} 
-			
+			}
+
 			//$this->emailhostreservationreq($insertid);
 			//$this->traveller_reservation($insertid);
-			
+
 			$this->session->set_userdata ( 'EnquiryId', $insertid );
 			$returnStr ['message'] = "Contact not send.";
-			
-			
+
+
 		}
-		
+
 		// print_r($returnStr);die;
 		echo json_encode ( $returnStr );
 	}
-	
+
 	/* Booking confirmation mail */
-	
-	
+
+
 	public function emailhostreservationreq($id) {
-	
+
 			$this->data['bookingmail'] = $this->user_model->getbookeduser_detail($id);
 			$price = $this->data['bookingmail']->row()->price * $this->data['bookingmail']->row()->noofdates;
 
@@ -936,17 +936,17 @@ class User extends MY_Controller {
 			$checkoutdate =date('d-M-Y',strtotime($this->data['bookingmail']->row()->checkout));
 
 			$this->data['hostdetail'] = $this->user_model->get_all_details(USERS,array('id'=>$this->data['bookingmail']->row()->renter_id));
-			
+
 			$hostemail = $this->data['hostdetail']->row()->email;
-			$hostname = $this->data['hostdetail']->row()->user_name;			
-			$to = $this->data['bookingmail']->row()->email; 
-			
+			$hostname = $this->data['hostdetail']->row()->user_name;
+			$to = $this->data['bookingmail']->row()->email;
+
 			$price = $this->data['bookingmail']->row()->price * $this->data['bookingmail']->row()->noofdates;
-			
+
 			$totalPrice = $this->data['bookingmail']->row()->totalAmt-$this->data['bookingmail']->row()->serviceFee;
-			
+
 			$totalPrice = number_format($totalPrice-(($totalPrice*10)/100), 2, '.', '');
-	        
+
 		$newsid = '19';
 		$template_values = $this->user_model->get_newsletter_template_details ( $newsid );
 		$adminnewstemplateArr = array (
@@ -964,13 +964,13 @@ class User extends MY_Controller {
 		extract ( $adminnewstemplateArr );
 		$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
 		$header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-		
+
 		$message .= '<body>';
 		include ('./newsletter/registeration' . $newsid . '.php');
-		
+
 		$message .= '</body>
 			';
-		
+
 		if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 			$sender_email = $this->config->item ( 'site_contact_mail' );
 			$sender_name = $this->config->item ( 'email_title' );
@@ -978,41 +978,41 @@ class User extends MY_Controller {
 			$sender_name = $template_values ['sender_name'];
 			$sender_email = $template_values ['sender_email'];
 		}
-		
-		
-		
+
+
+
 		$email_values = array (
 				'mail_type' => 'html',
 				'from_mail_id' => $sender_email,
 				'mail_name' => $sender_name,
-				'to_mail_id' => $hostemail, 
+				'to_mail_id' => $hostemail,
 				'subject_message' => $template_values['news_subject'],
-				'body_messages' => $message 
+				'body_messages' => $message
 		);
-		
+
 		//echo '<pre>'; print_r($message); die;
-			
-			 
+
+
 	$this->contact_model->common_email_send($email_values);
-	
-	
+
+
 	}
-	
-	
-	
+
+
+
 	public function traveller_reservation($id) {
-	
+
 	        $this->data['bookingmail'] = $this->user_model->getbookeduser_detail($id);
 			$price = $this->data['bookingmail']->row()->price * $this->data['bookingmail']->row()->noofdates;
 
 			$checkindate =date('d-M-Y',strtotime($this->data['bookingmail']->row()->checkin));
 			$checkoutdate =date('d-M-Y',strtotime($this->data['bookingmail']->row()->checkout));
-		
+
 			$this->data['hostdetail'] = $this->user_model->get_all_details(USERS,array('id'=>$this->data['bookingmail']->row()->renter_id));
 			$hostname = $this->data['hostdetail']->row->email;
-			$hostemail = $this->data['hostdetail']->row->user_name;			
-			$to  = $this->data['bookingmail']->row()->email; 
-			
+			$hostemail = $this->data['hostdetail']->row->user_name;
+			$to  = $this->data['bookingmail']->row()->email;
+
 			// echo $this->data['bookingmail']->row()->noofdates;
 			// echo $this->data['bookingmail']->row()->checkin;
 			// echo $this->data['bookingmail']->row()->checkout;
@@ -1021,13 +1021,13 @@ class User extends MY_Controller {
 			// echo $this->data['bookingmail']->row()->name;
 			$price = $this->data['bookingmail']->row()->price * $this->data['bookingmail']->row()->noofdates;
 			$prd_id =$this->data['bookingmail']->row()->prd_id;
-			
+
 		//	$this->data['productimage'] = $this->user_model->get_detail_all(PRODUCT_PHOTOS,array('product_id'=>$prd_id));
 			$this->data['productimage'] = $this->user_model->getproductimage($prd_id);
 			//echo $prd_id;
 			//echo '<pre>'; print_r($this->data['productimage']->row()->product_image);die;
-			
-	        
+
+
 		$newsid = '20';
 		$template_values = $this->user_model->get_newsletter_template_details ($newsid);
 		$adminnewstemplateArr = array (
@@ -1045,14 +1045,14 @@ class User extends MY_Controller {
 		);
 		extract ( $adminnewstemplateArr );
 		$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
-		
+
 		$header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-		
+
 		$message .= '<body>';
 		include ('./newsletter/registeration' . $newsid . '.php');
-		
+
 		$message .= '</body>';
-		
+
 		if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 			$sender_email = $this->config->item ( 'site_contact_mail' );
 			$sender_name = $this->config->item ( 'email_title' );
@@ -1060,68 +1060,68 @@ class User extends MY_Controller {
 			$sender_name = $template_values ['sender_name'];
 			$sender_email = $template_values ['sender_email'];
 		}
-		
+
 		$email_values = array (
 				'mail_type' => 'html',
 				'from_mail_id' => $sender_email,
 				'mail_name' => $sender_name,
 				'to_mail_id' => $this->data['bookingmail']->row()->email,
 				'subject_message' => $template_values ['news_subject'],
-				'body_messages' => $message 
+				'body_messages' => $message
 		);
-		//echo "<pre>";print_r($message);die; 
+		//echo "<pre>";print_r($message);die;
 			$this->contact_model->common_email_send($email_values);
-	
-	
+
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 	/* email send after enquiry */
 	public function contact_owner($dataArr) {
-		
+
 		// ---------------email to user---------------------------
 		if ($dataArr ['renter_id'] > 0) {
 			$UserDetails = $this->user_model->get_all_details ( USERS, array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			) );
 			$emailid = $UserDetails->row ()->email;
 			$this->session->set_userdata ( 'ContacterEmail', $emailid );
-			
+
 			$newsid = '1';
 			$template_values = $this->contact_model->get_newsletter_template_details ( $newsid );
-			
+
 			$cfmurl = base_url () . 'site/user/confirm_register/' . $uid . "/" . $randStr . "/confirmation";
 			$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
 			$adminnewstemplateArr = array (
 					'email_title' => $this->config->item ( 'email_title' ),
-					'logo' => $this->data ['logo'] 
+					'logo' => $this->data ['logo']
 			);
-			
+
 			extract ( $adminnewstemplateArr );
 			extract ( $dataArr );
-			
+
 			// $ddd =htmlentities($template_values['news_descrip'],null,'UTF-8');
 			$header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-			
+
 			$message .= '<!DOCTYPE HTML>
 							<html>
 							<head>
 							<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 							<meta name="viewport" content="width=device-width"/><body>';
 			include ('./newsletter/registeration' . $newsid . '.php');
-			
+
 			$message .= '</body>
 							</html>';
-			
+
 			if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 				$sender_email = $this->data ['siteContactMail'];
 				$sender_name = $this->data ['siteTitle'];
@@ -1129,37 +1129,37 @@ class User extends MY_Controller {
 				$sender_name = $template_values ['sender_name'];
 				$sender_email = $template_values ['sender_email'];
 			}
-			
+
 			// add inbox from mail
 			$this->contact_model->simple_insert ( INBOX, array (
 					'sender_id' => $owner_email,
 					'user_id' => $emailid,
 					'mailsubject' => $template_values ['news_subject'],
-					'description' => stripslashes ( $message ) 
+					'description' => stripslashes ( $message )
 			) );
-			
+
 			$email_values = array (
 					'mail_type' => 'html',
 					'from_mail_id' => $sender_email,
 					'mail_name' => $sender_name,
 					'to_mail_id' => $emailid,
 					'subject_message' => $template_values ['news_subject'],
-					'body_messages' => $message 
+					'body_messages' => $message
 			);
-			
+
 			$email_send_to_common = $this->contact_model->common_email_send ( $email_values );
-			
+
 			// $user_input_values = $this->input->post();
-			
+
 			$this->mail_owner_admin ( $dataArr );
 		}
 		// redirect(base_url('rental/'.$this->input->post('rental_id')));
 		/* echo '<!--<script>window.history.go(-1);</script>-->'; */
-		
+
 		// }
 	}
 	public function mail_owner_admin($got_values) { // print_r($got_values);die;
-	  
+
 		// email to admin
 		$header = '';
 		$adminnewstemplateArr = array ();
@@ -1169,28 +1169,28 @@ class User extends MY_Controller {
 		$sender_name = '';
 		$newsid = '9';
 		$template_values = $this->contact_model->get_newsletter_template_details ( $newsid );
-		
+
 		$adminnewstemplateArr = array (
 				'email_title' => $this->config->item ( 'email_title' ),
-				'logo' => $this->data ['logo'] 
+				'logo' => $this->data ['logo']
 		);
-		
+
 		extract ( $adminnewstemplateArr );
 		extract ( $got_values );
-		
+
 		$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
 		$header .= "Content-Type: text/plain; charset=ISO-8859-1\r\n";
-		
+
 		$message .= '<!DOCTYPE HTML>
 						<html>
 						<head>
 						<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 						<meta name="viewport" content="width=device-width"/><body>';
 		include ('./newsletter/registeration' . $newsid . '.php');
-		
+
 		$message .= '</body>
 						</html>';
-		
+
 		if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 			$sender_email = $this->data ['siteContactMail'];
 			$sender_name = $this->data ['siteTitle'];
@@ -1198,13 +1198,13 @@ class User extends MY_Controller {
 			$sender_name = $template_values ['sender_name'];
 			$sender_email = $template_values ['sender_email'];
 		}
-		
+
 		// add inbox from mail
 		$this->contact_model->simple_insert ( INBOX, array (
 				'sender_id' => $this->session->userdata ( 'ContacterEmail' ),
 				'user_id' => $sender_email,
 				'mailsubject' => $template_values ['news_subject'],
-				'description' => stripslashes ( $message ) 
+				'description' => stripslashes ( $message )
 		) );
 		$email_values2 = array (
 				'mail_type' => 'html',
@@ -1212,22 +1212,22 @@ class User extends MY_Controller {
 				'mail_name' => $sender_email,
 				'to_mail_id' => $sender_email,
 				'subject_message' => $template_values ['news_subject'],
-				'body_messages' => $message 
+				'body_messages' => $message
 		);
 		$email_send_to_common1 = $this->contact_model->common_email_send ( $email_values2 );
-		
+
 		// Email to owner
-		
+
 		if ($got_values ['renter_id'] > 0) {
 			$UserDetails = $this->user_model->get_all_details ( USERS, array (
-					'id' => $got_values ['renter_id'] 
+					'id' => $got_values ['renter_id']
 			) );
 			$emailid = $UserDetails->row ()->email;
 			$this->contact_model->simple_insert ( INBOX, array (
 					'sender_id' => $this->session->userdata ( 'ContacterEmail' ),
 					'user_id' => $emailid,
 					'mailsubject' => $template_values ['news_subject'],
-					'description' => stripslashes ( $message ) 
+					'description' => stripslashes ( $message )
 			) );
 			$email_values = array (
 					'mail_type' => 'html',
@@ -1235,14 +1235,14 @@ class User extends MY_Controller {
 					'mail_name' => $sender_name,
 					'to_mail_id' => $emailid,
 					'subject_message' => $template_values ['news_subject'],
-					'body_messages' => $message 
+					'body_messages' => $message
 			);
 			// echo"admin<pre>"; print_r($email_values2);echo "<br>";
 			// echo"owner"; print_r($email_values); die;
 			$this->session->unset_userdata ( 'ContacterEmail' );
 			$email_send_to_common = $this->contact_model->common_email_send ( $email_values );
 		}
-		
+
 		// print_r($message);die;
 	}
 	/* email send End */
@@ -1251,20 +1251,20 @@ class User extends MY_Controller {
 			$userdata = array (
 					'fc_session_user_id' => $userDetails->row ()->id,
 					'session_user_name' => $userDetails->row ()->user_name,
-					'session_user_email' => $userDetails->row ()->email 
+					'session_user_email' => $userDetails->row ()->email
 			);
 			$this->session->set_userdata ( $userdata );
 			$datestring = "%Y-%m-%d %h:%i:%s";
 			$time = time ();
 			$newdata = array (
 					'last_login_date' => mdate ( $datestring, $time ),
-					'last_login_ip' => $this->input->ip_address () 
+					'last_login_ip' => $this->input->ip_address ()
 			);
 			$condition = array (
-					'id' => $userDetails->row ()->id 
+					'id' => $userDetails->row ()->id
 			);
 			$this->user_model->update_details ( USERS, $newdata, $condition );
-			
+
 			$this->user_model->updategiftcard ( GIFTCARDS_TEMP, $this->checkLogin ( 'T' ), $userDetails->row ()->id );
 		} else {
 			redirect ( base_url () );
@@ -1277,17 +1277,17 @@ class User extends MY_Controller {
 		if ($mode == 'confirmation') {
 			$condition = array (
 					'verify_code' => $code,
-					'id' => $uid 
+					'id' => $uid
 			);
 			$checkUser = $this->user_model->get_all_details ( USERS, $condition );
 			if ($checkUser->num_rows () == 1) {
 				$conditionArr = array (
 						'id' => $uid,
-						'verify_code' => $code 
+						'verify_code' => $code
 				);
 				$dataArr = array (
 						'is_verified' => 'Yes'
-						//'status' => 'Active' 
+						//'status' => 'Active'
 				);
 				$this->user_model->update_details ( USERS, $dataArr, $condition );
 				$this->setErrorMessage ( 'success', 'Great going ! Your mail ID has been verified' );
@@ -1302,7 +1302,7 @@ class User extends MY_Controller {
 			redirect ( base_url () );
 		}
 	}
-	
+
 	public function confirm_verify() {
 		$uid = $this->uri->segment ( 4, 0 );
 		$code = $this->uri->segment ( 5, 0 );
@@ -1310,13 +1310,13 @@ class User extends MY_Controller {
 		if ($mode == 'confirmation') {
 			$condition = array (
 					'verify_code' => $code,
-					'user_id' => $uid 
+					'user_id' => $uid
 			);
 			$checkUser = $this->user_model->get_all_details ( REQUIREMENTS, $condition );
 			if ($checkUser->num_rows () == 1) {
 				$conditionArr = array (
 						'user_id' => $uid,
-						'verify_code' => $code 
+						'verify_code' => $code
 				);
 				$dataArr = array (
 						'id_verified' => 'yes'
@@ -1333,15 +1333,15 @@ class User extends MY_Controller {
 			redirect ( base_url () );
 		}
 	}
-	
+
 	public function logout_user() {
 		$datestring = "%Y-%m-%d %h:%i:%s";
 		$time = time ();
 		$newdata = array (
-				'last_logout_date' => mdate ( $datestring, $time ) 
+				'last_logout_date' => mdate ( $datestring, $time )
 		);
 		$condition = array (
-				'id' => $this->checkLogin ( 'U' ) 
+				'id' => $this->checkLogin ( 'U' )
 		);
 
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -1361,22 +1361,22 @@ class User extends MY_Controller {
 				'fc_session_user_id' => '',
 				'session_user_name' => '',
 				'session_user_email' => '',
-				'fc_session_temp_id' => '' 
+				'fc_session_temp_id' => ''
 		);
 		$this->session->unset_userdata ( $userdata );
-		
+
 		@session_start ();
 		unset ( $_SESSION ['token'] );
 		$twitter_return_values = array (
 				'tw_status' => '',
-				'tw_access_token' => '' 
+				'tw_access_token' => ''
 		);
 
-		
-		
+
+
 		$this->session->unset_userdata ( $twitter_return_values );
-		
-		$this->setErrorMessage ( 'success', 'Successfully logout from your account' );
+
+		$this->setErrorMessage ( 'success', 'Successfully logged out!' );
 		redirect ( base_url () );
 	}
 	public function forgot_password_form() {
@@ -1394,18 +1394,18 @@ class User extends MY_Controller {
 			$email = $this->input->post ( 'email' );
 			if (valid_email ( $email )) {
 				$condition = array (
-						'email' => $email 
+						'email' => $email
 				);
 				$checkUser = $this->user_model->get_all_details ( USERS, $condition );
-				
+
 				//echo '<pre>'; print_r($checkUser->result_array()); die;
 				if ($checkUser->num_rows () == '1') {
 					$pwd = $this->get_rand_str ( '6' );
 					$newdata = array (
-							'password' => md5 ( $pwd ) 
+							'password' => md5 ( $pwd )
 					);
 					$condition = array (
-							'email' => $email 
+							'email' => $email
 					);
 					$this->user_model->update_details ( USERS, $newdata, $condition );
 					$this->send_user_password ( $pwd, $checkUser );
@@ -1431,7 +1431,7 @@ class User extends MY_Controller {
 		$template_values = $this->user_model->get_newsletter_template_details ( $newsid );
 		$adminnewstemplateArr = array (
 				'email_title' => $this->config->item ( 'email_title' ),
-				'logo' => $this->data ['logo'] 
+				'logo' => $this->data ['logo']
 		);
 		extract ( $adminnewstemplateArr );
 		$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
@@ -1443,10 +1443,10 @@ class User extends MY_Controller {
 			<title>' . $template_values ['news_subject'] . '</title>
 			<body>';
 		include ('./newsletter/registeration' . $newsid . '.php');
-		
+
 		$message .= '</body>
 			</html>';
-		
+
 		if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 			$sender_email = $this->config->item ( 'site_contact_mail' );
 			$sender_name = $this->config->item ( 'email_title' );
@@ -1454,27 +1454,27 @@ class User extends MY_Controller {
 			$sender_name = $template_values ['sender_name'];
 			$sender_email = $template_values ['sender_email'];
 		}
-		
+
 		// add inbox from mail
 		// $this->product_model->simple_insert(INBOX,array('sender_id'=>$sender_email,'user_id'=>$query->row()->email,'mailsubject'=>'Password Reset','description'=>stripslashes($message)));
-		
+
 		$email_values = array (
 				'mail_type' => 'html',
 				'from_mail_id' => $sender_email,
 				'mail_name' => $sender_name,
 				'to_mail_id' => $query->row ()->email,
 				'subject_message' => 'Password Reset',
-				'body_messages' => $message 
+				'body_messages' => $message
 		);
-		
+
 		// print_r($message);die;
-		
+
 		$email_send_to_common = $this->product_model->common_email_send ( $email_values );
-		
+
 		/* echo $this->email->print_debugger();die; */
 	}
-	
-	
+
+
 	public function update_notifications() {
 		if ($this->checkLogin ( 'U' ) == '')
 			redirect ( base_url () );
@@ -1487,7 +1487,7 @@ class User extends MY_Controller {
 				}
 			}
 			$emailStr = substr ( $emailStr, 0, strlen ( $emailStr ) - 1 );
-			
+
 			$notyArr = $this->data ['notyArr'];
 			$mobileStr = '';
 			foreach ( $this->input->post () as $key => $val ) {
@@ -1497,12 +1497,12 @@ class User extends MY_Controller {
 			}
 			$mobileStr = substr ( $mobileStr, 0, strlen ( $mobileStr ) - 1 );
 			$dataArr = array (
-					'email_notifications' => $emailStr, 
-					'notifications' => $mobileStr 
+					'email_notifications' => $emailStr,
+					'notifications' => $mobileStr
 			);
 			//echo '<pre>';print_r($dataArr);die;
 			$condition = array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			);
 			$this->user_model->update_details ( USERS, $dataArr, $condition );
 			//echo $this->db->last_query();die;
@@ -1523,17 +1523,17 @@ class User extends MY_Controller {
 			}
 			$notyStr = substr ( $notyStr, 0, strlen ( $notyStr ) - 1 );
 			$dataArr = array (
-					'notifications' => $notyStr 
+					'notifications' => $notyStr
 			);
 			$condition = array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			);
 			$this->user_model->update_details ( USERS, $dataArr, $condition );
 			$this->setErrorMessage ( 'success', 'Mobile notifications settings saved successfully' );
 			redirect ( account );
 		}
 	}
-	
+
 	/**
 	 * * Membership Package Payment *
 	 */
@@ -1544,7 +1544,7 @@ class User extends MY_Controller {
 		$loginUserId = $this->checkLogin ( 'U' );
 		$excludeArr = array (
 				'plan',
-				'planpay' 
+				'planpay'
 		);
 		$MembershipIdArr = explode ( '-', $_POST ['member_pakage'] );
 		if ($MembershipIdArr [0] > 0) {
@@ -1554,72 +1554,72 @@ class User extends MY_Controller {
 			redirect ( base_url ( 'plan' ) );
 		}
 		$MembershipDetails = $this->user_model->get_all_details ( FANCYYBOX, array (
-				'id' => $meb_id 
+				'id' => $meb_id
 		) );
 		$condition = array (
-				'user_id' => $loginUserId 
+				'user_id' => $loginUserId
 		);
 		$dataArr = array (
-				'member_pakage' => $_POST ['member_pakage'] 
+				'member_pakage' => $_POST ['member_pakage']
 		);
-		
+
 		$this->product_model->commonInsertUpdate ( PRODUCT, 'update', $excludeArr, $dataArr, $condition );
 		$currDAte = date ( "Y-m-d" );
 		$this->product_model->commonInsertUpdate ( USERS, 'update', array (
 				'user_id',
 				'plan',
-				'planpay' 
+				'planpay'
 		), array (
 				'member_pakage' => $meb_id,
-				'member_purchase_date' => $currDAte 
+				'member_purchase_date' => $currDAte
 		), array (
-				'id' => $loginUserId 
+				'id' => $loginUserId
 		) );
 		// echo $this->db->last_query();die;
 		$quantity = 1;
-		
+
 		$paypal = $this->checkout_model->getPaypalDetails ();
 		// print_r($paypal);
 		$dataArr = array (
-				'settings' => serialize ( $paypal ) 
+				'settings' => serialize ( $paypal )
 		);
 		// $result=serialize($dataArr['settings']);
 		$ans = unserialize ( $paypal [0] ['settings'] );
-		
+
 		$email = $ans ['merchant_email'];
-		
+
 		$mode = $ans ['mode'];
-		
+
 		if ($mode == 'sandbox') {
 			$this->paypal_class->paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr'; // testing paypal url
 		} else {
 			$this->paypal_class->paypal_url = 'https://www.paypal.com/cgi-bin/webscr'; // paypal url
 		}
-		
+
 		$this->paypal_class->add_field ( 'currency_code', 'USD' ); // USD
-		
+
 		$this->paypal_class->add_field ( 'business', $email ); // Business Email
 		                                                   // $this->paypal_class->add_field('business',$email); // Business Email
-		
+
 		$this->paypal_class->add_field ( 'return', base_url () . 'order/pakagesuccess/' . $loginUserId . '/' . $lastFeatureInsertId ); // Return URL
-		
+
 		$this->paypal_class->add_field ( 'cancel_return', base_url () . 'order/failure' ); // Cancel URL
-		
+
 		$this->paypal_class->add_field ( 'notify_url', base_url () . 'order/ipnpayment' ); // Notify url
-		                                                                             
+
 		// $this->paypal_class->add_field('custom', 'Product|'.$loginUserId.'|'.$lastFeatureInsertId); // Custom Values
-		
+
 		$this->paypal_class->add_field ( 'item_name', $totalAmount [0] ); // Product Name
-		
+
 		$this->paypal_class->add_field ( 'user_id', $loginUserId );
-		
+
 		$this->paypal_class->add_field ( 'quantity', $quantity ); // Quantity
 		                                                       // echo $totalAmount;die;
 		$this->paypal_class->add_field ( 'amount', $totalAmount [1] ); // Price
 		                                                           // $this->paypal_class->add_field('amount', 1); // Price
-		                                                           
+
 		// echo base_url().'order/success/'.$loginUserId.'/'.$lastFeatureInsertId; die;
-		
+
 		$this->paypal_class->submit_paypal_post ();
 	}
 	public function update_privacy() {
@@ -1635,10 +1635,10 @@ class User extends MY_Controller {
 			}
 			$privacyStr = substr ( $privacyStr, 0, strlen ( $privacyStr ) - 1 );
 			$dataArr = array (
-					'notifications' => $privacyStr 
+					'notifications' => $privacyStr
 			);
 			$condition = array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			);
 			$this->user_model->update_details ( USERS, $dataArr, $condition );
 			$this->setErrorMessage ( 'success', 'Privacy settings saved successfully' );
@@ -1649,21 +1649,21 @@ class User extends MY_Controller {
 		if ($this->checkLogin ( 'U' ) == '') {
 			$returnStr ['message'] = 'You must login';
 		} else {
-		
+
 		$email = $this->input->post ( 'id' );
 		 $current_pass = md5 ( $this->input->post ( 'old_password' ) );
 			$condition = array (
 					'email' => $email,
-					'password' => $current_pass 
+					'password' => $current_pass
 			);
 			$checkuser = $this->user_model->get_all_details ( USERS, $condition );
 			if ($checkuser->num_rows () == 1) {
 				$newPass = md5 ( $this->input->post ( 'new_password' ) );
 				$newdata = array (
-						'password' => $newPass 
+						'password' => $newPass
 				);
 				$condition1 = array (
-						'email' => $email 
+						'email' => $email
 				);
 				$this->user_model->update_details ( USERS, $newdata, $condition1 );
 				$this->setErrorMessage ( 'success', 'Password changed successfully' );
@@ -1680,7 +1680,7 @@ class User extends MY_Controller {
 		} else {
 			$email = $this->input->post ( 'email' );
 			$condition = array (
-					'email' => $email 
+					'email' => $email
 			);
 			$checkUser = $this->user_model->get_all_details ( USERS, $condition );
 			if ($checkUser->num_rows () == 1) {
@@ -1689,7 +1689,7 @@ class User extends MY_Controller {
 						'email' => $email,
 						'reason' => $this->input->post ( 'reason' ),
 						'contact_again' => $this->input->post ( 'contact_ok' ),
-						'detail' => $this->input->post ( 'details' ) 
+						'detail' => $this->input->post ( 'details' )
 				);
 				$this->user_model->simple_insert ( USERS_DELETE, $data );
 				$this->user_model->commonDelete ( USERS, $condition );
@@ -1697,15 +1697,15 @@ class User extends MY_Controller {
 						'fc_session_user_id' => '',
 						'session_user_name' => '',
 						'session_user_email' => '',
-						'fc_session_temp_id' => '' 
+						'fc_session_temp_id' => ''
 				);
 				$this->session->unset_userdata ( $userdata );
-				
+
 				@session_start ();
 				unset ( $_SESSION ['token'] );
 				$twitter_return_values = array (
 						'tw_status' => '',
-						'tw_access_token' => '' 
+						'tw_access_token' => ''
 				);
 				$this->session->unset_userdata ( $twitter_return_values );
 				$this->setErrorMessage ( 'error', 'Your account has been canceled' );
@@ -1724,15 +1724,15 @@ class User extends MY_Controller {
 			$tid = $this->input->post ( 'tid' );
 			$checkProductLike = $this->user_model->get_all_details ( PRODUCT_LIKES, array (
 					'product_id' => $tid,
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($checkProductLike->num_rows () == 0) {
 				$productDetails = $this->user_model->get_all_details ( PRODUCT, array (
-						'seller_product_id' => $tid 
+						'seller_product_id' => $tid
 				) );
 				if ($productDetails->num_rows () == 0) {
 					$productDetails = $this->user_model->get_all_details ( USER_PRODUCTS, array (
-							'seller_product_id' => $tid 
+							'seller_product_id' => $tid
 					) );
 					$productTable = USER_PRODUCTS;
 				} else {
@@ -1743,14 +1743,14 @@ class User extends MY_Controller {
 					$dataArr = array (
 							'product_id' => $tid,
 							'user_id' => $this->checkLogin ( 'U' ),
-							'ip' => $this->input->ip_address () 
+							'ip' => $this->input->ip_address ()
 					);
 					$this->user_model->simple_insert ( PRODUCT_LIKES, $dataArr );
 					$actArr = array (
 							'activity_name' => 'fancy',
 							'activity_id' => $tid,
 							'user_id' => $this->checkLogin ( 'U' ),
-							'activity_ip' => $this->input->ip_address () 
+							'activity_ip' => $this->input->ip_address ()
 					);
 					$this->user_model->simple_insert ( USER_ACTIVITY, $actArr );
 					$datestring = "%Y-%m-%d %h:%i:%s";
@@ -1761,23 +1761,23 @@ class User extends MY_Controller {
 							'activity_id' => $tid,
 							'user_id' => $this->checkLogin ( 'U' ),
 							'activity_ip' => $this->input->ip_address (),
-							'created' => $createdTime 
+							'created' => $createdTime
 					);
 					$this->user_model->simple_insert ( NOTIFICATIONS, $actArr );
 					$likes ++;
 					$dataArr = array (
-							'likes' => $likes 
+							'likes' => $likes
 					);
 					$condition = array (
-							'seller_product_id' => $tid 
+							'seller_product_id' => $tid
 					);
 					$this->user_model->update_details ( $productTable, $dataArr, $condition );
 					$totalUserLikes = $this->data ['userDetails']->row ()->likes;
 					$totalUserLikes ++;
 					$this->user_model->update_details ( USERS, array (
-							'likes' => $totalUserLikes 
+							'likes' => $totalUserLikes
 					), array (
-							'id' => $this->checkLogin ( 'U' ) 
+							'id' => $this->checkLogin ( 'U' )
 					) );
 					/*
 					 * -------------------------------------------------------
@@ -1815,15 +1815,15 @@ class User extends MY_Controller {
 			$tid = $this->input->post ( 'tid' );
 			$checkProductLike = $this->user_model->get_all_details ( PRODUCT_LIKES, array (
 					'product_id' => $tid,
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($checkProductLike->num_rows () == 1) {
 				$productDetails = $this->user_model->get_all_details ( PRODUCT, array (
-						'seller_product_id' => $tid 
+						'seller_product_id' => $tid
 				) );
 				if ($productDetails->num_rows () == 0) {
 					$productDetails = $this->user_model->get_all_details ( USER_PRODUCTS, array (
-							'seller_product_id' => $tid 
+							'seller_product_id' => $tid
 					) );
 					$productTable = USER_PRODUCTS;
 				} else {
@@ -1833,30 +1833,30 @@ class User extends MY_Controller {
 					$likes = $productDetails->row ()->likes;
 					$conditionArr = array (
 							'product_id' => $tid,
-							'user_id' => $this->checkLogin ( 'U' ) 
+							'user_id' => $this->checkLogin ( 'U' )
 					);
 					$this->user_model->commonDelete ( PRODUCT_LIKES, $conditionArr );
 					$actArr = array (
 							'activity_name' => 'unfancy',
 							'activity_id' => $tid,
 							'user_id' => $this->checkLogin ( 'U' ),
-							'activity_ip' => $this->input->ip_address () 
+							'activity_ip' => $this->input->ip_address ()
 					);
 					$this->user_model->simple_insert ( USER_ACTIVITY, $actArr );
 					$likes --;
 					$dataArr = array (
-							'likes' => $likes 
+							'likes' => $likes
 					);
 					$condition = array (
-							'seller_product_id' => $tid 
+							'seller_product_id' => $tid
 					);
 					$this->user_model->update_details ( $productTable, $dataArr, $condition );
 					$totalUserLikes = $this->data ['userDetails']->row ()->likes;
 					$totalUserLikes --;
 					$this->user_model->update_details ( USERS, array (
-							'likes' => $totalUserLikes 
+							'likes' => $totalUserLikes
 					), array (
-							'id' => $this->checkLogin ( 'U' ) 
+							'id' => $this->checkLogin ( 'U' )
 					) );
 					$returnStr ['status_code'] = 1;
 				} else {
@@ -1874,7 +1874,7 @@ class User extends MY_Controller {
 		} else {
 			$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
 					'user_name' => $username,
-					'status' => 'Active' 
+					'status' => 'Active'
 			) );
 			if ($userProfileDetails->num_rows () == 1) {
 				$this->data ['heading'] = $username;
@@ -1886,7 +1886,7 @@ class User extends MY_Controller {
 					$this->data ['userProfileDetails'] = $userProfileDetails;
 					$this->data ['recentActivityDetails'] = $this->user_model->get_activity_details ( $userProfileDetails->row ()->id );
 					$this->data ['featureProductDetails'] = $this->product_model->get_featured_details ( $userProfileDetails->row ()->feature_product );
-					
+
 					$this->load->view ( 'site/user/display_user_profile', $this->data );
 				}
 			} else {
@@ -1907,14 +1907,14 @@ class User extends MY_Controller {
 				$followingCount ++;
 				$dataArr = array (
 						'following' => $newFollowingList,
-						'following_count' => $followingCount 
+						'following_count' => $followingCount
 				);
 				$condition = array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				);
 				$this->user_model->update_details ( USERS, $dataArr, $condition );
 				$followUserDetails = $this->user_model->get_all_details ( USERS, array (
-						'id' => $follow_id 
+						'id' => $follow_id
 				) );
 				if ($followUserDetails->num_rows () == 1) {
 					$followersListArr = explode ( ',', $followUserDetails->row ()->followers );
@@ -1925,10 +1925,10 @@ class User extends MY_Controller {
 						$followersCount ++;
 						$dataArr = array (
 								'followers' => $newFollowersList,
-								'followers_count' => $followersCount 
+								'followers_count' => $followersCount
 						);
 						$condition = array (
-								'id' => $follow_id 
+								'id' => $follow_id
 						);
 						$this->user_model->update_details ( USERS, $dataArr, $condition );
 					}
@@ -1937,7 +1937,7 @@ class User extends MY_Controller {
 						'activity_name' => 'follow',
 						'activity_id' => $follow_id,
 						'user_id' => $this->checkLogin ( 'U' ),
-						'activity_ip' => $this->input->ip_address () 
+						'activity_ip' => $this->input->ip_address ()
 				);
 				$this->user_model->simple_insert ( USER_ACTIVITY, $actArr );
 				$datestring = "%Y-%m-%d %h:%i:%s";
@@ -1948,7 +1948,7 @@ class User extends MY_Controller {
 						'activity_id' => $follow_id,
 						'user_id' => $this->checkLogin ( 'U' ),
 						'activity_ip' => $this->input->ip_address (),
-						'created' => $createdTime 
+						'created' => $createdTime
 				);
 				$this->user_model->simple_insert ( NOTIFICATIONS, $actArr );
 				$this->send_noty_mail ( $followUserDetails->result_array () );
@@ -1980,10 +1980,10 @@ class User extends MY_Controller {
 				$followingCount = $followingCount + $newCount;
 				$dataArr = array (
 						'following' => $newFollowingList,
-						'following_count' => $followingCount 
+						'following_count' => $followingCount
 				);
 				$condition = array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				);
 				$this->user_model->update_details ( USERS, $dataArr, $condition );
 				$conditionStr = 'where id IN (' . implode ( ',', $follow_ids_arr ) . ')';
@@ -1998,10 +1998,10 @@ class User extends MY_Controller {
 							$followersCount ++;
 							$dataArr = array (
 									'followers' => $newFollowersList,
-									'followers_count' => $followersCount 
+									'followers_count' => $followersCount
 							);
 							$condition = array (
-									'id' => $followUserDetails->id 
+									'id' => $followUserDetails->id
 							);
 							$this->user_model->update_details ( USERS, $dataArr, $condition );
 							$datestring = "%Y-%m-%d %h:%i:%s";
@@ -2012,7 +2012,7 @@ class User extends MY_Controller {
 									'activity_id' => $followUserDetails->id,
 									'user_id' => $this->checkLogin ( 'U' ),
 									'activity_ip' => $this->input->ip_address (),
-									'created' => $createdTime 
+									'created' => $createdTime
 							);
 							$this->user_model->simple_insert ( NOTIFICATIONS, $actArr );
 							$this->send_noty_mails ( $followUserDetails );
@@ -2040,14 +2040,14 @@ class User extends MY_Controller {
 				$followingCount --;
 				$dataArr = array (
 						'following' => $newFollowingList,
-						'following_count' => $followingCount 
+						'following_count' => $followingCount
 				);
 				$condition = array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				);
 				$this->user_model->update_details ( USERS, $dataArr, $condition );
 				$followUserDetails = $this->user_model->get_all_details ( USERS, array (
-						'id' => $follow_id 
+						'id' => $follow_id
 				) );
 				if ($followUserDetails->num_rows () == 1) {
 					$followersListArr = explode ( ',', $followUserDetails->row ()->followers );
@@ -2060,10 +2060,10 @@ class User extends MY_Controller {
 						$followersCount --;
 						$dataArr = array (
 								'followers' => $newFollowersList,
-								'followers_count' => $followersCount 
+								'followers_count' => $followersCount
 						);
 						$condition = array (
-								'id' => $follow_id 
+								'id' => $follow_id
 						);
 						$this->user_model->update_details ( USERS, $dataArr, $condition );
 					}
@@ -2072,7 +2072,7 @@ class User extends MY_Controller {
 						'activity_name' => 'unfollow',
 						'activity_id' => $follow_id,
 						'user_id' => $this->checkLogin ( 'U' ),
-						'activity_ip' => $this->input->ip_address () 
+						'activity_ip' => $this->input->ip_address ()
 				);
 				$this->user_model->simple_insert ( USER_ACTIVITY, $actArr );
 				$returnStr ['status_code'] = 1;
@@ -2085,7 +2085,7 @@ class User extends MY_Controller {
 	public function display_user_added() {
 		$username = urldecode ( $this->uri->segment ( 2, 0 ) );
 		$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $username 
+				'user_name' => $username
 		) );
 		if ($userProfileDetails->num_rows () == 1) {
 			if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
@@ -2105,7 +2105,7 @@ class User extends MY_Controller {
 	public function display_user_lists() {
 		$username = urldecode ( $this->uri->segment ( 2, 0 ) );
 		$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $username 
+				'user_name' => $username
 		) );
 		if ($userProfileDetails->num_rows () == 1) {
 			if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
@@ -2115,26 +2115,26 @@ class User extends MY_Controller {
 				$this->data ['userProfileDetails'] = $userProfileDetails;
 				$this->data ['recentActivityDetails'] = $this->user_model->get_activity_details ( $userProfileDetails->row ()->id );
 				$this->data ['listDetails'] = $this->product_model->get_all_details ( LISTS_DETAILS, array (
-						'user_id' => $userProfileDetails->row ()->id 
+						'user_id' => $userProfileDetails->row ()->id
 				) );
 				if ($this->data ['listDetails']->num_rows () > 0) {
 					foreach ( $this->data ['listDetails']->result () as $listDetailsRow ) {
 						$this->data ['listImg'] [$listDetailsRow->id] = '';
 						if ($listDetailsRow->product_id != '') {
 							$pidArr = array_filter ( explode ( ',', $listDetailsRow->product_id ) );
-							
+
 							$productDetails = '';
 							if (count ( $pidArr ) > 0) {
 								foreach ( $pidArr as $pidRow ) {
 									if ($pidRow != '') {
 										$productDetails = $this->product_model->get_all_details ( PRODUCT, array (
 												'seller_product_id' => $pidRow,
-												'status' => 'Publish' 
+												'status' => 'Publish'
 										) );
 										if ($productDetails->num_rows () == 0) {
 											$productDetails = $this->product_model->get_all_details ( USER_PRODUCTS, array (
 													'seller_product_id' => $pidRow,
-													'status' => 'Publish' 
+													'status' => 'Publish'
 											) );
 										}
 										if ($productDetails->num_rows () == 1)
@@ -2157,7 +2157,7 @@ class User extends MY_Controller {
 	public function display_user_wants() {
 		$username = urldecode ( $this->uri->segment ( 2, 0 ) );
 		$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $username 
+				'user_name' => $username
 		) );
 		if ($userProfileDetails->num_rows () == 1) {
 			if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
@@ -2167,7 +2167,7 @@ class User extends MY_Controller {
 				$this->data ['userProfileDetails'] = $userProfileDetails;
 				$this->data ['recentActivityDetails'] = $this->user_model->get_activity_details ( $userProfileDetails->row ()->id );
 				$wantList = $this->user_model->get_all_details ( WANTS_DETAILS, array (
-						'user_id' => $userProfileDetails->row ()->id 
+						'user_id' => $userProfileDetails->row ()->id
 				) );
 				$this->data ['wantProductDetails'] = $this->product_model->get_wants_product ( $wantList );
 				$this->data ['notSellProducts'] = $this->product_model->get_notsell_wants_product ( $wantList );
@@ -2180,7 +2180,7 @@ class User extends MY_Controller {
 	public function display_user_owns() {
 		$username = urldecode ( $this->uri->segment ( 2, 0 ) );
 		$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $username 
+				'user_name' => $username
 		) );
 		if ($userProfileDetails->num_rows () == 1) {
 			if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
@@ -2215,7 +2215,7 @@ class User extends MY_Controller {
 	public function display_user_following() {
 		$username = urldecode ( $this->uri->segment ( 2, 0 ) );
 		$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $username 
+				'user_name' => $username
 		) );
 		if ($userProfileDetails->num_rows () == 1) {
 			if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
@@ -2225,7 +2225,7 @@ class User extends MY_Controller {
 				$this->data ['userProfileDetails'] = $userProfileDetails;
 				$this->data ['recentActivityDetails'] = $this->user_model->get_activity_details ( $userProfileDetails->row ()->id );
 				$fieldsArr = array (
-						'*' 
+						'*'
 				);
 				$searchName = 'id';
 				$searchArr = explode ( ',', $userProfileDetails->row ()->following );
@@ -2247,7 +2247,7 @@ class User extends MY_Controller {
 	public function display_user_followers() {
 		$username = urldecode ( $this->uri->segment ( 2, 0 ) );
 		$userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $username 
+				'user_name' => $username
 		) );
 		if ($userProfileDetails->num_rows () == 1) {
 			if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
@@ -2257,7 +2257,7 @@ class User extends MY_Controller {
 				$this->data ['userProfileDetails'] = $userProfileDetails;
 				$this->data ['recentActivityDetails'] = $this->user_model->get_activity_details ( $userProfileDetails->row ()->id );
 				$fieldsArr = array (
-						'*' 
+						'*'
 				);
 				$searchName = 'id';
 				$searchArr = explode ( ',', $userProfileDetails->row ()->followers );
@@ -2288,14 +2288,14 @@ class User extends MY_Controller {
 			$firstCatName = '';
 			$firstCatDetails = '';
 			$count = 1;
-			
+
 			// Adding lists which was not already created from product categories
 			$productDetails = $this->user_model->get_all_details ( PRODUCT, array (
-					'seller_product_id' => $tid 
+					'seller_product_id' => $tid
 			) );
 			if ($productDetails->num_rows () == 0) {
 				$productDetails = $this->user_model->get_all_details ( USER_PRODUCTS, array (
-						'seller_product_id' => $tid 
+						'seller_product_id' => $tid
 				) );
 			}
 			if ($productDetails->num_rows () == 1) {
@@ -2305,7 +2305,7 @@ class User extends MY_Controller {
 					foreach ( $productCatArr as $productCatID ) {
 						if ($productCatID != '') {
 							$productCatDetails = $this->user_model->get_all_details ( CATEGORY, array (
-									'id' => $productCatID 
+									'id' => $productCatID
 							) );
 							if ($productCatDetails->num_rows () == 1) {
 								if ($count == 1) {
@@ -2313,7 +2313,7 @@ class User extends MY_Controller {
 								}
 								$listConditionArr = array (
 										'name' => $productCatDetails->row ()->cat_name,
-										'user_id' => $this->checkLogin ( 'U' ) 
+										'user_id' => $this->checkLogin ( 'U' )
 								);
 								$listCheck = $this->user_model->get_all_details ( LISTS_DETAILS, $listConditionArr );
 								if ($count == 1) {
@@ -2322,7 +2322,7 @@ class User extends MY_Controller {
 								if ($listCheck->num_rows () == 0) {
 									$this->user_model->simple_insert ( LISTS_DETAILS, $listConditionArr );
 									$userDetails = $this->user_model->get_all_details ( USERS, array (
-											'id' => $this->checkLogin ( 'U' ) 
+											'id' => $this->checkLogin ( 'U' )
 									) );
 									$listCount = $userDetails->row ()->lists;
 									if ($listCount < 0 || $listCount == '') {
@@ -2330,9 +2330,9 @@ class User extends MY_Controller {
 									}
 									$listCount ++;
 									$this->user_model->update_details ( USERS, array (
-											'lists' => $listCount 
+											'lists' => $listCount
 									), array (
-											'id' => $this->checkLogin ( 'U' ) 
+											'id' => $this->checkLogin ( 'U' )
 									) );
 								}
 								$count ++;
@@ -2341,28 +2341,28 @@ class User extends MY_Controller {
 					}
 				}
 			}
-			
+
 			// Check the product id in list table
 			$checkListsArr = $this->user_model->get_list_details ( $tid, $this->checkLogin ( 'U' ) );
-			
+
 			if ($checkListsArr->num_rows () == 0) {
-				
+
 				// Add the product id under the first category name
 				if ($firstCatName != '') {
 					$listConditionArr = array (
 							'name' => $firstCatName,
-							'user_id' => $this->checkLogin ( 'U' ) 
+							'user_id' => $this->checkLogin ( 'U' )
 					);
 					if ($firstCatDetails == '' || $firstCatDetails->num_rows () == 0) {
 						$dataArr = array (
-								'product_id' => $tid 
+								'product_id' => $tid
 						);
 					} else {
 						$productRowArr = explode ( ',', $firstCatDetails->row ()->product_id );
 						$productRowArr [] = $tid;
 						$newProductRowArr = implode ( ',', $productRowArr );
 						$dataArr = array (
-								'product_id' => $newProductRowArr 
+								'product_id' => $newProductRowArr
 						);
 					}
 					$this->user_model->update_details ( LISTS_DETAILS, $dataArr, $listConditionArr );
@@ -2373,7 +2373,7 @@ class User extends MY_Controller {
 					}
 				}
 			} else {
-				
+
 				// Get all the lists which contain this product
 				foreach ( $checkListsArr->result () as $checkListsRow ) {
 					array_push ( $uniqueListNames, $checkListsRow->id );
@@ -2381,7 +2381,7 @@ class User extends MY_Controller {
 				}
 			}
 			$all_lists = $this->user_model->get_all_details ( LISTS_DETAILS, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($all_lists->num_rows () > 0) {
 				foreach ( $all_lists->result () as $all_lists_row ) {
@@ -2390,10 +2390,10 @@ class User extends MY_Controller {
 					}
 				}
 			}
-			
+
 			// Check the product wanted status
 			$wantedProducts = $this->user_model->get_all_details ( WANTS_DETAILS, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($wantedProducts->num_rows () == 1) {
 				$wantedProductsArr = explode ( ',', $wantedProducts->row ()->product_id );
@@ -2413,7 +2413,7 @@ class User extends MY_Controller {
 			$tid = $this->input->post ( 'tid' );
 			$lid = $this->input->post ( 'list_ids' );
 			$listDetails = $this->user_model->get_all_details ( LISTS_DETAILS, array (
-					'id' => $lid 
+					'id' => $lid
 			) );
 			if ($listDetails->num_rows () == 1) {
 				$product_ids = explode ( ',', $listDetails->row ()->product_id );
@@ -2422,9 +2422,9 @@ class User extends MY_Controller {
 				}
 				$new_product_ids = implode ( ',', $product_ids );
 				$this->user_model->update_details ( LISTS_DETAILS, array (
-						'product_id' => $new_product_ids 
+						'product_id' => $new_product_ids
 				), array (
-						'id' => $lid 
+						'id' => $lid
 				) );
 				$returnStr ['status_code'] = 1;
 			}
@@ -2439,7 +2439,7 @@ class User extends MY_Controller {
 			$tid = $this->input->post ( 'tid' );
 			$lid = $this->input->post ( 'list_ids' );
 			$listDetails = $this->user_model->get_all_details ( LISTS_DETAILS, array (
-					'id' => $lid 
+					'id' => $lid
 			) );
 			if ($listDetails->num_rows () == 1) {
 				$product_ids = explode ( ',', $listDetails->row ()->product_id );
@@ -2450,9 +2450,9 @@ class User extends MY_Controller {
 				}
 				$new_product_ids = implode ( ',', $product_ids );
 				$this->user_model->update_details ( LISTS_DETAILS, array (
-						'product_id' => $new_product_ids 
+						'product_id' => $new_product_ids
 				), array (
-						'id' => $lid 
+						'id' => $lid
 				) );
 				$returnStr ['status_code'] = 1;
 			}
@@ -2466,7 +2466,7 @@ class User extends MY_Controller {
 		} else {
 			$tid = $this->input->post ( 'thing_id' );
 			$wantDetails = $this->user_model->get_all_details ( WANTS_DETAILS, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($wantDetails->num_rows () == 1) {
 				$product_ids = explode ( ',', $wantDetails->row ()->product_id );
@@ -2475,14 +2475,14 @@ class User extends MY_Controller {
 				}
 				$new_product_ids = implode ( ',', $product_ids );
 				$this->user_model->update_details ( WANTS_DETAILS, array (
-						'product_id' => $new_product_ids 
+						'product_id' => $new_product_ids
 				), array (
-						'user_id' => $this->checkLogin ( 'U' ) 
+						'user_id' => $this->checkLogin ( 'U' )
 				) );
 			} else {
 				$dataArr = array (
 						'user_id' => $this->checkLogin ( 'U' ),
-						'product_id' => $tid 
+						'product_id' => $tid
 				);
 				$this->user_model->simple_insert ( WANTS_DETAILS, $dataArr );
 			}
@@ -2492,7 +2492,7 @@ class User extends MY_Controller {
 			}
 			$wantCount ++;
 			$dataArr = array (
-					'want_count' => $wantCount 
+					'want_count' => $wantCount
 			);
 			$ownProducts = explode ( ',', $this->data ['userDetails']->row ()->own_products );
 			if (in_array ( $tid, $ownProducts )) {
@@ -2505,7 +2505,7 @@ class User extends MY_Controller {
 				$dataArr ['own_products'] = implode ( ',', $ownProducts );
 			}
 			$this->user_model->update_details ( USERS, $dataArr, array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			) );
 			$returnStr ['status_code'] = 1;
 		}
@@ -2518,7 +2518,7 @@ class User extends MY_Controller {
 		} else {
 			$tid = $this->input->post ( 'thing_id' );
 			$wantDetails = $this->user_model->get_all_details ( WANTS_DETAILS, array (
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($wantDetails->num_rows () == 1) {
 				$product_ids = explode ( ',', $wantDetails->row ()->product_id );
@@ -2529,9 +2529,9 @@ class User extends MY_Controller {
 				}
 				$new_product_ids = implode ( ',', $product_ids );
 				$this->user_model->update_details ( WANTS_DETAILS, array (
-						'product_id' => $new_product_ids 
+						'product_id' => $new_product_ids
 				), array (
-						'user_id' => $this->checkLogin ( 'U' ) 
+						'user_id' => $this->checkLogin ( 'U' )
 				) );
 				$wantCount = $this->data ['userDetails']->row ()->want_count;
 				if ($wantCount <= 0 || $wantCount == '') {
@@ -2539,9 +2539,9 @@ class User extends MY_Controller {
 				}
 				$wantCount --;
 				$this->user_model->update_details ( USERS, array (
-						'want_count' => $wantCount 
+						'want_count' => $wantCount
 				), array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				) );
 				$returnStr ['status_code'] = 1;
 			}
@@ -2558,20 +2558,20 @@ class User extends MY_Controller {
 			$category_id = $this->input->post ( 'category_id' );
 			$checkList = $this->user_model->get_all_details ( LISTS_DETAILS, array (
 					'name' => $list_name,
-					'user_id' => $this->checkLogin ( 'U' ) 
+					'user_id' => $this->checkLogin ( 'U' )
 			) );
 			if ($checkList->num_rows () == 0) {
 				$dataArr = array (
 						'user_id' => $this->checkLogin ( 'U' ),
 						'name' => $list_name,
-						'product_id' => $tid 
+						'product_id' => $tid
 				);
 				if ($category_id != '') {
 					$dataArr ['category_id'] = $category_id;
 				}
 				$this->user_model->simple_insert ( LISTS_DETAILS, $dataArr );
 				$userDetails = $this->user_model->get_all_details ( USERS, array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				) );
 				$listCount = $userDetails->row ()->lists;
 				if ($listCount < 0 || $listCount == '') {
@@ -2579,9 +2579,9 @@ class User extends MY_Controller {
 				}
 				$listCount ++;
 				$this->user_model->update_details ( USERS, array (
-						'lists' => $listCount 
+						'lists' => $listCount
 				), array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				) );
 				$returnStr ['list_id'] = $this->user_model->get_last_insert_id ();
 				$returnStr ['new_list'] = 1;
@@ -2592,14 +2592,14 @@ class User extends MY_Controller {
 				}
 				$product_id = implode ( ',', $productArr );
 				$dataArr = array (
-						'product_id' => $product_id 
+						'product_id' => $product_id
 				);
 				if ($category_id != '') {
 					$dataArr ['category_id'] = $category_id;
 				}
 				$this->user_model->update_details ( LISTS_DETAILS, $dataArr, array (
 						'user_id' => $this->checkLogin ( 'U' ),
-						'name' => $list_name 
+						'name' => $list_name
 				) );
 				$returnStr ['list_id'] = $checkList->row ()->id;
 				$returnStr ['new_list'] = 0;
@@ -2662,10 +2662,10 @@ class User extends MY_Controller {
 				// echo "<script>window.history.go(-1)/script>";
 			} else {
 				$dataArr = array (
-						'request_status' => 'Pending' 
+						'request_status' => 'Pending'
 				);
 				$this->user_model->commonInsertUpdate ( USERS, 'update', array (), $dataArr, array (
-						'id' => $this->checkLogin ( 'U' ) 
+						'id' => $this->checkLogin ( 'U' )
 				) );
 				$this->setErrorMessage ( 'success', 'Welcome onboard ! Our team is evaluating your request. We will contact you shortly' );
 				redirect ( base_url () );
@@ -2704,7 +2704,7 @@ class User extends MY_Controller {
 	}
 	public function get_invoice($PrdList) {
 		$shipAddRess = $this->user_model->get_all_details ( SHIPPING_ADDRESS, array (
-				'id' => $PrdList->row ()->shippingid 
+				'id' => $PrdList->row ()->shippingid
 		) );
 		$message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -2714,13 +2714,13 @@ class User extends MY_Controller {
 <div style="width:1012px;background:#FFFFFF; margin:0 auto;">
 <div style="width:100%;background:#454B56; float:left; margin:0 auto;">
     <div style="padding:20px 0 10px 15px;float:left; width:50%;"><a href="' . base_url () . '" target="_blank" id="logo"><img src="' . base_url () . 'images/logo/' . $this->data ['logo'] . '" alt="' . $this->data ['WebsiteTitle'] . '" title="' . $this->data ['WebsiteTitle'] . '"></a></div>
-	
-</div>			
+
+</div>
 <!--END OF LOGO-->
-    
+
  <!--start of deal-->
     <div style="width:970px;background:#FFFFFF;float:left; padding:20px; border:1px solid #454B56; ">
-    
+
 	<div style=" float:right; width:35%; margin-bottom:20px; margin-right:7px;">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #cecece;">
 			  <tr bgcolor="#f3f3f3">
@@ -2731,12 +2731,12 @@ class User extends MY_Controller {
                 <td width="87"  style="border-right:1px solid #cecece;"><span style="font-size:13px; font-family:Arial, Helvetica, sans-serif; text-align:center; width:100%; font-weight:bold; color:#000000; line-height:38px; float:left;">Order Date</span></td>
                 <td  width="100"><span style="font-size:12px; font-family:Arial, Helvetica, sans-serif; font-weight:normal; color:#000000; line-height:38px; text-align:center; width:100%; float:left;">' . date ( "F j, Y g:i a", strtotime ( $PrdList->row ()->created ) ) . '</span></td>
               </tr>
-			 
+
               </table>
         	</div>
-		
+
     <div style="float:left; width:100%;">
-	
+
     <div style="width:49%; float:left; border:1px solid #cccccc; margin-right:10px;">
     	<span style=" border-bottom:1px solid #cccccc; background:#f3f3f3; width:95.8%; float:left; padding:10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#000305;">Shipping Address</span>
     		<div style="float:left; padding:10px; width:96%;  font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#030002; line-height:28px;">
@@ -2752,7 +2752,7 @@ class User extends MY_Controller {
             	</table>
             </div>
      </div>
-    
+
     <div style="width:49%; float:left; border:1px solid #cccccc;">
     	<span style=" border-bottom:1px solid #cccccc; background:#f3f3f3; width:95.7%; float:left; padding:10px; font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#000305;">Billing Address</span>
     		<div style="float:left; padding:10px; width:96%;  font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#030002; line-height:28px;">
@@ -2768,9 +2768,9 @@ class User extends MY_Controller {
             	</table>
             </div>
     </div>
-</div> 
-	   
-<div style="float:left; width:100%; margin-right:3%; margin-top:10px; font-size:14px; font-weight:normal; line-height:28px;  font-family:Arial, Helvetica, sans-serif; color:#000; overflow:hidden;">   
+</div>
+
+<div style="float:left; width:100%; margin-right:3%; margin-top:10px; font-size:14px; font-weight:normal; line-height:28px;  font-family:Arial, Helvetica, sans-serif; color:#000; overflow:hidden;">
 	<table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
     	<td colspan="3"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #cecece; width:99.5%;">
@@ -2781,7 +2781,7 @@ class User extends MY_Controller {
             <td width="14%" style="border-right:1px solid #cecece;text-align:center;"><span style="font-size:12px; font-family:Arial, Helvetica, sans-serif; font-weight:bold; color:#000000; line-height:38px; text-align:center;">Unit Price</span></td>
             <td width="15%" style="text-align:center;"><span style="font-size:12px; font-family:Arial, Helvetica, sans-serif; font-weight:bold; color:#000000; line-height:38px; text-align:center;">Sub Total</span></td>
          </tr>';
-		
+
 		$disTotal = 0;
 		$grantTotal = 0;
 		foreach ( $PrdList->result () as $cartRow ) {
@@ -2804,25 +2804,25 @@ class User extends MY_Controller {
 		}
 		$private_total = $grantTotal - $PrdList->row ()->discountAmount;
 		$private_total = $private_total + $PrdList->row ()->tax + $PrdList->row ()->shippingcost;
-		
+
 		$message .= '</table></td> </tr><tr><td colspan="3"><table border="0" cellspacing="0" cellpadding="0" style=" margin:10px 0px; width:99.5%;"><tr>
 			<td width="460" valign="top" >';
 		if ($PrdList->row ()->note != '') {
 			$message .= '<table width="97%" border="0"  cellspacing="0" cellpadding="0"><tr>
                 <td width="87" ><span style="font-size:13px; font-family:Arial, Helvetica, sans-serif; text-align:left; width:100%; font-weight:bold; color:#000000; line-height:38px; float:left;">Note:</span></td>
-               
+
             </tr>
 			<tr>
                 <td width="87"  style="border:1px solid #cecece;"><span style="font-size:13px; font-family:Arial, Helvetica, sans-serif; text-align:left; width:97%; color:#000000; line-height:24px; float:left; margin:10px;">' . stripslashes ( $PrdList->row ()->note ) . '</span></td>
             </tr></table>';
 		}
-		
+
 		if ($PrdList->row ()->order_gift == 1) {
 			$message .= '<table width="97%" border="0"  cellspacing="0" cellpadding="0"  style="margin-top:10px;"><tr>
                 <td width="87"  style="border:1px solid #cecece;"><span style="font-size:16px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; text-align:center; width:97%; color:#000000; line-height:24px; float:left; margin:10px;">This Order is a gift</span></td>
             </tr></table>';
 		}
-		
+
 		$message .= '</td>
             <td width="174" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="border:1px solid #cecece;">
             <tr bgcolor="#f3f3f3">
@@ -2851,17 +2851,17 @@ class User extends MY_Controller {
         </tr>
     </table>
         </div>
-        
-        <!--end of left--> 
-		
-            
+
+        <!--end of left-->
+
+
             <div style="width:27.4%; margin-right:5px; float:right;">
-            
-           
+
+
             </div>
-        
+
         <div style="clear:both"></div>
-        
+
     </div>
     </div></body></html>';
 		return $message;
@@ -2878,11 +2878,11 @@ class User extends MY_Controller {
 				$dealCode = $this->input->post ( 'dealCode' );
 				$status = $this->input->post ( 'value' );
 				$dataArr = array (
-						'shipping_status' => $status 
+						'shipping_status' => $status
 				);
 				$conditionArr = array (
 						'dealCodeNumber' => $dealCode,
-						'sell_id' => $uid 
+						'sell_id' => $uid
 				);
 				$this->user_model->update_details ( PAYMENT, $dataArr, $conditionArr );
 				$returnStr ['status_code'] = 1;
@@ -2896,24 +2896,24 @@ class User extends MY_Controller {
 		$uname = $this->uri->segment ( '2', '0' );
 		$this->data ['shareUrl'] = base_url().'user/'.$uname.'/wishlists/'.$lid;
 		$this->data ['user_profile_details'] = $userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $uname 
+				'user_name' => $uname
 		) );
 		$this->data ['listUserDetails'] = $listUserDetails = $this->user_model->get_all_details ( USERS, array (
-				'id' => $uname 
+				'id' => $uname
 		) );
 		//echo '<pre>';print_r($this->data['user_profile_details']->result());die;
 		if ($listUserDetails->row ()->visibility == 'Only you' && $listUserDetails->row ()->id != $this->checkLogin ( 'U' )) {
 			$this->load->view ( 'site/user/display_user_profile_private', $this->data );
 		} else {
 			$this->data ['list_details'] = $list_details = $this->product_model->get_all_details (LISTS_DETAILS, array (
-					'id' => $lid 
+					'id' => $lid
 			) );
-			
+
 			if ($this->data ['list_details']->row ()->whocansee != 'Everyone' && $listUserDetails->row ()->id != $this->checkLogin ( 'U' )) {
 				redirect();
 			}
 			// echo '<pre>';print_r($this->data['list_details']->result());die;
-			
+
 			$searchArr = array_filter ( explode ( ',', $list_details->row ()->product_id ) );
 			// echo '<pre>';print_r($searchArr);die;
 			if (count ( $searchArr ) > 0) {
@@ -2927,7 +2927,7 @@ class User extends MY_Controller {
 				$this->data ['totalProducts'] = $this->data ['product_details']->num_rows ();
 			}
 			$this->data['wishlist_image']=$wishlist_image;
-			
+
 			$this->load->view ( 'site/user/user_list_home', $this->data );
 		}
 		}
@@ -2940,10 +2940,10 @@ class User extends MY_Controller {
 		$lid = $this->uri->segment ( '4', '0' );
 	//echo($lid);die;
 			$this->data['deletewishlist'] = $this->product_model->alldeletewishlist_details($lid );
-			
+
 			$uid = $this->uri->segment ( '2', '0' );
 			//echo($this->data ['userDetails']->row ()->id );die;
-			
+
 			//redirect('users/'.$uid.'/wishlists');
 			redirect('users/'.$this->data ['userDetails']->row ()->id.'/wishlists');
 	}
@@ -2954,14 +2954,14 @@ class User extends MY_Controller {
 		$lid = $this->uri->segment ( '4', '0' );
 		$uname = $this->uri->segment ( '2', '0' );
 		$this->data ['user_profile_details'] = $userProfileDetails = $this->user_model->get_all_details ( USERS, array (
-				'user_name' => $uname 
+				'user_name' => $uname
 		) );
 		if ($userProfileDetails->row ()->visibility == 'Only you' && $userProfileDetails->row ()->id != $this->checkLogin ( 'U' )) {
 			$this->load->view ( 'site/user/display_user_profile_private', $this->data );
 		} else {
 			$this->data ['list_details'] = $list_details = $this->product_model->get_all_details ( LISTS_DETAILS, array (
 					'id' => $lid,
-					'user_id' => $this->data ['user_profile_details']->row ()->id 
+					'user_id' => $this->data ['user_profile_details']->row ()->id
 			) );
 			if ($this->data ['list_details']->num_rows () == 0) {
 				show_404 ();
@@ -2975,25 +2975,25 @@ class User extends MY_Controller {
 								PRODUCT_LIKES . '.*',
 								PRODUCT . '.product_name',
 								PRODUCT . '.image',
-								PRODUCT . '.id as PID' 
+								PRODUCT . '.id as PID'
 						);
 						$searchArr = array (
-								$userRow->id 
+								$userRow->id
 						);
 						$joinArr1 = array (
 								'table' => PRODUCT,
 								'on' => PRODUCT_LIKES . '.product_id=' . PRODUCT . '.seller_product_id',
-								'type' => '' 
+								'type' => ''
 						);
 						$joinArr = array (
-								$joinArr1 
+								$joinArr1
 						);
 						$sortArr1 = array (
 								'field' => PRODUCT . '.created',
-								'type' => 'desc' 
+								'type' => 'desc'
 						);
 						$sortArr = array (
-								$sortArr1 
+								$sortArr1
 						);
 						$this->data ['product_details'] [$userRow->id] = $this->product_model->get_fields_from_many ( PRODUCT_LIKES, $fieldsArr, PRODUCT_LIKES . '.user_id', $searchArr, $joinArr, $sortArr, '5' );
 					}
@@ -3001,7 +3001,7 @@ class User extends MY_Controller {
 				$fieldsArr = array (
 						PRODUCT . '.*',
 						USERS . '.user_name',
-						USERS . '.full_name' 
+						USERS . '.full_name'
 				);
 				$searchArr = array_filter ( explode ( ',', $list_details->row ()->product_id ) );
 				if (count ( $searchArr ) > 0) {
@@ -3009,7 +3009,7 @@ class User extends MY_Controller {
 				} else {
 					$this->data ['totalProducts'] = 0;
 				}
-				
+
 				$this->load->view ( 'site/user/user_list_followers', $this->data );
 			}
 		}
@@ -3019,7 +3019,7 @@ class User extends MY_Controller {
 		$lid = $this->input->post ( 'lid' );
 		if ($this->checkLogin ( 'U' ) != '') {
 			$listDetails = $this->product_model->get_all_details ( LISTS_DETAILS, array (
-					'id' => $lid 
+					'id' => $lid
 			) );
 			$followersArr = explode ( ',', $listDetails->row ()->followers );
 			$followersCount = $listDetails->row ()->followers_count;
@@ -3032,15 +3032,15 @@ class User extends MY_Controller {
 				$followersCount ++;
 			}
 			$this->product_model->update_details ( USERS, array (
-					'following_user_lists' => implode ( ',', $oldDetails ) 
+					'following_user_lists' => implode ( ',', $oldDetails )
 			), array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			) );
 			$this->product_model->update_details ( LISTS_DETAILS, array (
 					'followers' => implode ( ',', $followersArr ),
-					'followers_count' => $followersCount 
+					'followers_count' => $followersCount
 			), array (
-					'id' => $lid 
+					'id' => $lid
 			) );
 			$returnStr ['status_code'] = 1;
 		}
@@ -3051,7 +3051,7 @@ class User extends MY_Controller {
 		$lid = $this->input->post ( 'lid' );
 		if ($this->checkLogin ( 'U' ) != '') {
 			$listDetails = $this->product_model->get_all_details ( LISTS_DETAILS, array (
-					'id' => $lid 
+					'id' => $lid
 			) );
 			$followersArr = explode ( ',', $listDetails->row ()->followers );
 			$followersCount = $listDetails->row ()->followers_count;
@@ -3068,15 +3068,15 @@ class User extends MY_Controller {
 				$followersCount --;
 			}
 			$this->product_model->update_details ( USERS, array (
-					'following_user_lists' => implode ( ',', $oldDetails ) 
+					'following_user_lists' => implode ( ',', $oldDetails )
 			), array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			) );
 			$this->product_model->update_details ( LISTS_DETAILS, array (
 					'followers' => implode ( ',', $followersArr ),
-					'followers_count' => $followersCount 
+					'followers_count' => $followersCount
 			), array (
-					'id' => $lid 
+					'id' => $lid
 			) );
 			$returnStr ['status_code'] = 1;
 		}
@@ -3092,17 +3092,17 @@ class User extends MY_Controller {
 				show_404 ();
 			} else {
 				$this->data ['user_profile_details'] = $this->user_model->get_all_details ( USERS, array (
-						'user_name' => $uname 
+						'user_name' => $uname
 				) );
 				$this->data ['list_details'] = $list_details = $this->product_model->get_all_details ( LISTS_DETAILS, array (
 						'id' => $lid,
-						'user_id' => $this->data ['user_profile_details']->row ()->id 
+						'user_id' => $this->data ['user_profile_details']->row ()->id
 				) );
 				if ($this->data ['list_details']->num_rows () == 0) {
 					show_404 ();
 				} else {
 					$this->data ['list_category_details'] = $this->user_model->get_all_details ( CATEGORY, array (
-							'id' => $this->data ['list_details']->row ()->category_id 
+							'id' => $this->data ['list_details']->row ()->category_id
 					) );
 					$this->data ['heading'] = 'Edit List';
 					$this->load->view ( 'site/user/edit_user_list', $this->data );
@@ -3124,7 +3124,7 @@ class User extends MY_Controller {
 				$duplicateCheck = $this->user_model->get_all_details ( LISTS_DETAILS, array (
 						'user_id' => $uid,
 						'id !=' => $lid,
-						'name' => $list_title 
+						'name' => $list_title
 				) );
 				if ($duplicateCheck->num_rows () > 0) {
 					$this->setErrorMessage ( 'error', 'List title already exists' );
@@ -3135,10 +3135,10 @@ class User extends MY_Controller {
 					}
 					$this->user_model->update_details ( LISTS_DETAILS, array (
 							'name' => $list_title,
-							'category_id' => $catID 
+							'category_id' => $catID
 					), array (
 							'id' => $lid,
-							'user_id' => $uid 
+							'user_id' => $uid
 					) );
 					$this->setErrorMessage ( 'success', 'List updated successfully' );
 					echo '<script>window.history.go(-1);</script>';
@@ -3158,7 +3158,7 @@ class User extends MY_Controller {
 			} else {
 				$list_details = $this->user_model->get_all_details ( LISTS_DETAILS, array (
 						'id' => $lid,
-						'user_id' => $uid 
+						'user_id' => $uid
 				) );
 				if ($list_details->num_rows () == 1) {
 					$followers_id = $list_details->row ()->followers;
@@ -3166,7 +3166,7 @@ class User extends MY_Controller {
 						$searchArr = array_filter ( explode ( ',', $followers_id ) );
 						$fieldsArr = array (
 								'following_user_lists',
-								'id' 
+								'id'
 						);
 						$followersArr = $this->user_model->get_fields_from_many ( USERS, $fieldsArr, 'id', $searchArr );
 						if ($followersArr->num_rows () > 0) {
@@ -3176,9 +3176,9 @@ class User extends MY_Controller {
 									if (($key = array_search ( $lid, $listArr )) != false) {
 										unset ( $listArr [$key] );
 										$this->user_model->update_details ( USERS, array (
-												'following_user_lists' => implode ( ',', $listArr ) 
+												'following_user_lists' => implode ( ',', $listArr )
 										), array (
-												'id' => $followersRow->id 
+												'id' => $followersRow->id
 										) );
 									}
 								}
@@ -3187,7 +3187,7 @@ class User extends MY_Controller {
 					}
 					$this->user_model->commonDelete ( LISTS_DETAILS, array (
 							'id' => $lid,
-							'user_id' => $this->checkLogin ( 'U' ) 
+							'user_id' => $this->checkLogin ( 'U' )
 					) );
 					$listCount = $this->data ['userDetails']->row ()->lists;
 					$listCount --;
@@ -3195,9 +3195,9 @@ class User extends MY_Controller {
 						$listCount = 0;
 					}
 					$this->user_model->update_details ( USERS, array (
-							'lists' => $listCount 
+							'lists' => $listCount
 					), array (
-							'id' => $this->checkLogin ( 'U' ) 
+							'id' => $this->checkLogin ( 'U' )
 					) );
 					$returnStr ['url'] = base_url () . 'user/' . $this->data ['userDetails']->row ()->user_name . '/lists';
 					$this->setErrorMessage ( 'success', 'List deleted successfully' );
@@ -3213,16 +3213,16 @@ class User extends MY_Controller {
 		if ($this->checkLogin ( 'U' ) == '')
 			redirect ( 'login' );
 		else {
-			
+
 			$uId = $this->input->post ( 'user_id' );
 			$verified_guest = $this->input->post ( 'verify_id' );
 			if($verified_guest == '') $verified_guest = 'No';
-			
+
 			$newdata = array ('verified_guest' => $verified_guest);
 			$condition = array ('id' => $uId);
 			$this->user_model->update_details ( USERS, $newdata, $condition );
 			$this->setErrorMessage ( 'success', 'Reservation requirements updated successfully' );
-			
+
 			redirect('listing-requirement');
 		}
 	}
@@ -3245,7 +3245,7 @@ class User extends MY_Controller {
 		} else {
 			$targ_w = $targ_h = 240;
 			$jpeg_quality = 90;
-			
+
 			$src = 'images/users/' . $this->data ['userDetails']->row ()->image;
 			$ext = substr ( $src, strpos ( $src, '.' ) + 1 );
 			if ($ext == 'png') {
@@ -3254,9 +3254,9 @@ class User extends MY_Controller {
 			}
 			$img_r = imagecreatefromjpeg ( $src );
 			$dst_r = ImageCreateTrueColor ( $targ_w, $targ_h );
-			
+
 			// list($width, $height) = getimagesize($src);
-			
+
 			imagecopyresampled ( $dst_r, $img_r, 0, 0, $_POST ['x1'], $_POST ['y1'], $targ_w, $targ_h, $_POST ['w'], $_POST ['h'] );
 			// imagecopyresized($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'], $targ_w,$targ_h,$_POST['w'],$_POST['h']);
 			// imagecopyresized($dst_r, $img_r,0,0, $_POST['x1'],$_POST['y1'], $_POST['x2'],$_POST['y2'],1024,980);
@@ -3278,7 +3278,7 @@ class User extends MY_Controller {
 						'meta_title' => $this->config->item ( 'meta_title' ),
 						'full_name' => $followUserDetails [0] ['full_name'],
 						'cfull_name' => $this->data ['userDetails']->row ()->full_name,
-						'user_name' => $this->data ['userDetails']->row ()->user_name 
+						'user_name' => $this->data ['userDetails']->row ()->user_name
 				);
 				extract ( $adminnewstemplateArr );
 				$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
@@ -3289,10 +3289,10 @@ class User extends MY_Controller {
 			<meta name="viewport" content="width=device-width"/>
 			<title>' . $template_values ['news_subject'] . '</title><body>';
 				include ('./newsletter/registeration' . $newsid . '.php');
-				
+
 				$message .= '</body>
 			</html>';
-				
+
 				if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 					$sender_email = $this->data ['siteContactMail'];
 					$sender_name = $this->data ['siteTitle'];
@@ -3305,16 +3305,16 @@ class User extends MY_Controller {
 						'sender_id' => $sender_email,
 						'user_id' => $followUserDetails [0] ['email'],
 						'mailsubject' => $subject,
-						'description' => stripslashes ( $message ) 
+						'description' => stripslashes ( $message )
 				) );
-				
+
 				$email_values = array (
 						'mail_type' => 'html',
 						'from_mail_id' => $sender_email,
 						'mail_name' => $sender_name,
 						'to_mail_id' => $followUserDetails [0] ['email'],
 						'subject_message' => $subject,
-						'body_messages' => $message 
+						'body_messages' => $message
 				);
 				$email_send_to_common = $this->product_model->common_email_send ( $email_values );
 			}
@@ -3324,7 +3324,7 @@ class User extends MY_Controller {
 		if (count ( $followUserDetails ) > 0) {
 			$emailNoty = explode ( ',', $followUserDetails->email_notifications );
 			if (in_array ( 'following', $emailNoty )) {
-				
+
 				$newsid = '9';
 				$template_values = $this->product_model->get_newsletter_template_details ( $newsid );
 				$adminnewstemplateArr = array (
@@ -3332,7 +3332,7 @@ class User extends MY_Controller {
 						'meta_title' => $this->config->item ( 'meta_title' ),
 						'full_name' => $followUserDetails [0] ['full_name'],
 						'cfull_name' => $this->data ['userDetails']->row ()->full_name,
-						'user_name' => $this->data ['userDetails']->row ()->user_name 
+						'user_name' => $this->data ['userDetails']->row ()->user_name
 				);
 				extract ( $adminnewstemplateArr );
 				$subject = 'From: ' . $this->config->item ( 'email_title' ) . ' - ' . $template_values ['news_subject'];
@@ -3343,10 +3343,10 @@ class User extends MY_Controller {
 			<meta name="viewport" content="width=device-width"/>
 			<title>' . $template_values ['news_subject'] . '</title><body>';
 				include ('./newsletter/registeration' . $newsid . '.php');
-				
+
 				$message .= '</body>
 			</html>';
-				
+
 				if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 					$sender_email = $this->data ['siteContactMail'];
 					$sender_name = $this->data ['siteTitle'];
@@ -3354,22 +3354,22 @@ class User extends MY_Controller {
 					$sender_name = $template_values ['sender_name'];
 					$sender_email = $template_values ['sender_email'];
 				}
-				
+
 				// add inbox from mail
 				$this->product_model->simple_insert ( INBOX, array (
 						'sender_id' => $sender_email,
 						'user_id' => $followUserDetails->email,
 						'mailsubject' => $subject,
-						'description' => stripslashes ( $message ) 
+						'description' => stripslashes ( $message )
 				) );
-				
+
 				$email_values = array (
 						'mail_type' => 'html',
 						'from_mail_id' => $sender_email,
 						'mail_name' => $sender_name,
 						'to_mail_id' => $followUserDetails->email,
 						'subject_message' => $subject,
-						'body_messages' => $message 
+						'body_messages' => $message
 				);
 				$email_send_to_common = $this->product_model->common_email_send ( $email_values );
 			}
@@ -3398,10 +3398,10 @@ class User extends MY_Controller {
 					$this->db->join ( PRODUCT_ATTRIBUTE . ' as pAr', 'pAr.id = p.attribute_values', 'left' );
 					$this->db->where ( 'p.sell_id = "' . $sid . '" and p.status = "Paid" and p.dealCodeNumber = "' . $dealCode . '"' );
 					$order_details = $this->db->get ();
-					
+
 					// $order_details = $this->user_model->get_all_details(PAYMENT,array('dealCodeNumber'=>$dealCode,'status'=>'Paid','sell_id'=>$sid));
 				} else {
-					
+
 					// $order_details = $this->user_model->get_all_details(PAYMENT,array('dealCodeNumber'=>$dealCode,'status'=>'Paid'));
 					$this->db->select ( 'p.*,pAr.attr_name' );
 					$this->db->from ( PAYMENT . ' as p' );
@@ -3409,37 +3409,37 @@ class User extends MY_Controller {
 					$this->db->where ( "p.status = 'Paid' and p.dealCodeNumber = '" . $dealCode . "'" );
 					$order_details = $this->db->get ();
 				}
-				
+
 				if ($order_details->num_rows () == 0) {
 					show_404 ();
 				} else {
 					if ($view_mode == 'user') {
 						$this->data ['user_details'] = $this->data ['userDetails'];
 						$this->data ['seller_details'] = $this->user_model->get_all_details ( USERS, array (
-								'id' => $sid 
+								'id' => $sid
 						) );
 					} elseif ($view_mode == 'seller') {
 						$this->data ['user_details'] = $this->user_model->get_all_details ( USERS, array (
-								'id' => $uid 
+								'id' => $uid
 						) );
 						$this->data ['seller_details'] = $this->data ['userDetails'];
 					}
 					foreach ( $order_details->result () as $order_details_row ) {
 						$this->data ['prod_details'] [$order_details_row->product_id] = $this->user_model->get_all_details ( PRODUCT, array (
-								'id' => $order_details_row->product_id 
+								'id' => $order_details_row->product_id
 						) );
 					}
 					$this->data ['view_mode'] = $view_mode;
 					$this->data ['order_details'] = $order_details;
 					$sortArr1 = array (
 							'field' => 'date',
-							'type' => 'desc' 
+							'type' => 'desc'
 					);
 					$sortArr = array (
-							$sortArr1 
+							$sortArr1
 					);
 					$this->data ['order_comments'] = $this->user_model->get_all_details ( REVIEW_COMMENTS, array (
-							'deal_code' => $dealCode 
+							'deal_code' => $dealCode
 					), $sortArr );
 					$this->load->view ( 'site/user/display_order_reviews', $this->data );
 				}
@@ -3456,9 +3456,9 @@ class User extends MY_Controller {
 			$status = $this->input->post ( 'status' );
 			$rid = $this->input->post ( 'rid' );
 			$this->user_model->update_details ( PAYMENT, array (
-					'received_status' => $status 
+					'received_status' => $status
 			), array (
-					'id' => $rid 
+					'id' => $rid
 			) );
 		}
 	}
@@ -3466,16 +3466,16 @@ class User extends MY_Controller {
 		$excludeArr = array (
 				'signin',
 				'first_name',
-				'last_name' 
+				'last_name'
 		);
 		$condition = array (
-				'id' => $this->checkLogin ( 'U' ) 
+				'id' => $this->checkLogin ( 'U' )
 		);
 		$dataArr = array (
 				'firstname' => $this->input->post ( 'first_name' ),
-				'lastname' => $this->input->post ( 'last_name' ) 
+				'lastname' => $this->input->post ( 'last_name' )
 		);
-		
+
 		/*
 		 * $logoDirectory ='./images/users';
 		 * if(!is_dir($logoDirectory))
@@ -3495,29 +3495,29 @@ class User extends MY_Controller {
 		 * $dataArr['thumbnail'] = $logoDetails['file_name'];
 		 * }
 		 */
-		
+
 		$filePRoductUploadData = array ();
 		$setPriority = 0;
 		// $imgtitle = $this->input->post('usre_image');
-		
+
 		$this->user_model->commonInsertUpdate ( USERS, 'update', $excludeArr, $dataArr, $condition );
-		
+
 		$this->setErrorMessage ( 'success', 'User details updated successfully' );
 		redirect ( base_url () . 'users/edit/' . $this->checkLogin ( 'U' ) );
 	}
-	
-	
+
+
 	function getDatesFromRange($start, $end) {
 		$dates = array (
-				$start 
+				$start
 		);
 		while ( end ( $dates ) < $end ) {
 			$dates [] = date ( 'Y-m-d', strtotime ( end ( $dates ) . ' +1 day' ) );
 		}
-		
+
 		return $dates;
 	}
-	
+
 	/**
 	 * ****************Invite Friends*******************
 	 */
@@ -3527,12 +3527,12 @@ class User extends MY_Controller {
 			redirect ( 'login' );
 		} else {
 			$this->data ['heading'] = 'Invite Friends';
-			
-				 
+
+
 	 $this->data['get_admin_details'] = $get_admin_details = $this->invite_model->get_all_details(ADMIN_SETTINGS,array())->result();
-	 
-	 
-	 
+
+
+
 			$this->load->view ( 'site/user/invite_friends', $this->data );
 		}
 	}
@@ -3548,14 +3548,14 @@ class User extends MY_Controller {
 		$returnStr ['message'] = '';
 		echo json_encode ( $returnStr );
 	}
-	
-	
-	
+
+
+
 	public function find_friends_gmail() {
 		$returnStr ['status_code'] = 1;
 		$clientid = '1082636820487-f01uj52t92djbuhlpt51j9q7tb65ulga.apps.googleusercontent.com';
 		$clientsecret = 'o6oDSo3JH4undGqR27MFmlEe';
-		$redirecturi = 'https://www.holidan.com/site/user/find_friends_gmail'; 
+		$redirecturi = 'https://www.holidan.com/site/user/find_friends_gmail';
 		$maxresults = 300;
 		if($_GET["code"] == '')
 		{
@@ -3597,15 +3597,15 @@ $xml->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
 $contacts = $xml->xpath('//gd:email');
 
 $count = 0;
-	
-	
-		
+
+
+
 		foreach ($contacts as $title) {
 			$newContacts[] = $title->attributes()->address;
 			/* $this->send_invite_mail ( $title->attributes()->address );
 			$count ++; */
 		}
-		
+
 		sort($newContacts);
 		$this->data ['gmail_contacts'] = $newContacts;
 		$this->load->view ( 'site/user/gmail_list', $this->data );
@@ -3624,15 +3624,15 @@ $count = 0;
 			</script>
 			";
 		}
-		
+
 		exit;
 		}
 		echo json_encode ( $returnStr );
 	}
-	
-	
-	
-	
+
+
+
+
 	public function find_friends_gmail_old() {
 		$returnStr ['status_code'] = 1;
 		error_reporting ( 0 );
@@ -3653,16 +3653,16 @@ $count = 0;
 		error_reporting ( 0 );
 		$oauth = new GmailOath ( $consumer_key, $consumer_secret, $argarray, $debug, $callback );
 		$getcontact_access = new GmailGetContacts ();
-		
+
 		$request_token = $oauth->rfc3986_decode ( $this->input->get ( 'oauth_token' ) );
 		$request_token_secret = $oauth->rfc3986_decode ( $this->session->userdata ( 'oauth_token_secret' ) );
 		$oauth_verifier = $oauth->rfc3986_decode ( $this->input->get ( 'oauth_verifier' ) );
-		
+
 		$contact_access = $getcontact_access->get_access_token ( $oauth, $request_token, $request_token_secret, $oauth_verifier, false, true, true );
 		$access_token = $oauth->rfc3986_decode ( $contact_access ['oauth_token'] );
 		$access_token_secret = $oauth->rfc3986_decode ( $contact_access ['oauth_token_secret'] );
 		$contacts = $getcontact_access->GetContacts ( $oauth, $access_token, $access_token_secret, false, true, $emails_count );
-		
+
 		$count = 0;
 		foreach ( $contacts as $k => $a ) {
 			$final = end ( $contacts [$k] );
@@ -3695,7 +3695,7 @@ $count = 0;
 					'siteTitle' => $this->data ['siteTitle'],
 					'meta_title' => $this->config->item ( 'meta_title' ),
 					'full_name' => $this->data ['userDetails']->row ()->full_name,
-					'user_name' => $this->data ['userDetails']->row ()->user_name 
+					'user_name' => $this->data ['userDetails']->row ()->user_name
 			);
 			extract ( $adminnewstemplateArr );
 			$subject = $template_values ['news_subject'];
@@ -3706,10 +3706,10 @@ $count = 0;
 					<meta name="viewport" content="width=device-width"/>
 					<title>' . $template_values ['news_subject'] . '</title><body>';
 			include ('./newsletter/registeration' . $newsid . '.php');
-			
+
 			$message .= '</body>
 					</html>';
-			
+
 			if ($template_values ['sender_name'] == '' && $template_values ['sender_email'] == '') {
 				$sender_email = $this->data ['siteContactMail'];
 				$sender_name = $this->data ['siteTitle'];
@@ -3717,22 +3717,22 @@ $count = 0;
 				$sender_name = $template_values ['sender_name'];
 				$sender_email = $template_values ['sender_email'];
 			}
-			
+
 			$email_values = array (
 					'mail_type' => 'html',
 					'from_mail_id' => $sender_email,
 					'mail_name' => $sender_name,
 					'to_mail_id' => $to,
 					'subject_message' => $subject,
-					'body_messages' => $message 
+					'body_messages' => $message
 			);
-			
+
 			//print_r($email_values);
 			$email_send_to_common = $this->product_model->common_email_send ( $email_values );
 		}
 	}
 	public function verification() {
-	
+
 		if ($this->checkLogin ( 'U' ) == '') {
 			redirect ( base_url () . 'login' );
 		}
@@ -3743,7 +3743,7 @@ $count = 0;
 		}
 		if ($this->uri->segment ( 2 ) == 'verify-mail') {
 			//echo '<pre>';print_r($_POST);die;
-			
+
 			$this->send_verify_mail ( $this->data ['userDetails'] );
 			$this->setErrorMessage ( 'success', 'Verification request sent. Stayrove team will in contact with you shortly.' );
 			redirect ( 'verification' );
@@ -3762,7 +3762,7 @@ $count = 0;
 			$API_CONFIG = array(
 			'appKey'       => '75wpz389ifrzbq',
 			'appSecret'    => 'ZYEG6gBlFhhUAkfR',
-			'callbackUrl'  => NULL 
+			'callbackUrl'  => NULL
 			);
 			define('DEMO_GROUP', '4010474');
 			define('DEMO_GROUP_NAME', 'Simple LI Demo');
@@ -3868,7 +3868,7 @@ $count = 0;
 			} else {
 
 			echo "Error retrieving profile information:<br /><br />RESPONSE:<br /><br /><pre>" . print_r($response) . "</pre>";
-			} 
+			}
 			} else {
 
 			}
@@ -3881,9 +3881,9 @@ $count = 0;
 			}
 			$this->setErrorMessage('success','Registered & Login Successfully');
 	 }
-	
+
 	public function change_profile_photo() {
-	
+
 		$config ['overwrite'] = FALSE;
 		$config ['remove_spaces'] = TRUE;
 		$config ['allowed_types'] = 'jpg|jpeg|gif|png';
@@ -3903,14 +3903,14 @@ $count = 0;
 			} else {
 				$imgDetails = array ();
 			}
-			
+
 			$condition = array (
-					'id' => $this->checkLogin ( 'U' ) 
+					'id' => $this->checkLogin ( 'U' )
 			);
 			$dataArrMrg = $imgDetails;
 			$this->user_model->update_details (USERS, $dataArrMrg, $condition );
 			// echo $this->db->last_query();die;
-			
+
 			$this->setErrorMessage ( 'success', 'User Profile Information Updated successfully.' );
 			redirect ( 'photo-video' );
 		}
@@ -3919,24 +3919,24 @@ $count = 0;
 		//print_r($this->data ['userDetails']->row());die;
 		$this->load->view ( 'site/user/photo_video', $this->data );
 	}
-	
+
 	/* Inbox message code added by muhammed 28-11-2014 */
 	public function inbox1() {
-		
+
 		// echo '<pre>'; print_r($_POST); die;
 		$guide_id = $this->input->post ( 'guide_id' );
 		$uid = $this->input->post ( 'user_id' );
-		
+
 		// if($uid==$this->checkLogin('U')) {
 		// $this->setErrorMessage('error','Message cannot send yourself');
 		// redirect('site/users/show/'.$uid);
 		// }
-		
+
 		$excludeArr = array (
 				'submit',
 				'hid',
 				'expid',
-				'uid' 
+				'uid'
 		);
 		$condition = array ();
 		$dataArr = array ();
@@ -3949,10 +3949,10 @@ $count = 0;
 				'submit',
 				'hid',
 				'expid',
-				'uid' 
+				'uid'
 		);
 		$condition = array (
-				'id' => $this->input->post ( 'hid' ) 
+				'id' => $this->input->post ( 'hid' )
 		);
 		$dataArr = array (
 				'accname' => $this->input->post ( 'accname' ),
@@ -3962,45 +3962,45 @@ $count = 0;
 		);
 		$this->user_model->commonInsertUpdate (USERS, 'update', $excludeArr, $dataArr, $condition );
 		$this->account_changes($this->input->post ( 'hid' ));
-		
+
 		redirect (base_url().'account-payout');
 	}
-	
-	
-	
+
+
+
 	/* deactivate account */
-	
+
 	public function deactive_user() {
 		$datestring = "%Y-%m-%d %h:%i:%s";
 		$time = time ();
 		$newdata = array (
-				'last_logout_date' => mdate ( $datestring, $time ) 
+				'last_logout_date' => mdate ( $datestring, $time )
 		);
 		$condition = array (
-				'id' => $this->checkLogin ( 'U' ) 
+				'id' => $this->checkLogin ( 'U' )
 		);
 		$this->user_model->update_details ( USERS, $newdata, $condition );
 		$userdata = array (
 				'fc_session_user_id' => '',
 				'session_user_name' => '',
 				'session_user_email' => '',
-				'fc_session_temp_id' => '' 
+				'fc_session_temp_id' => ''
 		);
 		$this->session->unset_userdata ( $userdata );
-		
+
 		@session_start ();
 		unset ( $_SESSION ['token'] );
 		$twitter_return_values = array (
 				'tw_status' => '',
-				'tw_access_token' => '' 
+				'tw_access_token' => ''
 		);
-		
+
 		$this->session->unset_userdata ( $twitter_return_values );
-		
+
 		$this->setErrorMessage ( 'success', 'Your account deactivate successfully' );
 		redirect ( base_url () );
 	}
-	
+
 	public function get_mobile_code()
 {
  $country_id=$this->input->post('country_id');
@@ -4008,17 +4008,17 @@ $count = 0;
  $country_mobile_code=$this->product_model->ExecuteQuery($country_mobile_code_query)->row_array();
  echo json_encode($country_mobile_code);
 }
-	
-	
+
+
 	public function booking_confirm() {
-	
-	
+
+
 	$bookingDetails = $this->user_model->get_all_details(RENTALENQUIRY,array('Bookingno'=>$this->input->post('Bookingno')));
 	$message = $this->input->post('message');
 	$dataArr = array('productId' => $bookingDetails->row()->prd_id, 'bookingNo' => $bookingDetails->row()->Bookingno, 'senderId' => $bookingDetails->row()->user_id, 'receiverId' => $bookingDetails->row()->renter_id, 'subject' => 'Booking Request : '.$bookingDetails->row()->Bookingno, 'message' => $message);
-	
+
 	$this->user_model->simple_insert(MED_MESSAGE, $dataArr);
-	
+
 	$phoneno = $this->input->post('phone_no');
 	$this->user_model->update_details( RENTALENQUIRY, array ('booking_status' => 'Pending', 'caltophone' =>$phoneno), array ('user_id' => $this->checkLogin ( 'U' ),'id' => $this->session->userdata ( 'EnquiryId' ) ) );
 	$this->emailhostreservationreq($this->session->userdata ( 'EnquiryId' ));
@@ -4036,31 +4036,31 @@ $count = 0;
 		$activities = array('user_id' => $this->checkLogin ( 'U' ), 'user_ip' => $ip, 'name' => 'booking', 'description' => "Enquiry id: ".$this->session->userdata ( 'EnquiryId' )."&nbsp;status: Pending", 'date' => date('Y-m-d H:i:s') );
 
 		 //$this->user_model->update_user_activity($activities);
-	
+
 	$user_id =$this->uri->segment(4);
-	
+
 	$this->setErrorMessage ( 'success', 'Congratulation on your booking!! The host will reply you soon.' );
-	
+
 	redirect('trips/upcoming');
-	
+
 	}
-	
+
 	public function confirmbooking() {
-	
-	
-	
-	$id = $this->uri->segment(4); 
-	
+
+
+
+	$id = $this->uri->segment(4);
+
 	$this->data['enqId'] = $id;
-	
+
 	$this->data['datavalues'] = $this->user_model->get_all_details(RENTALENQUIRY,array('id'=>$id));
 	$user = $this->data['datavalues']->row_array();
 
 	// echo '<pre>'; print_r($this->data['datavalues']->row()->Bookingno); die;
 	 $refno = $this->data['datavalues']->row()->Bookingno;
 	 $refid = $this->data['datavalues']->row()->id;
-	 
-	/*  echo $refid; 
+
+	/*  echo $refid;
 	 echo '<pre>'; print_r($this->data['datavalues']->result_array());
 	 die; */
 	//echo $user['user_id'];
@@ -4081,24 +4081,24 @@ $count = 0;
 	//$this->user_model->update_user_activity($activities);
 	$this->data['pay'] = $this->user_model->get_all_details(PAYMENT,array('user_id'=>$user['user_id']));
 	$this->data['payment_id'] = $this->user_model->get_all_details(PAYMENT,array('EnquiryId'=>$id, 'user_id'=>$user['user_id']));
-	
+
 	$this->data['userDetails'] = $this->user_model->get_all_details (USERS, array ('id' => $user['user_id']) );
-	
+
 	$this->data ['productList'] = $this->product_model->view_product_details_booking ( ' where p.id="' . $Rental_id . '" and rq.id="' . $this->session->userdata ( 'EnquiryId' ) . '" group by p.id order by p.created desc limit 0,1' );
-	 
+
 	//echo '<pre>'; print_r($this->data['pay']->result()); die;
-		
+
 		$this->data ['countryList'] = $this->product_model->get_country_list ();
-		
+
 		$this->data ['BookingUserDetails'] = $this->product_model->view_user_details_booking ( ' where p.id="' . $Rental_id . '" and rq.id="' . $this->session->userdata ( 'EnquiryId' ) . '" group by p.id order by p.created desc limit 0,1' );
-		
+
 		#echo '<pre>'; print_r($this->data['BookingUserDetails']->result());
-		
+
 		$service_tax_query='SELECT * FROM '.COMMISSION.' WHERE commission_type="Guest Booking" AND status="Active"';
 		$this->data['service_tax']=$this->product_model->ExecuteQuery($service_tax_query);
 
 		#echo '<pre>'; print_r($this->data['service_tax']->result());
-		
+
 		// echo '<pre>';print_r($this->data['productList']->result());die;
 		if ($this->data ['productList']->row ()->meta_title != '') {
 			$this->data ['meta_title'] = $this->data ['productList']->row ()->meta_title;
@@ -4109,15 +4109,15 @@ $count = 0;
 		if ($this->data ['productList']->row ()->meta_description != '') {
 			$this->data ['meta_description'] = $this->data ['productList']->row ()->meta_description;
 		}
-		
+
 		$tax_query = 'SELECT * FROM ' . COMMISSION . ' WHERE id=4';
-		
+
 		$this->data ['tax'] = $this->product_model->ExecuteQuery ( $tax_query );
-		
+
 		#echo '<pre>'; print_r($this->data['tax']->result()); die;
-		
+
 		$singAmnt = ($this->data['datavalues']->row()->totalAmt)*100;
-		
+
 		$uniid = time()."-".$refno."-".$refid;
 		$this->data['RefNo'] = $uniid;
 		$source ="DbQhpCuQpPM07244".$uniid.$singAmnt."MYR";
@@ -4128,33 +4128,33 @@ $count = 0;
 		//$tt = hex2bin($val);
 		$rval = $this->hex2bin($val);
 		$this->data['signature']=  base64_encode($rval);
-		 // return base64_encode(hex2bin(sha1($source))); 
-		  /* echo $val = base64_encode(hex2bin(sha1($source))); 
-		if (!function_exists('hex2bin')) 
-		{ 
-		function hex2bin($hexSource) 
-		{ 
-		  for ($i=0;$i<strlen($hexSource);$i=$i+2) 
-		  { 
-			$bin .= chr(hexdec(substr($hexSource,$i,2))); 
-		  } 
-		  return $bin; 
-		} 
+		 // return base64_encode(hex2bin(sha1($source)));
+		  /* echo $val = base64_encode(hex2bin(sha1($source)));
+		if (!function_exists('hex2bin'))
+		{
+		function hex2bin($hexSource)
+		{
+		  for ($i=0;$i<strlen($hexSource);$i=$i+2)
+		  {
+			$bin .= chr(hexdec(substr($hexSource,$i,2)));
+		  }
+		  return $bin;
+		}
 		} */
-		
+
 		$this->load->view ( 'site/rentals/confirmpayment', $this->data );
-	
-	}	
-	
+
+	}
+
 	public function bookingdelete() {
-	
+
 	$bookingno = $this->uri->segment(4);
 	$newdata = array (
 						'is_Delete' =>1
-						
+
 				);
 				$condition = array (
-						'Bookingno' => $bookingno 
+						'Bookingno' => $bookingno
 				);
 
 
@@ -4170,33 +4170,33 @@ $count = 0;
 		$activities = array('user_id' => $this->checkLogin ( 'U' ), 'user_ip' => $ip, 'name' => 'booking Deleted', 'description' => 'Booking id: '.$bookingno, 'date' => date('Y-m-d H:i:s') );
 
 		 //$this->user_model->update_user_activity($activities);
-		
+
 		$this->user_model->update_details ( RENTALENQUIRY, $newdata, $condition );
 				//echo $this->db->last_query();die;
 		redirect('trips/previous');
-	
-	
-	
+
+
+
 	}
 	public function bookingdeletelist() {
-	
+
 	$bookingno = $this->uri->segment(4);
 	$newdata = array (
 						'is_Delete' =>1
-						
+
 				);
 				$condition = array (
-						'Bookingno' => $bookingno 
+						'Bookingno' => $bookingno
 				);
 				$this->user_model->update_details ( RENTALENQUIRY, $newdata, $condition );
 				//echo $this->db->last_query();die;
 		redirect('listing-reservation');
-	
-	
-	
+
+
+
 	}
-	
-	
+
+
 	function hex2bin( $str ) {
         $sbin = "";
         $len = strlen( $str );
@@ -4206,62 +4206,62 @@ $count = 0;
 
         return $sbin;
     }
-	
-	
-	
-	
+
+
+
+
 	public function invoice() {
-	
+
 	if($this->checkLogin ('U')=='') {
 	$this->setErrorMessage('error','Please login');
 	redirect(base_url());
 	}
-	
-	
-	
+
+
+
 	$id = $this->uri->segment(4);
-	
+
 	$Invoicetmp = $this->product_model->get_all_details(RENTALENQUIRY,array('Bookingno'=>$id));
-	
-	
+
+
 	//echo '<pre>'; print_r($Invoicetmp->result_array());
-	
+
 	$users = array($Invoicetmp->row()->user_id, $Invoicetmp->row()->renter_id);
 	//print_r($users);die;
-	
+
 	if (!in_array($this->checkLogin ('U'), $users)) {
 	//$this->setErrorMessage('error','Invoice Not available');
 	redirect(base_url());
 	}
-	
+
 	$enId = $Invoicetmp->row()->id;
-	
+
     $transactionid = $this->product_model->get_all_details(PAYMENT,array('EnquiryId'=>$enId));
-	
+
 	$chkPaid = $transactionid->row()->status;
-	
+
 	if($chkPaid != 'Paid')
 	{
 		redirect(base_url());
 	}
-	
+
 	$transid = $Invoicetmp->row()->Bookingno;
-	
+
 	$productvalue = $this->product_model->get_all_details(PRODUCT,array('id'=>$Invoicetmp->row()->prd_id));
-	
+
     //$Invoicetmp->row()->prd_id =4;
 	$productaddress = $this->product_model->get_all_details(PRODUCT_ADDRESS,array('product_id'=>$Invoicetmp->row()->prd_id));
-	
+
 	$checkindate =date('d-M-Y',strtotime($Invoicetmp->row()->checkin));
     $checkoutdate =date('d-M-Y',strtotime($Invoicetmp->row()->checkout));
-	
+
 	$TotalAmt = ($Invoicetmp->row()->totalAmt) - ($Invoicetmp->row()->serviceFee);
-	
+
 	$to  = '';//$this->data['bookingmail']->row()->email; // note the comma
-     
+
      $service = $this->user_model->get_all_details(COMMISSION,array('id'=>2));
     // echo '<pre>'; print_r($service->row()->commission_percentage);
-      	 
+
 
 	 if($Invoicetmp->row()->serviceFee==0.00) {
 	 $servicefee = $service->row()->commission_percentage;
@@ -4271,62 +4271,62 @@ $count = 0;
 	 $servicefee = $Invoicetmp->row()->serviceFee;
 	 $gtotalAmt = $productvalue->row()->price;
 	 }
-	 
+
 	 $Night = ($Invoicetmp->row()->numofdates == 1)?"Night":"Nights";
 	 $Guest = ($Invoicetmp->row()->NoofGuest==1)?"Guest":"Guests";
 	 //print_r($productaddress->row()); die;
 	 $houserule = ($productvalue->row()->house_rules!='')?$productvalue->row()->house_rules:'None';
-	 
+
 	// $couponcode ='[Coupon code Used]'.$transactionid->row()->couponCode;
 	//echo '<pre>';print_r($transactionid->row());die;
-	 
-	
+
+
 $this->data['message'] = '
 <html>
 <head>
   <title>Stayrove Booking</title>
 </head>
-	<body style="margin:0px;"><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#4BBEFF" data-bgcolor="body-bg-dark" data-module="1" class="ui-sortable-handle currentTable">  
+	<body style="margin:0px;"><table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#4BBEFF" data-bgcolor="body-bg-dark" data-module="1" class="ui-sortable-handle currentTable">
 	<tbody><tr>
 	 <td>
-	 <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" class="devicewidth" style="background-color:#ffffff;" data-bgcolor="light-gray-bg"> 
+	 <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" class="devicewidth" style="background-color:#ffffff;" data-bgcolor="light-gray-bg">
 	 <tbody><tr>
-	 <td height="30" bgcolor="#4BBEFF" >&nbsp;</td> 
-	 </tr>  
-	 <tr>  
-	<td align="center">          
-	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">              
-	 <tbody><tr style="padding: 10px 10px 0px 10px; float: left">          
-			   
+	 <td height="30" bgcolor="#4BBEFF" >&nbsp;</td>
+	 </tr>
+	 <tr>
+	<td align="center">
+	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+	 <tbody><tr style="padding: 10px 10px 0px 10px; float: left">
+
 	 <td align="center" valign="top">
 					<table width="650" border="0" cellpadding="5" cellspacing="1" >
 							<tbody style="font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;">
 							<tr>
-							  
+
 							  <th width="70" bgcolor="#4BBEFF"style="color:#fff; font-size:15px;">Receipt</th>
 							  <th width="75" ></th>
 							  <th width="75"></th>
 							  <th width="75"></th>
 							  <th align="right" width="75" style="color:#f3402e; text-align:right"><a onClick="window.print()" TARGET="_blank" style="cursor: pointer; cursor: hand;text-decoration:underline;">Print Page</a></th>
 							</tr>
-							
-						 
-							
+
+
+
 				</tbody></table>
-				</td>       
-	 </tr>          
+				</td>
+	 </tr>
 	 </tr>
 	 <tr><td align="left" style="color:#4c4c4c;font-size:13px;font-family:Open Sans, Arial, Helvetica, sans-serif;margin:10px; padding: 10px">Booking No : '.$transid.'</td></tr>
 	 <tr><td align="left" style="color:#4c4c4c;font-size:13px;font-family:Open Sans, Arial, Helvetica, sans-serif;margin:10px; padding: 10px">Property Name : '.$productvalue->row()->product_title.'</td></tr>
 	 <tr><td align="left" style="color:#4c4c4c;font-size:13px;font-family:Open Sans, Arial, Helvetica, sans-serif;margin:10px; padding: 10px">Address : '.$productaddress->row()->address.'</td></tr>
 	 <tr>
-	 <td style="border-top:1px solid #808080" bgcolor="#fff">&nbsp;</td>       
-	 </tr>        
-	 <tr>         
+	 <td style="border-top:1px solid #808080" bgcolor="#fff">&nbsp;</td>
+	 </tr>
+	 <tr>
 	 <td>
-	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">              
-	 <tbody><tr style="padding: 10px; float: left">          
-			   
+	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+	 <tbody><tr style="padding: 10px; float: left">
+
 	 <td align="center" valign="top">
 					<table width="650" border="0" cellpadding="5" cellspacing="1" >
 							<tbody style="font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;" ><tr>
@@ -4336,7 +4336,7 @@ $this->data['message'] = '
 							  <th width="75" ></th>
 							  <th width="75" bgcolor="#EFEFEF">'.$Night.'</th>
 							  <th width="75" bgcolor="#EFEFEF">'.$Guest.'</th>
-							 
+
 							</tr>
 							<tr align="center">
 								<td >'.$checkindate.'</td>
@@ -4347,122 +4347,122 @@ $this->data['message'] = '
 								<td >'.$Invoicetmp->row()->NoofGuest.'</td>
 
 							  </tr>
-						
-							
-						 
-							
+
+
+
+
 				</tbody></table>
-				</td>       
-	 </tr>          
+				</td>
+	 </tr>
 	 </tbody>
-	 </table>  
+	 </table>
 	 </td>
-	 </tr>      
-	 
+	 </tr>
+
 	<tr>
 	 <td align="center" valign="top" style="color:#000; font-weight: 700; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;" data-size="body-text" data-min="10" data-max="25" data-color="footer-text">
 	 <iframe width="800px" height="464px" src="https://maps.google.com/?q='. $productaddress->row()->latitude.','.$productaddress->row()->longitude.'&amp;ie=UTF8&amp;t=m&amp;z=17&amp;ll='.$productaddress->row()->latitude.','. $productaddress->row()->longitude.'&amp;spn=0.006295,0.006295&amp;iwloc=A&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-	 </td> 
-	</tr> 
-		   
-	 <tr>      
-	 <td>&nbsp;</td>      
-	 </tr>       
-	      
-	 <tr>   
-	  <tr>         
- <td align="center" >          
- <table width="100%" border="0" cellspacing="1" cellpadding="0" align="center" style="padding:0px 10px;">              
- <tbody><tr>          
-            
+	 </td>
+	</tr>
+
+	 <tr>
+	 <td>&nbsp;</td>
+	 </tr>
+
+	 <tr>
+	  <tr>
+ <td align="center" >
+ <table width="100%" border="0" cellspacing="1" cellpadding="0" align="center" style="padding:0px 10px;">
+ <tbody><tr>
+
  <td align="left" width="300px" valign="top" style="color:#4f595b; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px; line-height:20px;" data-size="body-text" data-min="10" data-max="25" data-color="footer-text">
 <h4 style="float: left; width:100%;">Cancellation Policy  -    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '.ucfirst($productvalue->row()->cancellation_policy).'</h4>For More details of the cancellation policy, please refer <a href="http://www.holidan.com/pages/cancellation-policy" target="_blank">cancellation policy</a>.
  <td>
- <td align="left" width="300px"valign="top" style="color:#4f595b; text-align:justify; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;line-height:20px;" data-size="body-text" data-min="10" data-max="25" data-color="footer-text"> 
+ <td align="left" width="300px"valign="top" style="color:#4f595b; text-align:justify; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;line-height:20px;" data-size="body-text" data-min="10" data-max="25" data-color="footer-text">
  <h4 style="float: left; width:100%;">House Rules</h4>
- '.$houserule.'</td> 
- </tr>      
+ '.$houserule.'</td>
+ </tr>
 
 
-<tr>          
-      
+<tr>
+
  <td align="left" width="300px" valign="top" style="color:#4f595b; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px; line-height:20px;" data-size="body-text" data-min="10" data-max="25" data-color="footer-text">
 <h4 style="float: left; width:100%; margin: 10px 0px;">Billing</h4>
 <table style="width:100%; font-size:13px;">
   <tr>
     <td style="border-bottom: 1px solid #bbb;">Booked for '.$Invoicetmp->row()->numofdates.'  &nbsp;'.$Night.'</td>
-    <td style="border-bottom: 1px solid #bbb;"></td>		
+    <td style="border-bottom: 1px solid #bbb;"></td>
     <td style="border-bottom: 1px solid #bbb; padding: 5px 0px;">RM '.number_format($Invoicetmp->row()->totalAmt-$servicefee, 2, '.', ' ').'</td>
   </tr>
   <tr>
 <td style="border-bottom: 1px solid #bbb;">Service Fee</td>
-    <td style="border-bottom: 1px solid #bbb;"></td>		
+    <td style="border-bottom: 1px solid #bbb;"></td>
     <td style="border-bottom: 1px solid #bbb; padding: 5px 0px;">RM '.$servicefee.'</td>
   </tr>';
   if($transactionid->row()->couponCode != ''){
   $this->data['message'] .= '<tr>
 <td style="border-bottom: 1px solid #bbb;  padding: 10px 0px;">Discount [Coupon Code : '.$transactionid->row()->couponCode.']</td>
-    <td style="border-bottom: 1px solid #bbb;padding: 10px 0px;"> - </td>		
+    <td style="border-bottom: 1px solid #bbb;padding: 10px 0px;"> - </td>
     <td style="border-bottom: 1px solid #bbb;padding: 10px 0px;">RM '.number_format($transactionid->row()->total_amt, 2, '.', ' ').'</td>
 </tr>';
 }
 $this->data['message'] .= '<td style="border-bottom: 1px solid #bbb;  padding: 10px 0px;">Total</td>
-    <td style="border-bottom: 1px solid #bbb;padding: 10px 0px;"></td>		
+    <td style="border-bottom: 1px solid #bbb;padding: 10px 0px;"></td>
     <td style="border-bottom: 1px solid #bbb;padding: 10px 0px;">RM '.number_format($Invoicetmp->row()->totalAmt-$transactionid->row()->total_amt, 2, '.', ' ').'</td>
-	
-	
-	
+
+
+
   </tr>
-  
- 
-  
-  
- 
+
+
+
+
+
 </table>
 
 <td>
- </tr> 
- 
+ </tr>
+
  </tbody>
- </table>      
- </td>        
- </tr> 
+ </table>
+ </td>
+ </tr>
 	 </tr>
-	        
-	 <tr>      
-	 <td>&nbsp;</td>     
-	 </tr>       
-	 <tr>    
-	 <td align="center" valign="middle" style="color:#444444; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;"><a href="javascript:void(0);" style="color:#0094aa; text-decoration:none;" data-size="body-text" data-min="10" data-max="25" data-link-color="plain-url-color" data-link-size="plain-url-text">(Remember: Not responding to this booking will result in your listing being ranked lower.)</a></td>       
-	 </tr>        
-	 <tr>        
-	 <td>&nbsp;</td>   
-	 </tr>              
-	 <tr>               
-	 <td align="center" valign="middle" style="color:#444444; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px; padding:0 20px;" data-size="body-text" data-min="10" data-max="25" data-color="body-text">If you need help or have any questions, please visit <a href="#" style="color:#0094aa;" data-link-color="plain-url-color">contact@stayrove.com</a></td>     
-	 </tr>       
-	 <tr>       
-	 <td height="50">&nbsp;</td>      
-	 </tr>         
-	 <tr>       
-	 <td height="30" bgcolor="#fff">&nbsp;</td>     
-	 </tr>      
-	 <tr>         
-	 <td align="center" bgcolor="#fff">          
-	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="padding:0px 10px;">              
-	 <tbody>
-	 
-	 </tbody>
-	 </table>      
-	 </td>        
-	 </tr>         
+
 	 <tr>
-	 <td height="30" bgcolor="#4BBEFF" >&nbsp;</td> 
-	 </tr> 
-	 </tbody></table> 
-	 </td>      </tr>  
+	 <td>&nbsp;</td>
+	 </tr>
+	 <tr>
+	 <td align="center" valign="middle" style="color:#444444; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px;"><a href="javascript:void(0);" style="color:#0094aa; text-decoration:none;" data-size="body-text" data-min="10" data-max="25" data-link-color="plain-url-color" data-link-size="plain-url-text">(Remember: Not responding to this booking will result in your listing being ranked lower.)</a></td>
+	 </tr>
+	 <tr>
+	 <td>&nbsp;</td>
+	 </tr>
+	 <tr>
+	 <td align="center" valign="middle" style="color:#444444; font-family:Open Sans, Arial, Helvetica, sans-serif; font-size:13px; padding:0 20px;" data-size="body-text" data-min="10" data-max="25" data-color="body-text">If you need help or have any questions, please visit <a href="#" style="color:#0094aa;" data-link-color="plain-url-color">contact@stayrove.com</a></td>
+	 </tr>
+	 <tr>
+	 <td height="50">&nbsp;</td>
+	 </tr>
+	 <tr>
+	 <td height="30" bgcolor="#fff">&nbsp;</td>
+	 </tr>
+	 <tr>
+	 <td align="center" bgcolor="#fff">
+	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="padding:0px 10px;">
+	 <tbody>
+
+	 </tbody>
+	 </table>
+	 </td>
+	 </tr>
+	 <tr>
+	 <td height="30" bgcolor="#4BBEFF" >&nbsp;</td>
+	 </tr>
 	 </tbody></table>
-	 </body>	
+	 </td>      </tr>
+	 </tbody></table>
+	 </body>
 </html>
 ';
 
@@ -4477,22 +4477,22 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 //echo $message; die;
 // Mail it
 /* mail($to, $subject, $message, $headers); */
-	
-	
-	
+
+
+
 	$this->load->view ( 'site/user/invoice', $this->data );
-	
-	
-	
+
+
+
 	}
-	
-	
-	public function ipaysuccess() { 
-	
+
+
+	public function ipaysuccess() {
+
 		if($this->session->userdata ( 'coupon_strip' ) != '')
 		{
 		$coupon_strip = $this->session->userdata ( 'coupon_strip' );
-		
+
 		$coupons = explode("-",$coupon_strip);
 		$is_coupon_used = 'Yes';
 		$coupon_code = $coupons[0];
@@ -4507,14 +4507,14 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 		$coupon_value = '';
 		$total_value = '';
 		}
-		
+
 		$this->data['is_coupon_used'] = $is_coupon_used;
 		$this->data['coupon_code'] = $coupon_code;
 		$this->data['disountValue'] = $total_value;
-		
-	        //echo '<pre>'; print_r($_REQUEST); 
+
+	        //echo '<pre>'; print_r($_REQUEST);
 			if($_REQUEST['Status']==1) {
-			
+
 			$Bookno =  explode("-", $_REQUEST['RefNo']);
 			$Bookingno = $Bookno[1];
 			$EnquiryId = $Bookno[2];
@@ -4523,41 +4523,41 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 			$Transid = $_REQUEST['TransId'];
 			$signature =  $_REQUEST['Signature'];
 			$prddetail = $this->user_model->get_all_details(RENTALENQUIRY,array('Bookingno'=>$Bookingno));
-			$user_id = $prddetail->row()->user_id;			
+			$user_id = $prddetail->row()->user_id;
 			$prd_id =$prddetail->row()->prd_id;
 			$sell_id = $prddetail->row()->renter_id;
-			$Enquiryid = $EnquiryId;			
+			$Enquiryid = $EnquiryId;
 			$total_amt = $_REQUEST['Amount'];
 			$price = $_REQUEST['Amount'];
 			$status ="Paid";
 			$payment_type ="ipay";
-            
+
 			$EnquiryChk = $this->user_model->get_all_details(PAYMENT,array('EnquiryId'=>$Enquiryid));
-			
+
 			if($EnquiryChk->num_rows()==0) {
 			$insertqry ="insert into   fc_payment(user_id,sell_id,product_id,price,total,paypal_transaction_id,status,EnquiryId,payment_type,is_coupon_used,couponCode,total_amt) value('".$user_id."','".$sell_id."','".$prd_id."','".$total_amt."','".$total_amt."','".$signature."','".$status."','".$Enquiryid."','".$payment_type."','".$is_coupon_used."','".$coupon_code."','".$total_value."')";
-			mysql_query($insertqry); 
+			mysql_query($insertqry);
 			$this->data['amount'] =$_REQUEST['Amount'];
 			$this->data['RefNo'] =$Bookno[1];
 			$this->data['errdesc']="";
 			$this->data['status'] ='Success';
-		
-		
+
+
 		$SelBookingQty =$this->order_model->get_all_details(RENTALENQUIRY,array( 'id' => $Enquiryid));
-			
+
 		//booking update
 		$productId = $SelBookingQty->row()->prd_id;
 		$arrival = $SelBookingQty->row()->checkin;
 		$depature = $SelBookingQty->row()->checkout;
 		$dates = $this->getDatesFromRange($arrival, $depature);
 		$i=1;
-		$dateMinus1= count($dates)-2; 
+		$dateMinus1= count($dates)-2;
 		//print_r($dates);die;
 		foreach($dates as $date){
 			if($i <= $dateMinus1){
 				$BookingArr=$this->contact_model->get_all_details(CALENDARBOOKING,array('PropId' => $productId,'id_state' => 1,'id_item' => 1,'the_date' => $date));
 				if($BookingArr->num_rows() > 0){
-				
+
 				}else{
 					$dataArr = array('PropId' => $productId,
 									 'id_state' => 1,
@@ -4569,7 +4569,7 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 		   }
 		   $i++;
 		}
-										
+
 		//SCHEDULE calendar
 		$DateArr=$this->product_model->get_all_details(CALENDARBOOKING,array('PropId'=>$productId));
 		$dateDispalyRowCount=0;
@@ -4577,7 +4577,7 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 		if($DateArr->num_rows > 0){
 			$dateArrVAl .='{';
 			foreach($DateArr->result() as $dateDispalyRow){
-									
+
 				if($dateDispalyRowCount==0){
 					$availableDates = $dateDispalyRow->the_date;
 					$dateArrVAl .='"'.$dateDispalyRow->the_date.'":{"available":"1","bind":0,"info":"","notes":"","price":"'.$price.'","promo":"","status":"booked"}';
@@ -4589,7 +4589,7 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 			}
 			$dateArrVAl .='}';
 		}
-		
+
 		//echo $dateArrVAl;echo '</br></br>';
 		$newDateArrQuery = $this->product_model->get_all_details(SCHEDULE,array('id'=>$productId));
 		$dateString = $newDateArrQuery->row()->data;
@@ -4604,45 +4604,45 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 		$newdateArr1[$key] = $dates;
 		$newdateArrJ = array_merge($newdateArr1, $newArr);
 		$dateArrVAl = json_encode($newdateArrJ);
-		
+
 		$inputArr4=array();
 		$inputArr4 = array('id' =>$productId,'data' => trim($dateArrVAl));
-							
+
 		$this->product_model->update_details(SCHEDULE,$inputArr4,array('id' =>$productId));
-		
+
 			$this->booking_conform_mail($EnquiryId);
 			$this->booking_conform_mail_admin($EnquiryId);
 			$this->booking_conform_mail_host($EnquiryId);
 			}
 			else {
-			
+
 		    $insertqry ="update  fc_payment set status='Paid',is_coupon_used = '".$is_coupon_used."', couponCode = '".$coupon_code."', total_amt = '".$total_value."' where EnquiryId='".$Enquiryid."'";
-			mysql_query($insertqry); 
+			mysql_query($insertqry);
 			}
 			//echo "RECEIVEOK";
 			$this->load->view('site/user/ipaysuccess', $this->data);
-	
+
 		 }
 		else {
 		    $Bookno =  explode("-", $_REQUEST['RefNo']);
 			$Bookingno = $Bookno[1];
-			$EnquiryId = $Bookno[2];			
+			$EnquiryId = $Bookno[2];
 			$Amount = $_REQUEST['Amount'];
 			$Authcode = $_REQUEST['AuthCode'];
 			$Transid = $_REQUEST['TransId'];
 			$signature =  $_REQUEST['Signature'];
 			$prddetail = $this->user_model->get_all_details(RENTALENQUIRY,array('Bookingno'=>$Bookingno));
-			$user_id = $prddetail->row()->user_id;			
+			$user_id = $prddetail->row()->user_id;
 			$prd_id =$prddetail->row()->prd_id;
 			$sell_id = $prddetail->row()->renter_id;
-			$Enquiryid = $EnquiryId;			
+			$Enquiryid = $EnquiryId;
 			$total_amt = $_REQUEST['Amount'];
 			$price = $_REQUEST['Amount'];
 			$status ="Pending";
 			$payment_type ="ipay";
 			$Errdesc = $_REQUEST['ErrDesc'];
 			$EnquiryChk = $this->user_model->get_all_details(PAYMENT,array('EnquiryId'=>$Enquiryid));
-			
+
 			if($EnquiryChk->num_rows()==0) {
             $insertqry ="insert into   fc_payment(user_id,sell_id,product_id,price,total,paypal_transaction_id,status,EnquiryId,errmsg,payment_type) value('".$user_id."','".$sell_id."','".$prd_id."','".$total_amt."','".$total_amt."','".$signature."','".$status."','".$Enquiryid."','".$Errdesc."','".$payment_type."')";
 			mysql_query($insertqry);
@@ -4652,55 +4652,55 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 			$this->data['status'] ='Failed';
 			}
 			else {
-			
+
 		    $insertqry ="update  fc_payment set status='Pending' where EnquiryId='".$Enquiryid."'";
-			mysql_query($insertqry); 
+			mysql_query($insertqry);
 			}
 			//echo "Failed";
 			$this->load->view('site/user/ipaysuccess', $this->data);
-			
-		} 
-		
+
+		}
+
 		/* if($_REQUEST['Status']==1) {
 			echo "RECEIVEOK";
 		}
 		else {
 			echo "Failed";
 		} */
-	 
-	 
+
+
 	}
-	
+
 	public function booking_conform_mail($paymentid){
 
-	$PaymentSuccess = $this->order_model->get_all_details(PAYMENT,array('EnquiryId' => $paymentid)); 
-					
+	$PaymentSuccess = $this->order_model->get_all_details(PAYMENT,array('EnquiryId' => $paymentid));
+
     $Renter_details = $this->order_model->get_all_details(USERS,array('id'=>$PaymentSuccess->row()->sell_id));
-	
+
 	$user_details = $this->order_model->get_all_details(USERS,array('id'=>$PaymentSuccess->row()->user_id));
-					
+
 	$Rental_details = $this->order_model->get_all_details(PRODUCT,array('id'=>$PaymentSuccess->row()->product_id));
     $Contact_details = $this->order_model->get_all_details(RENTALENQUIRY,array( 'id' => $PaymentSuccess->row()->EnquiryId));
 	$RentalPhoto = $this->order_model->get_all_details(PRODUCT_PHOTOS,array('product_id'=>$PaymentSuccess->row()->product_id));
-					
+
 	//$total = $Renter_details->row()->price * $Contact_details->row()->numofdates;
 	$total = $Contact_details->row()->totalAmt-$Contact_details->row()->serviceFee;
 	$Bookingno = $Contact_details->row()->Bookingno;
 	//---------------email to user---------------------------
 	$newsid='29';
 	$template_values=$this->order_model->get_newsletter_template_details($newsid);
-					
+
 	$subject = 'From: '.$this->config->item('email_title').' - '.$template_values['news_subject'];
 	$proImages=base_url().PRODUCTPATH.$RentalPhoto->row()->product_image;
 	$chkIn = date('d-m-y',strtotime($Contact_details->row()->checkin));
 	$chkOut = date('d-m-y',strtotime($Contact_details->row()->checkout));
-	
+
 	if($Renter_details->row()->loginUserType == 'google')
 	$userImage = $Renter_details->row()->image;
 	else if($Renter_details->row()->image == '')
 	$userImage = base_url().'images/site/profile.png';
 	else $userImage = base_url().'images/users/'.$Renter_details->row()->image;
-	
+
 	$adminnewstemplateArr=array(
 				'email_title'=>$this->config->item('email_title'),
 				'logo'=>$this->data['logo'],
@@ -4730,24 +4730,24 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 				'rental_name'=>$Rental_details->row()->product_title,
 				'cancel_policy'=>$Rental_details->row()->cancellation_policy,
 				'rental_image'=>$proImages);
-                    
-                    
+
+
 	extract($adminnewstemplateArr);
 
 	$header .="Content-Type: text/plain; charset=ISO-8859-1\r\n";
-	
+
 	$message .= '<!DOCTYPE HTML>
 		<html>
 		<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width"/><body>';
-	
-	
-	include('./newsletter/registeration'.$newsid.'.php');	
-	
+
+
+	include('./newsletter/registeration'.$newsid.'.php');
+
 	$message .= '</body>';
-		
-	
+
+
 	if($template_values['sender_name']=='' && $template_values['sender_email']==''){
 		$sender_email=$this->data['siteContactMail'];
 		$sender_name=$this->data['siteTitle'];
@@ -4755,11 +4755,11 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 		$sender_name=$template_values['sender_name'];
 		$sender_email=$template_values['sender_email'];
 	}
-	
+
 	/*$sender_name=ucfirst($Renter_details->row()->first_name).' '.ucfirst($Renter_details->row()->last_name);
 	$sender_email=$Renter_details->row()->email;*/
-	
-	//add inbox from mail 
+
+	//add inbox from mail
 	$this->order_model->simple_insert(INBOX,array('sender_id'=>$sender_email,'user_id'=>$this->data['userDetails']->row()->email,'mailsubject'=>$template_values['news_subject'],'description'=>stripslashes($message)));
 	$this->session->set_userdata('ContacterEmail',$user_details->row()->email);
 	$new_Subject = $template_values['news_subject'].' - '.$Bookingno;
@@ -4770,37 +4770,37 @@ $headers .= 'From: Holidan Booking Request Confirmation' . "\r\n"; */
 						'subject_message'=>$new_Subject,
 						'body_messages'=>$message
 						);
-					//print_r(stripslashes($message));die;	
-					
-	//echo '<pre>'; print_r($email_values);					
+					//print_r(stripslashes($message));die;
+
+	//echo '<pre>'; print_r($email_values);
 	$email_send_to_common = $this->order_model->common_email_send($email_values);
-	
+
 	//$this->mail_owner_admin_booking($adminnewstemplateArr);
-}	
-	
+}
+
 public function booking_conform_mail_admin($paymentid){
 
-	$PaymentSuccess = $this->order_model->get_all_details(PAYMENT,array('EnquiryId' => $paymentid)); 
-					
+	$PaymentSuccess = $this->order_model->get_all_details(PAYMENT,array('EnquiryId' => $paymentid));
+
 	$condition = array('id'=>$PaymentSuccess->row()->sell_id);
 	$Renter_details = $this->order_model->get_all_details(USERS,$condition);
 
 	$condition3 = array('id'=>$PaymentSuccess->row()->user_id);
 	$user_details = $this->order_model->get_all_details(USERS,$condition3);
-	
+
 	$condition1 = array('id'=>$PaymentSuccess->row()->product_id);
 	$Rental_details = $this->order_model->get_all_details(PRODUCT,$condition1);
 	$Contact_details = $this->order_model->get_all_details(RENTALENQUIRY,array( 'id' => $PaymentSuccess->row()->EnquiryId));
 	$RentalPhoto = $this->order_model->get_all_details(PRODUCT_PHOTOS,array('product_id'=>$PaymentSuccess->row()->product_id));
-					
+
 	/* $total = $Renter_details->row()->price * $Contact_details->row()->numofdates; */
 	$total = $Contact_details->row()->totalAmt-$Contact_details->row()->serviceFee;
 	$Bookingno = $Contact_details->row()->Bookingno;
 	//---------------email to user---------------------------
 	$newsid='33';
 	$template_values=$this->order_model->get_newsletter_template_details($newsid);
-	
-	
+
+
 	$subject = 'From: '.$this->config->item('email_title').' - '.$template_values['news_subject'];
 	$proImages=base_url().PRODUCTPATH.$RentalPhoto->row()->product_image;
 	$chkIn = date('d-m-y',strtotime($Contact_details->row()->checkin));
@@ -4833,20 +4833,20 @@ public function booking_conform_mail_admin($paymentid){
 			'rental_name'=>$Rental_details->row()->product_title,
 			'cancel_policy'=>$Rental_details->row()->cancellation_policy,
 			'rental_image'=>$proImages);
-	
-	
+
+
 	extract($adminnewstemplateArr);
 
 	$header .="Content-Type: text/plain; charset=ISO-8859-1\r\n";
-	
+
 	$message .= '<body>';
-	
-	
-	include('./newsletter/registeration'.$newsid.'.php');	
-	
+
+
+	include('./newsletter/registeration'.$newsid.'.php');
+
 	$message .= '</body>
 		</html>';
-	
+
 	if($template_values['sender_name']=='' && $template_values['sender_email']==''){
 		$sender_email=$this->data['siteContactMail'];
 		$sender_name=$this->data['siteTitle'];
@@ -4854,11 +4854,11 @@ public function booking_conform_mail_admin($paymentid){
 		$sender_name=$template_values['sender_name'];
 		$sender_email=$template_values['sender_email'];
 	}
-	
+
 	/* $sender_name=ucfirst($Renter_details->row()->first_name).' '.ucfirst($Renter_details->row()->last_name);
 	$sender_email=$Renter_details->row()->email; */
-	
-	//add inbox from mail 
+
+	//add inbox from mail
 	$this->order_model->simple_insert(INBOX,array('sender_id'=>$sender_email,'user_id'=>$this->data['userDetails']->row()->email,'mailsubject'=>$template_values['news_subject'],'description'=>stripslashes($message)));
 	$this->session->set_userdata('ContacterEmail',$user_details->row()->email);
 	$new_Subject = $template_values['news_subject'].' - '.$Bookingno;
@@ -4869,7 +4869,7 @@ public function booking_conform_mail_admin($paymentid){
 						'subject_message'=>$new_Subject,
 						'body_messages'=>$message
 						);
-	//echo '<pre>'; print_r($email_values);			
+	//echo '<pre>'; print_r($email_values);
 	$email_send_to_common = $this->order_model->common_email_send($email_values);
 
 					//$this->mail_owner_admin_booking($adminnewstemplateArr);
@@ -4878,7 +4878,7 @@ public function booking_conform_mail_admin($paymentid){
 
 public function booking_conform_mail_host($paymentid){
 	$PaymentSuccess = $this->order_model->get_all_details(PAYMENT,array('EnquiryId' => $paymentid));
-					
+
 	$condition = array('id'=>$PaymentSuccess->row()->sell_id);
 	$Renter_details = $this->order_model->get_all_details(USERS,$condition);
 	$condition = array('id'=>$PaymentSuccess->row()->sell_id);
@@ -4887,32 +4887,32 @@ public function booking_conform_mail_host($paymentid){
 
 	$condition3 = array('id'=>$PaymentSuccess->row()->user_id);
 	$user_details = $this->order_model->get_all_details(USERS,$condition3);
-					
-					
+
+
 	$condition1 = array('id'=>$PaymentSuccess->row()->product_id);
 	$Rental_details = $this->order_model->get_all_details(PRODUCT,$condition1);
 	$Contact_details = $this->order_model->get_all_details(RENTALENQUIRY,array( 'id' => $PaymentSuccess->row()->EnquiryId));
 	$RentalPhoto = $this->order_model->get_all_details(PRODUCT_PHOTOS,array('product_id'=>$PaymentSuccess->row()->product_id));
-	
+
 	/* $total = $Renter_details->row()->price * $Contact_details->row()->numofdates; */
 	$total = $Contact_details->row()->totalAmt-$Contact_details->row()->serviceFee;
 	$Bookingno = $Contact_details->row()->Bookingno;
 	//---------------email to user---------------------------
 	$newsid='34';
 	$template_values=$this->order_model->get_newsletter_template_details($newsid);
-	
-	
+
+
 	$subject = 'From: '.$this->config->item('email_title').' - '.$template_values['news_subject'];
 	$proImages=base_url().PRODUCTPATH.$RentalPhoto->row()->product_image;
 	$chkIn = date('d-m-y',strtotime($Contact_details->row()->checkin));
 	$chkOut = date('d-m-y',strtotime($Contact_details->row()->checkout));
-	
+
 	if($user_details->row()->loginUserType == 'google')
 	$userImage = $user_details->row()->image;
 	else if($user_details->row()->image == '')
 	$userImage = base_url().'images/site/profile.png';
 	else $userImage = base_url().'images/users/'.$user_details->row()->image;
-	
+
 	$adminnewstemplateArr=array(
 			'email_title'=>$this->config->item('email_title'),
 			'logo'=>$this->data['logo'],
@@ -4942,24 +4942,24 @@ public function booking_conform_mail_host($paymentid){
 			'rental_name'=>$Rental_details->row()->product_title,
 			'cancel_policy'=>$Rental_details->row()->cancellation_policy,
 			'rental_image'=>$proImages);
-	
-	
+
+
 	extract($adminnewstemplateArr);
 
 	$header .="Content-Type: text/plain; charset=ISO-8859-1\r\n";
-	
+
 	$message .= '<!DOCTYPE HTML>
 		<html>
 		<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width"/><body>';
-	
-	
-	include('./newsletter/registeration'.$newsid.'.php');	
-	
+
+
+	include('./newsletter/registeration'.$newsid.'.php');
+
 	$message .= '</body>
 		</html>';
-	
+
 	if($template_values['sender_name']=='' && $template_values['sender_email']==''){
 		$sender_email=$this->data['siteContactMail'];
 		$sender_name=$this->data['siteTitle'];
@@ -4967,11 +4967,11 @@ public function booking_conform_mail_host($paymentid){
 		$sender_name=$template_values['sender_name'];
 		$sender_email=$template_values['sender_email'];
 	}
-	
+
 	/* $sender_name=ucfirst($Renter_details->row()->first_name).' '.ucfirst($Renter_details->row()->last_name);
 	$sender_email=$Renter_details->row()->email; */
-	
-	//add inbox from mail 
+
+	//add inbox from mail
 	$this->order_model->simple_insert(INBOX,array('sender_id'=>$sender_email,'user_id'=>$this->data['userDetails']->row()->email,'mailsubject'=>$template_values['news_subject'],'description'=>stripslashes($message)));
 	$this->session->set_userdata('ContacterEmail',$user_details->row()->email);
 	$new_Subject = $template_values['news_subject'].' - '.$Bookingno;
@@ -4982,9 +4982,9 @@ public function booking_conform_mail_host($paymentid){
 						'subject_message'=>$new_Subject,
 						'body_messages'=>$message
 						);
-	//echo '<pre>'; print_r($email_values);				
+	//echo '<pre>'; print_r($email_values);
 	$email_send_to_common = $this->order_model->common_email_send($email_values);
-					
+
 					//$this->mail_owner_admin_booking($adminnewstemplateArr);
 }
 
@@ -4994,36 +4994,36 @@ public function account_changes($userid){
 	$userDetail = $this->user_model->get_all_details(USERS,array('id'=>$userid));
     $username = $userDetail->row()->firstname." ".$userDetail->row()->lastname;
 	$useremail = $userDetail->row()->email;
-		
+
 	$newsid='36';
 	$template_values=$this->user_model->get_newsletter_template_details($newsid);
-	
-	
+
+
 	$subject = 'From: '.$this->config->item('email_title').' - '.$template_values['news_subject'];
-	
+
 	$adminnewstemplateArr=array(
 			'email_title'=>$this->config->item('email_title'),
 			'logo'=>$this->data['logo'],
 			'username'=>$username
 			);
-	
-	
+
+
 	extract($adminnewstemplateArr);
 
 	$header .="Content-Type: text/plain; charset=ISO-8859-1\r\n";
-	
+
 	$message .= '<!DOCTYPE HTML>
 		<html>
 		<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width"/><body>';
-	
-	
-	include('./newsletter/registeration'.$newsid.'.php');	
-	
+
+
+	include('./newsletter/registeration'.$newsid.'.php');
+
 	$message .= '</body>
 		</html>';
-	
+
 	if($template_values['sender_name']=='' && $template_values['sender_email']==''){
 		$sender_email=$this->data['siteContactMail'];
 		$sender_name=$this->data['siteTitle'];
@@ -5031,10 +5031,10 @@ public function account_changes($userid){
 		$sender_name=$template_values['sender_name'];
 		$sender_email=$template_values['sender_email'];
 	}
-	
-	//add inbox from mail 
+
+	//add inbox from mail
 	//$this->session->set_userdata('ContacterEmail',$user_details->row()->email);
-	
+
 	$email_values = array('mail_type'=>'html',
 						'from_mail_id'=>$this->config->item('site_contact_mail'),
 						'mail_name'=>$sender_name,
@@ -5043,32 +5043,32 @@ public function account_changes($userid){
 						'subject_message'=>$template_values['news_subject'],
 						'body_messages'=>$message
 						);
-	//echo '<pre>'; print_r($email_values);	die;			
+	//echo '<pre>'; print_r($email_values);	die;
 	$email_send_to_common = $this->order_model->common_email_send($email_values);
 }
 
 
 
  public function ipayback() {
-			$merchantcode  = $_REQUEST["MerchantCode"]; 
-			$paymentid    = $_REQUEST["PaymentId"]; 
-			$refno    = $_REQUEST["RefNo"]; 
-			$amount    = $_REQUEST["Amount"]; 
-			$ecurrency    = $_REQUEST["Currency"]; 
-			$remark    = $_REQUEST["Remark"]; 
-			$transid    = $_REQUEST["TransId"]; 
-			$authcode    = $_REQUEST["AuthCode"]; 
-			$estatus    = $_REQUEST["Status"]; 
-			$errdesc    = $_REQUEST["ErrDesc"]; 
+			$merchantcode  = $_REQUEST["MerchantCode"];
+			$paymentid    = $_REQUEST["PaymentId"];
+			$refno    = $_REQUEST["RefNo"];
+			$amount    = $_REQUEST["Amount"];
+			$ecurrency    = $_REQUEST["Currency"];
+			$remark    = $_REQUEST["Remark"];
+			$transid    = $_REQUEST["TransId"];
+			$authcode    = $_REQUEST["AuthCode"];
+			$estatus    = $_REQUEST["Status"];
+			$errdesc    = $_REQUEST["ErrDesc"];
 			$signature    = $_REQUEST["Signature"];
-			IF ($estatus==1) { 
-			  echo "RECEIVEOK"; 
-			} 
-			else   {   
-			// update order to FAIL 
-			echo "Payment fail."; 
+			IF ($estatus==1) {
+			  echo "RECEIVEOK";
 			}
- 
+			else   {
+			// update order to FAIL
+			echo "Payment fail.";
+			}
+
 	}
 
 
@@ -5077,32 +5077,32 @@ public function account_changes($userid){
 		$uid = $this->checkLogin ( 'U' );
 		$user_details = $this->order_model->get_all_details(USERS,array('id'=>$uid));
 		//echo '<pre>';print_r($user_details->result_array());die;
-		
+
 		$newsid='32';
 		$template_values=$this->order_model->get_newsletter_template_details($newsid);
-					
+
 		$subject = 'From: '.$this->config->item('email_title').' - '.$template_values['news_subject'];
-	
-	
+
+
 		$adminnewstemplateArr=array('username'=>$user_details->row()->user_name, 'logo' => $this->data ['logo'] );
-                    
-                    
+
+
 	extract($adminnewstemplateArr);
 
 	$header .="Content-Type: text/plain; charset=ISO-8859-1\r\n";
-	
+
 	$message .= '<!DOCTYPE HTML>
 		<html>
 		<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width"/><body>';
-	
-	
-	include('./newsletter/registeration'.$newsid.'.php');	
-	
+
+
+	include('./newsletter/registeration'.$newsid.'.php');
+
 	$message .= '</body>';
-		
-	
+
+
 	if($template_values['sender_name']=='' && $template_values['sender_email']==''){
 		$sender_email=$this->data['siteContactMail'];
 		$sender_name=$this->data['siteTitle'];
@@ -5110,8 +5110,8 @@ public function account_changes($userid){
 		$sender_name=$template_values['sender_name'];
 		$sender_email=$template_values['sender_email'];
 	}
-	
-	
+
+
 	$new_Subject = $template_values['news_subject'];
 	$email_values = array('mail_type'=>'html',
 						'from_mail_id'=>$this->config->item('site_contact_mail'),
@@ -5120,20 +5120,20 @@ public function account_changes($userid){
 						'subject_message'=>$new_Subject,
 						'body_messages'=>$message
 						);
-						
+
 	$newdata = array ('cancel_request' => 'Yes');
 	$condition = array ('id' => $uid);
 	$this->user_model->update_details ( USERS, $newdata, $condition );
-				
-					//print_r(stripslashes($message));die;	
-					
-					//echo '<pre>'; print_r($email_values);					
-					
+
+					//print_r(stripslashes($message));die;
+
+					//echo '<pre>'; print_r($email_values);
+
 					$email_send_to_common = $this->order_model->common_email_send($email_values);
-					
+
 					redirect ( 'account-setting' );
 	}
-	
+
 	public function host_conversation()
 	{
 		$convId = $this->uri->segment ( 2, 0 );
@@ -5141,45 +5141,45 @@ public function account_changes($userid){
 		if($this->checkLogin ( 'U' ) != '' && $convId != 0)
 		{
 			$this->data['conversationDetails'] = $this->user_model->get_all_details ( DISCUSSION, array ('convId' => $convId ),array(array('field'=>'id', 'type'=>'desc')));
-			
+
 			$temp[] = $this->data['conversationDetails']->row()->sender_id;
 			$temp[] = $this->data['conversationDetails']->row()->receiver_id;
 			$productId = $this->data['productId'] = $this->data['conversationDetails']->row()->rental_id;
 			$this->data['bookingno'] = $this->data['conversationDetails']->row()->bookingno;
-			
+
 			if(!in_array($this->checkLogin ( 'U' ), $temp))redirect();
 			if($this->checkLogin ( 'U' ) == $temp[0])
 			{
 				$this->data['sender_id'] = $temp[0];
 				$this->data['receiver_id'] = $temp[1];
 			}
-			else 
+			else
 			{
 				$this->data['sender_id'] = $temp[1];
 				$this->data['receiver_id'] = $temp[0];
 			}
-			
+
 			$dataArr = array('msg_read' => 'yes');
 			$conditionArr = array('receiver_id' => $this->data['sender_id'], 'convId' => $convId);
-			
+
 			$this->user_model->update_details ( DISCUSSION, $dataArr, $conditionArr );
-			
-			
+
+
 			$this->data['senderDetails'] = $this->user_model->get_all_details ( USERS, array ('id' => $this->data['sender_id'] ));
-			
+
 			$this->data['receiverDetails'] = $this->user_model->get_all_details ( USERS, array ('id' => $this->data['receiver_id'] ));
-			
+
 			$this->data['verifiedDetails'] = $this->user_model->get_all_details ( REQUIREMENTS, array ('user_id' => $this->data['receiver_id'] ));
-			
+
 			$reviewCount = $this->user_model->get_all_details ( REVIEW, array ('user_id' => $this->data['receiver_id'] ));
-			
+
 			$this->data['reviewCount'] = $reviewCount->num_rows();
-			
+
 			$this->data['productDetails'] = $this->user_model->get_all_details ( PRODUCT, array ('id' => $productId));
-			
+
 			//echo '<pre>';print_r($this->data['productDetails']->result_array());die;
-			
-			
+
+
 			$this->load->view ( 'site/user/host_conversation', $this->data );
 		}
 		else
@@ -5187,7 +5187,7 @@ public function account_changes($userid){
 			redirect();
 		}
 	}
-	
+
 	public function send_message()
 	{
 		$sender_id = $this->input->post ( 'sender_id' );
@@ -5196,7 +5196,7 @@ public function account_changes($userid){
 		$product_id = $this->input->post ( 'product_id' );
 		$subject = $this->input->post ( 'subject' );
 		$message = $this->input->post ( 'message' );
-		
+
 		$dataArr = array(
 			'productId' => $product_id ,
 			'senderId' => $sender_id ,
@@ -5205,17 +5205,17 @@ public function account_changes($userid){
 			'subject' => $subject ,
 			'message' => $message
 		);
-		
+
 		$this->db->insert(MED_MESSAGE, $dataArr);
 	}
-	
+
 
 	 public function report_user()
 			{
 				$user_id = $this->input->post ( 'user_id' );
 		        $main_id = $this->input->post ( 'main_id' );
 		        $reason = $this->input->post ( 'report' );
-		
+
 
 
 		$dataArr = array(
@@ -5223,14 +5223,14 @@ public function account_changes($userid){
 			'user_id' => $user_id ,
 			'reason' => $reason ,
 			'date' => date('Y-m-d H:i:s')
-			
+
 		);
-		
-		
+
+
 		$this->db->insert('fc_user_report', $dataArr);
 		$this->setErrorMessage ( 'success', ' Reported to admin' );
-			
-		redirect("users/show/".$user_id);		
+
+		redirect("users/show/".$user_id);
         }
 
 
@@ -5242,7 +5242,7 @@ public function account_changes($userid){
 		        $work = $this->input->post ( 'work' );
 		        $listings = $this->input->post ( 'listings' );
 		        $reviews = $this->input->post ( 'reviews' );
-		    
+
 			$status = "SELECT * FROM fc_user_display_settings WHERE user_id=".$user_id;
 		$id = $this->user_model->ExecuteQuery($status);
 
@@ -5253,30 +5253,30 @@ public function account_changes($userid){
 					'listings' => $listings ,
 					'reviews' => $reviews ,
 					'work' => $work ,
-					'school' => $school 
+					'school' => $school
 				 );
 				$this->db->insert('fc_user_display_settings', $dataArr);
 	  }else{
-		
+
 		$newdata = array (
 		    'languages' => $languages ,
 			'listings' => $listings ,
 			'reviews' => $reviews ,
 			'work' => $work ,
-			'school' => $school 
+			'school' => $school
 				);
 		$condition = array (
 						'user_id' => $user_id ,
 				);
 	    $this->user_model->update_details ( 'fc_user_display_settings', $newdata, $condition );
-			
+
 	 }
 		$this->setErrorMessage ( 'success', ' Reported to admin' );
-			
-		redirect("users/show/".$user_id);		
-     
+
+		redirect("users/show/".$user_id);
+
      }
-	
+
 	public function send_new_message()
 	{
 		//echo '<pre>';print_r($_POST);die;
@@ -5284,7 +5284,7 @@ public function account_changes($userid){
 		$receiver_id = $this->input->post ( 'receiver_id' );
 		$product_id = $this->input->post ( 'product_id' );
 		$message = $this->input->post ( 'message' );
-		
+
 		$checkMsg = $this->user_model->get_all_details ( DISCUSSION, array ('sender_id' => $sender_id, 'receiver_id' => $receiver_id, 'bookingno' => ''));
 		//echo $checkMsg->num_rows();die;
 		if($checkMsg->num_rows() > 0)
@@ -5297,13 +5297,13 @@ public function account_changes($userid){
 				'convId' => $convId ,
 				'message' => $message
 			);
-			
+
 			$this->db->insert(DISCUSSION, $dataArr);
 		}
-		else 
+		else
 		{
 			$convId = time();
-		
+
 			$dataArr = array(
 				'rental_id' => $product_id ,
 				'sender_id' => $sender_id ,
@@ -5311,14 +5311,14 @@ public function account_changes($userid){
 				'convId' => $convId ,
 				'message' => $message
 			);
-		
+
 			$this->db->insert(DISCUSSION, $dataArr);
 		}
-		
+
 		redirect("rental/$product_id");
 	}
 
-	
+
 /**
  * ************************************************
  */

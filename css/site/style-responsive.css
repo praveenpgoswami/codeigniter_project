@@ -40,6 +40,7 @@ li .filter-primary-item input[type="checkbox"]{ margin: 32px 27px 0 0;}
 /* ============================= 768px ====================== */
 
 @media screen and (min-width: 768px) and (max-width: 1023px){
+
 .nav-collapse, .nav-collapse.collapse {
     height: auto;
     overflow: visible;
@@ -77,6 +78,7 @@ li .filter-primary-item input[type="checkbox"]{ margin: 32px 27px 0 0;}
 }
 
 .btn.btn-navbar{display: none;}
+
 .nav-collapse .nav > li > a, .nav-collapse .dropdown-menu a{ padding: 9px 11px;
 }
 
@@ -93,169 +95,80 @@ li .filter-primary-item input[type="checkbox"]{ margin: 32px 27px 0 0;}
 
 
 .profile-page .col-sm-3{
-	width: 30%;
-}
+	width: 30%;}
+
+
 .profile-page .col-sm-7{
-	width: 70%;
-}
+	width: 70%;}
+
+
 .namd-space{
-	width: 100%;
-}
+	width: 100%;}
+
+
 .listig-areasli li{	
-	width: 41%;
-}
+	width: 41%;}
+
 
 
 .profile-page .col-sm-9{
-	width: 69%;
-}
+	width: 69%;}
+
 .browsefriendsbannner #carousel-example-generic{
-	height: 380px !important;
-}
+	height: 380px !important;}
 
 
 
 }
 
 
-/* ============================= 736px ====================== */
 
-@media screen and (min-width: 736px) and (max-width: 767px){
+/*=====================================
+new media css start here
+=======================================*/
+
+
+@media (max-width: 767px) {
 
 .browsefriendsbannner #carousel-example-generic {
-    height: 250px !important;
-}
+    height: 250px !important;}
+
 .text-center h1.listing-text{
-	line-height: 48px;
-	font-size: 34px;
+        line-height: 48px;
+    font-size: 34px;
 }
-
-
-}
-
-
-/* ============================= 667px ====================== */
-
-
-@media screen and (min-width: 667px) and (max-width: 735px){
-
-
-.browsefriendsbannner #carousel-example-generic {
-    height: 252px !important;
-}
-.text-center h1.listing-text{
-	line-height: 48px;
-	font-size: 34px;
-}
-.payment_right label{
-	clear: both;
-}
-
-
-
-
-
-
-
-
-}
-
-/* ============================= 600px ====================== */
-
-
-@media screen and (min-width: 600px) and (max-width: 666px){
 
 
 .browsefriendsbannner #carousel-example-generic {
     height: 255px !important;
 }
 .text-center h1.listing-text{
-	line-height: 48px;
-	font-size: 34px;
+    line-height: 48px;
+    font-size: 34px;
 }
 .payment_right label{
-	clear: both;
+    clear: both;
 }
-
-
-
-
-
-}
-
-/* ============================= 568px ====================== */
-
-@media screen and (min-width: 568px) and (max-width: 599px){
 
 
 .browsefriendsbannner #carousel-example-generic {
     height: 250px !important;
 }
 .text-center h1.listing-text{
-	line-height: 48px;
-	font-size: 34px;
+    line-height: 48px;
+    font-size: 34px;
 }
 .listyourspace .apart_hide span{
-	font-size: 12px;
+    font-size: 12px;
 }
 .payment_right label{
-	clear: both;
+    clear: both;
 }
 
-
-}
-
-/* ============================= 480px ====================== */
-
-
-@media screen and (min-width: 480px) and (max-width: 567px){
 
 .browsefriendsbannner #carousel-example-generic {
     height: 191px !important;
 }
-
-
-}
-
-/* ============================= 414px ====================== */
-
-@media screen and (min-width: 414px) and (max-width: 479px){
-
-.browsefriendsbannner #carousel-example-generic {
-    height: 191px !important;
-}
-
-
-}
-
-/* ============================= 384px ====================== */
-
-
-@media screen and (min-width: 384px) and (max-width: 413px){
-
-.browsefriendsbannner #carousel-example-generic {
-    height: 174px !important;
-}
-
-
-
-}
-
-/* ============================= 375px ====================== */
-
-
-@media screen and (min-width: 375px) and (max-width: 383px){
-
-.browsefriendsbannner #carousel-example-generic {
-    height: 171px !important;
-}
-
-
-}
-/* ============================= 320px ====================== */
-
-
-@media screen and (min-width: 320px) and (max-width: 374px){
 
 .logo {
     float: left;
@@ -267,16 +180,69 @@ li .filter-primary-item input[type="checkbox"]{ margin: 32px 27px 0 0;}
     display: inline-block;
     margin: -14px 6px 0 0;
     width: 68%;
-	float: none;
+    float: none;
 }
 .inpt-head-place{
-	width: 91%;
+    width: 91%;
 }
 .browsefriendsbannner #carousel-example-generic {
     height: 142px !important;
 }
 
+.text-center h1{
+font-size: 21px;
 
 }
 
+.text-center h3{
+font-size: 18px;
+}
+
+
+.row, 
+.thumbnails{
+margin: 0px;
+}
+
+.carousel-control.left{
+top: 27%;
+z-index: 9999;
+left: 0;
+}
+
+.carousel-control.right{
+top: 27%;
+z-index: 9999;
+right: 0;
+}
+
+.carousel-control.right .fa,
+.carousel-control.left .fa{
+font-size: 20px;
+
+}
+
+
+
+}
+
+
+@media (max-width: 480px) {
+
+.main-text h1,
+.main-text h3
+{
+display: none ;
+}
+
+
+.register-btn .btn{
+width: 94%;
+display: block;
+margin: 5px auto;
+
+}
+
+
+}
 

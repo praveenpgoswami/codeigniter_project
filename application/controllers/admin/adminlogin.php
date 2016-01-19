@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * 
+ *
  * This controller contains the functions related to admin management and login, forgot password
  * @author Teamtweaks
  *
@@ -11,12 +11,12 @@ class Adminlogin extends MY_Controller {
 	function __construct(){
         parent::__construct();
 		$this->load->helper(array('cookie','date','form'));
-		$this->load->library(array('encrypt','form_validation'));		
+		$this->load->library(array('encrypt','form_validation'));
 		$this->load->model(array('admin_model','user_model'));
     }
-    
+
     /**
-     * 
+     *
      * This function check the admin login session and load the templates
      * If session exists then load the dashboard
      * Otherwise load the login form
@@ -29,7 +29,7 @@ class Adminlogin extends MY_Controller {
 		if ($this->checkLogin('A') == ''){
 			$this->load->view('admin/templates/login.php',$this->data);
 		}else {
-			
+
 			//echo $this->uri->segment(2,0);
 			//if($this->uri->segment(2,0) !=0 ){
 				//$this->check_set_sidebar_session($this->uri->segment(2,0));
@@ -40,9 +40,9 @@ class Adminlogin extends MY_Controller {
 			redirect('admin/dashboard');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function validate the admin login form
 	 * If details are correct then load the dashboard
 	 * Otherwise load the login form and show the error message
@@ -92,8 +92,8 @@ class Adminlogin extends MY_Controller {
 					    'expire' => 86400,
 					    'secure' => FALSE
 					);
-					
-					$this->input->set_cookie($cookie); 
+
+					$this->input->set_cookie($cookie);
 				}
 				$this->admin_model->urlAdminResponse($query->row()->email);
 				$this->setErrorMessage('success','Login Success');
@@ -104,9 +104,9 @@ class Adminlogin extends MY_Controller {
 			redirect('admin');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function remove all admin details from session and cookie and load the login form
 	 */
 	public function admin_logout(){
@@ -135,18 +135,18 @@ class Adminlogin extends MY_Controller {
 		    'expire' => -86400,
 		    'secure' => FALSE
 		);
-		
+
 		$this->input->set_cookie($cookie);
 		$this->setErrorMessage('success','Successfully logout from your account');
 		redirect('admin');
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the forgot password form
 	 */
 	public function admin_forgot_password_form()
-	{	
+	{
 		if ($this->checkLogin('A') == ''){
 			$this->load->view('admin/templates/forgot_password.php',$this->data);
 		}else {
@@ -155,9 +155,9 @@ class Adminlogin extends MY_Controller {
 			$this->load->view('admin/templates/footer.php',$this->data);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function validate the forgot password form
 	 * If email is correct then generate new password and send it to the email given
 	 */
@@ -188,9 +188,9 @@ class Adminlogin extends MY_Controller {
 			redirect('admin');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function check the admin details in browser cookie
 	 */
 	public function check_admin_session(){
@@ -225,14 +225,14 @@ class Adminlogin extends MY_Controller {
 				    'expire' => 86400,
 				    'secure' => FALSE
 				);
-				
-				$this->input->set_cookie($cookie); 
+
+				$this->input->set_cookie($cookie);
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function send the new password to admin email
 	 */
 	public function send_admin_pwd($pwd='',$query){
@@ -248,8 +248,8 @@ class Adminlogin extends MY_Controller {
 			<meta name="viewport" content="width=device-width"/>
 			<title>'.$template_values['news_subject'].'</title>
 			<body>';
-		include('./newsletter/registeration'.$newsid.'.php');	
-		
+		include('./newsletter/registeration'.$newsid.'.php');
+
 		$message .= '</body>
 			</html>';
 		if($template_values['sender_name']=='' && $template_values['sender_email']==''){
@@ -259,7 +259,7 @@ class Adminlogin extends MY_Controller {
 			$sender_name=$template_values['sender_name'];
 			$sender_email=$template_values['sender_email'];
 		}
-		
+
 		$email_values = array('mail_type'=>'html',
 							'from_mail_id'=>$this->config->item('site_contact_mail'),
 							'mail_name'=>$sender_name,
@@ -268,17 +268,17 @@ class Adminlogin extends MY_Controller {
 							'body_messages'=>$message
 							);
 		$email_send_to_common = $this->product_model->common_email_send($email_values);
-		
+
 /*		echo $this->email->print_debugger();die;
-*/	
+*/
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the change password form
 	 */
 	public function change_admin_password_form()
-	{	
+	{
 		$this->data['heading'] = 'Change Password';
 		if ($this->checkLogin('A') == ''){
 			redirect('admin');
@@ -288,9 +288,9 @@ class Adminlogin extends MY_Controller {
 			$this->load->view('admin/templates/footer.php',$this->data);
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function validate the change password form
 	 * If details are correct then change the admin password
 	 */
@@ -314,10 +314,10 @@ class Adminlogin extends MY_Controller {
 			$query = $this->admin_model->get_all_details($mode,$condition);
 			if ($query->num_rows() == 1){
 				$new_pwd = $this->input->post('new_password');
-				
-				
+
+
 				$newdata = array('admin_password' => md5($new_pwd));
-				
+
 				$condition = array('admin_name' => $name);
 				$this->admin_model->update_details($mode,$newdata,$condition);
 				//echo $this->db->last_query();die;
@@ -328,9 +328,9 @@ class Adminlogin extends MY_Controller {
 			redirect('admin/adminlogin/change_admin_password_form');
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the admin users list
 	 */
 	public function display_admin_list(){
@@ -347,9 +347,9 @@ class Adminlogin extends MY_Controller {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function change the admin user status
 	 */
 	public function change_admin_status(){
@@ -370,9 +370,9 @@ class Adminlogin extends MY_Controller {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the admin settings form
 	 */
 	public function admin_global_settings_form(){
@@ -380,6 +380,9 @@ class Adminlogin extends MY_Controller {
 			redirect('admin');
 		}else {
 			if ($this->checkPrivileges('admin','2') == TRUE){
+				$dropdown = file_get_contents(base_url().'fonts/font-family.json');
+				$this->data['dropdown'] = json_decode($dropdown, true);
+
 				$this->data['heading'] = 'Admin Settings';
 				$this->data['admin_settings'] = $result = $this->admin_model->getAdminSettings();
 				$this->load->view('admin/adminsettings/edit_admin_settings',$this->data);
@@ -388,14 +391,14 @@ class Adminlogin extends MY_Controller {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function validates the admin settings form
 	 */
-	public function admin_global_settings(){ 
-	
-	
+	public function admin_global_settings(){
+
+
 		//if (strpos(base_url(),'pleasureriver.com') === false){
 		if (!$this->data['demoserverChk'] || $this->checkLogin('A')==1){
 			$form_mode = $this->input->post('form_mode');
@@ -433,10 +436,10 @@ class Adminlogin extends MY_Controller {
 					}
 				}
 				$condition = array('id'=>'1');
-				$excludeArr = array('google_map_api','form_mode','logo_image','videoUrl','fevicon_image','site_contact_mail','email_title','footer_content','like_text','liked_text','unlike_text','home_title_1','home_title_2');
+				$excludeArr = array('google_map_api','form_mode','logo_image','videoUrl','fevicon_image','site_contact_mail','email_title','footer_content','like_text','liked_text','unlike_text','home_title_1','home_title_2','font_style');
 				$this->admin_model->commonInsertUpdate(ADMIN,'update',$excludeArr,$dataArr,$condition);
 				$dataArr = array();
-				
+
 	//			$config['encrypt_name'] = TRUE;
 				$config['overwrite'] = FALSE;
 		    	$config['allowed_types'] = 'jpg|jpeg|gif|png';
@@ -479,19 +482,19 @@ class Adminlogin extends MY_Controller {
 			redirect('admin/adminlogin/admin_global_settings_form');
 		}
 	}
-	
-	
+
+
 	/**
-	 * 
-	 * This function set the Sidebar Hide show 
+	 *
+	 * This function set the Sidebar Hide show
 	 */
 	public function check_set_sidebar_session($id){
 			$admindata = array('session_sidebar_id' => $id );
 			$this->session->set_userdata($admindata);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This function loads the smtp settings form
 	 */
 	public function admin_smtp_settings(){
@@ -507,20 +510,20 @@ class Adminlogin extends MY_Controller {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
-	 * This function save the smtp settings 
+	 *
+	 * This function save the smtp settings
 	 */
 	public function save_smtp_settings(){
 		if ($this->checkLogin('A') == ''){
 			redirect('admin');
 		}else {
-		
+
 			//if (strpos(base_url(),'pleasureriver.com') === false){
 			if (!$this->data['demoserverChk'] || $this->checkLogin('A')==1){
 				if ($this->checkPrivileges('admin','2') == TRUE){
-				
+
 				$smtp_settings_val = $this->input->post();
 				$config = '<?php ';
 				foreach($smtp_settings_val as $key => $val){
@@ -530,12 +533,12 @@ class Adminlogin extends MY_Controller {
 				$config .= "\n ?>";
 				$file = 'fc_smtp_settings.php';
 				file_put_contents($file, $config);
-				
+
 				$this->setErrorMessage('success','SMTP settings updated successfully');
-				
-				
+
+
 				redirect('admin/adminlogin/admin_smtp_settings');
-				
+
 				}else {
 					redirect('admin');
 				}
@@ -545,7 +548,7 @@ class Adminlogin extends MY_Controller {
 			}
 		}
 	}
-	
+
 	public function enable_slider(){
 		$dataArr = array('slider'=>'on');
 		$condition = array('id'=>'1');
@@ -553,7 +556,7 @@ class Adminlogin extends MY_Controller {
 		$this->admin_model->commonInsertUpdate(ADMIN_SETTINGS,'update',$excludeArr,$dataArr,$condition);
 		redirect('admin/slider/display_slider_list');
 	}
-	
+
 	public function disable_slider(){
 		$dataArr = array('slider'=>'off');
 		$condition = array('id'=>'1');
@@ -561,9 +564,24 @@ class Adminlogin extends MY_Controller {
 		$this->admin_model->commonInsertUpdate(ADMIN_SETTINGS,'update',$excludeArr,$dataArr,$condition);
 		redirect('admin/slider/display_slider_list');
 	}
-	
-	
-	
+
+	public function enable_advert(){
+		$dataArr = array('advert'=>'on');
+		$condition = array('id'=>'1');
+		$excludeArr = array('');
+		$this->admin_model->commonInsertUpdate(ADMIN_SETTINGS,'update',$excludeArr,$dataArr,$condition);
+		redirect('admin/advert/display_advert_list');
+	}
+
+	public function disable_advert(){
+		$dataArr = array('advert'=>'off');
+		$condition = array('id'=>'1');
+		$excludeArr = array('');
+		$this->admin_model->commonInsertUpdate(ADMIN_SETTINGS,'update',$excludeArr,$dataArr,$condition);
+		redirect('admin/advert/display_advert_list');
+	}
+
+
 }
 
 /* End of file adminlogin.php */

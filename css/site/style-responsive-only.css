@@ -24,11 +24,17 @@
     float: left;
     width: 50%;
 }
-.text-center {
+/*.text-center {
     display: inline-block;
     float: left;
     text-align: center;
     width: 100%;
+}
+*/
+
+
+.text-center{
+display: block;
 }
 
 .host-list {
@@ -294,7 +300,7 @@ ul.listings .listing .listing-info{ width: 41%;}
 
 /* ============================= 736px ====================== */
 
-@media (max-width: 736px){
+@media (max-width: 767px){
 
 	.nav-collapse.navbar-collapse .nav{float: left; width: 100%}
 	.navbar-collapse.my-nav #broswe_box1{float: left; width: 100%} 
@@ -491,7 +497,7 @@ div.notification_section .notification_area{ width: 99%;}
 	display: block !important;
 }
 .main-text{
-	 top: 26%;
+	 top: 10%;
 }
 .searching-section{
 	bottom: inherit;

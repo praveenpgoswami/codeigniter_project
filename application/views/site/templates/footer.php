@@ -6,14 +6,14 @@
  <div class="country-lop">
 <input class="country" id="selected_country" placeholder="English" type="text" style="text-transform:capitalize;">
 <ul class="dropdn">
-             <?php 
+             <?php
                  $selectedLangCode = $this->session->userdata('language_code');
                 if ($selectedLangCode == ''){
                 	$selectedLangCode = $defaultLg[0]['lang_code'];
                 }
                 if (count($activeLgs)>0){
                 	foreach ($activeLgs as $activeLgsRow){
-                ?>							
+                ?>
                     <li><a href="lang/<?php echo $activeLgsRow['lang_code'];?>" <?php if ($selectedLangCode == $activeLgsRow['lang_code']){echo 'class="active"';}?>><?php echo $activeLgsRow['name'];?></a></li>
                 <?php } } ?>
 
@@ -27,21 +27,19 @@
 
 
 
-                 <?php 
-				 
-				     
-				   
-					if($currency_setup->num_rows() >0){ 
+                 <?php
+					if($currency_setup->num_rows() >0){
 						foreach($currency_setup->result() as $currency_s){
 						if($currency_s->currency_type==$this->session->userdata('currency_type')){
-						$SelecTed='class="active"';
+						  $SelecTed='class="active"';
 						}else{
-						$SelecTed='';
+						  $SelecTed='';
 						}
+                      if($currency_s->currency_type == 'AUD'){
 						?>
                       <li <?php echo $SelecTed; ?>><a href="change-currency/<?php echo $currency_s->id; ?>"><?php echo $currency_s->currency_type; ?></a></li>
-                   <?php }
-				   }?> 
+                   <?php } }
+				   }?>
 </ul>
 <!-- $this->session->userdata('currency_type') -->
 </div>
@@ -52,11 +50,13 @@
 <ul class="footer-list">
 
 <li><span><?php if($this->lang->line('discover') != '') { echo stripslashes($this->lang->line('discover')); } else echo "Discover";?></span></li>
-<?php 
+<?php
 if ($cmsList->num_rows() > 0){
 foreach ($cmsList->result() as $row){
-if($row->section == 'discover' && $row->hidden_page =='No' && $row->category == 'Main') { ?> 
+if($row->section == 'discover' && $row->hidden_page =='No' && $row->category == 'Main') { ?>
 <li><a href="pages/<?php echo $row->seourl; ?>"><?php echo $row->page_name;?></a></li> <?php } } } ?>
+<li><a href="https://stayrove.freshdesk.com/support/solutions/articles/5000545522-terms-and-conditions" target="_blank">Terms Of Service</a></li>
+<li><a href="https://stayrove.freshdesk.com/support/solutions/articles/5000545523-privacy-policy" target="_blank">Privacy Policy</a></li>
 </ul>
 
 </div>
@@ -65,10 +65,10 @@ if($row->section == 'discover' && $row->hidden_page =='No' && $row->category == 
 <div class="col-md-3">
 <ul class="footer-list">
 <li><span>Company</span></li>
-<?php 
+<?php
 if ($cmsList->num_rows() > 0){
 foreach ($cmsList->result() as $row){
-if($row->section == 'company' && $row->hidden_page =='No' && $row->category == 'Main') { ?> 
+if($row->section == 'company' && $row->hidden_page =='No' && $row->category == 'Main') { ?>
 <li><a href="pages/<?php echo $row->seourl; ?>"><?php echo $row->page_name;?></a></li> <?php } } } ?>
 <li><a href="contact-us">Contact us</a> </li>
 </ul>
@@ -140,40 +140,6 @@ $('.header').css('padding','7px 0 0px');
 });
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	 
-	 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <?php if($this->config->item('google_verification_code')){ echo stripslashes($this->config->item('google_verification_code')); } ?>
 </body>

@@ -181,7 +181,7 @@
 	border:#135f85 1px solid;
 }
 .conta{
-background: url(../images/sprite-icons/cont.png) no-repeat; 
+background: url(../images/sprite-icons/cont.png) no-repeat;
 height: 20px;
 width: 20px;
 display: block;
@@ -371,7 +371,7 @@ top: 14px;
 .stats_bar li {
 	display:inline-block;
 	height:50px;
-	
+
 	position:relative;
 }
 .stats_bar li > a {
@@ -975,9 +975,10 @@ input.full {
 }
 /*---Social Activities---*/
 .social_activities {
-	width:auto;
-	overflow:hidden;
-	padding: 20px 10px 0 10px;
+    overflow: hidden;
+    padding: 20px 10px 21px 10px;
+    margin: 0 17%;
+    text-align: center;
 }
 .activities_s, .views_s, .comments_s, .user_s {
 	-moz-border-radius:5px;
@@ -1735,7 +1736,7 @@ Date:		September 2008
 */
 
 
-/* REQUIRED STYLES - the menus will only render correctly with these rules */	
+/* REQUIRED STYLES - the menus will only render correctly with these rules */
 
 .fg-menu-container {
 	position: absolute;
@@ -1871,7 +1872,7 @@ Date:		September 2008
 	font-size:1.3em;
 	text-decoration:none;
 }
-/* REQUIRED LINK STYLES: links are "display:block" by default; if the menu options are split into 
+/* REQUIRED LINK STYLES: links are "display:block" by default; if the menu options are split into
 	selectable node links and 'next' links, the script floats the node links left and floats the 'next' links to the right	*/
 
 .fg-menu a:link, .fg-menu a:visited, .fg-menu a:hover, .fg-menu a:active {
@@ -1892,8 +1893,8 @@ Date:		September 2008
 	display:block;
 	cursor:pointer;
 }
-/* SUGGESTED STYLES - for use with jQuery UI Themeroller CSS */	
- 
+/* SUGGESTED STYLES - for use with jQuery UI Themeroller CSS */
+
 .fg-menu-indicator span {
 	float:left;
 }
@@ -1967,7 +1968,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b7075', end
 }
 /* Uncomment for shadow */
   /*.tipsy-inner { box-shadow: 0 0 5px #000000; -webkit-box-shadow: 0 0 5px #000000; -moz-box-shadow: 0 0 5px #000000; }*/
-  
+
   .tipsy-arrow {
 	position: absolute;
 	width: 0;
@@ -2486,7 +2487,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e0dede', end
 	Mosaic - Sliding Boxes and Captions jQuery Plugin
 	Version 1.0.1
 	www.buildinternet.com/project/mosaic
-	
+
 	By Sam Dunn / One Mighty Roar (www.onemightyroar.com)
 	Released under MIT License / GPL License
 */
@@ -2639,15 +2640,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', end
 	cursor: default;
 	display: block;
 	cursor:pointer;
-	/* 
-	if width will be 100% horizontal scrollbar will apear 
+	/*
+	if width will be 100% horizontal scrollbar will apear
 	when scroll mode will be used
 	*/
 	/*width: 100%;*/
 	font: menu;
 	font-size: 12px;
-	/* 
-	it is very important, if line-height not setted or setted 
+	/*
+	it is very important, if line-height not setted or setted
 	in relative units scroll will be broken in firefox
 	*/
 	line-height: 16px;
@@ -2798,7 +2799,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', end
 
 
 /*================
-  WIDGETS 
+  WIDGETS
 ==================*/
 .intro_bar {
 	width:auto;
@@ -3958,7 +3959,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3cb7dd', end
 	color:#000;
 }
 .login_opt_link a:hover {
-	
+
 }
 .login_btn:hover, .forgot_btn:hover{color:#000}
 
@@ -4106,7 +4107,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7bb00', end
 .slider_max {
 	height:6px !important;
 	border:#000 1px solid !important;
-	box-shadow: 
+	box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
 	-moz-box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
@@ -4139,7 +4140,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#12c0f4', end
 	-webkit-border-radius:10px !important;
 	border-radius:10px !important;
 	margin:10px;
-	box-shadow: 
+	box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
 	-moz-box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
@@ -4167,7 +4168,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#12c0f4', end
 	-webkit-border-radius:10px !important;
 	border-radius:10px !important;
 	margin:10px;
-	box-shadow: 
+	box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
 	-moz-box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
@@ -4228,7 +4229,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b7075', end
 	-webkit-border-radius:10px !important;
 	border-radius:10px !important;
 	height:6px;
-	box-shadow: 
+	box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
 	-moz-box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
@@ -4241,7 +4242,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b7075', end
 	-moz-border-radius:10px !important;
 	-webkit-border-radius:10px !important;
 	border-radius:10px !important;
-	box-shadow: 
+	box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
 	-moz-box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
@@ -4268,7 +4269,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6b7075', end
 	-moz-border-radius:3px !important;
 	-webkit-border-radius:3px !important;
 	border-radius:3px !important;
-	box-shadow: 
+	box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
 	-moz-box-shadow:
  0 1px 0 rgba(255, 255, 255, 0.6) inset;
@@ -4728,7 +4729,7 @@ html .fc, .fc table {
 	margin-right: 0; /* back to normal */
 }
 /* button layering (for border precedence) */
-	
+
 .fc-header .fc-state-hover, .fc-header .ui-state-hover {
 	z-index: 2;
 }
@@ -4740,7 +4741,7 @@ html .fc, .fc table {
 }
 /* Content
 ------------------------------------------------------------------------*/
-	
+
 .fc-content {
 	clear: both;
 }
@@ -4795,7 +4796,7 @@ html .fc, .fc table {
 	white-space: nowrap;
 }
 /* icon (for jquery ui) */
-	
+
 .fc-button-content .fc-icon-wrap {
 	position: relative;
 	float: left;
@@ -4809,7 +4810,7 @@ html .fc, .fc table {
  *top: -50%;
 }
 /* gloss effect */
-	
+
 .fc-state-default .fc-button-effect {
 	position: absolute;
 	top: 50%;
@@ -4838,7 +4839,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
 	filter: alpha(opacity=9);
 }
 /* button states (determines colors)  */
-	
+
 .fc-state-default, .fc-state-default .fc-button-inner {
 	border-style: solid;
 	border-color: #ccc #bbb #aaa;
@@ -4878,7 +4879,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
 }
 /* Global Event Styles
 ------------------------------------------------------------------------*/
-	 
+
 .fc-event {
 	border-style: solid;
 	border-width: 0;
@@ -4927,7 +4928,7 @@ a.fc-event {
 	margin-bottom: 1px;
 }
 /* resizable */
-	
+
 .fc-event-hori .ui-resizable-e {
 	top: 0 !important; /* importants override pre jquery ui 1.7 styles */
 	right: -3px !important;
@@ -4947,7 +4948,7 @@ a.fc-event {
 }
 /* Fake Rounded Corners (for buttons and events)
 ------------------------------------------------------------*/
-	
+
 .fc-corner-left {
 	margin-left: 1px;
 }
@@ -4974,7 +4975,7 @@ a.fc-event {
 }
 /* Fake Rounded Corners SPECIFICALLY FOR EVENTS
 -----------------------------------------------------------------*/
-	
+
 .fc-corner-left .fc-event-inner {
 	border-left-width: 1px;
 }
@@ -5026,12 +5027,12 @@ table.fc-border-separate {
 	padding: 2px 2px 1px; /* distance between events and day edges */
 }
 /* event styles */
-	
+
 .fc-grid .fc-event-time {
 	font-weight: bold;
 }
 /* right-to-left */
-	
+
 .fc-rtl .fc-grid .fc-day-number {
 	float: left;
 }
@@ -5059,7 +5060,7 @@ table.fc-border-separate {
 	padding: 2px 2px 1px;
 }
 /* make axis border take precedence */
-	
+
 .fc-agenda-days .fc-agenda-axis {
 	border-right-width: 1px;
 }
@@ -5067,7 +5068,7 @@ table.fc-border-separate {
 	border-left-width: 0;
 }
 /* all-day area */
-	
+
 .fc-agenda-allday th {
 	border-width: 0 1px;
 }
@@ -5076,7 +5077,7 @@ table.fc-border-separate {
 	_height: 34px;
 }
 /* divider (between all-day and slots) */
-	
+
 .fc-agenda-divider-inner {
 	height: 2px;
 	overflow: hidden;
@@ -5085,7 +5086,7 @@ table.fc-border-separate {
 	background: #eee;
 }
 /* slot rows */
-	
+
 .fc-agenda-slots th {
 	border-width: 1px 1px 0;
 }
@@ -5135,7 +5136,7 @@ table.fc-border-separate {
 	display: none\9; /* for IE6/7/8. nested opacity filters while dragging don't work */
 }
 /* resizable */
-	
+
 .fc-event-vert .ui-resizable-s {
 	bottom: 0 !important; /* importants override pre jquery ui 1.7 styles */
 	width: 100% !important;
@@ -5194,7 +5195,7 @@ table.fc-border-separate {
 }
 /************************************/
 /*             toolbar              */
-/************************************/         
+/************************************/
 
 .el-finder-toolbar ul {
 	padding:5px 7px;
@@ -6436,8 +6437,8 @@ background: url(../images/loader.gif) 50% 50% no-repeat #ede9df;
 }
 
 /*--Safari Browser --*/
-	
-/*	
+
+/*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 #error_404 .error_code {
  width:155px;

@@ -370,8 +370,8 @@ $config['mailpath'] = '/usr/sbin/sendmail';
 $config['charset'] = 'iso-8859-1';
 $config['wordwrap'] = TRUE;
 $config['mailtype'] = 'text or html';
-$config['email_smtp_crypto'] = 'tls'; // TLS protocol 
-$config['email_newline'] = "\r\n";  // SES hangs with just \n 
+$config['email_smtp_crypto'] = 'tls'; // TLS protocol
+$config['email_newline'] = "\r\n";  // SES hangs with just \n
 
 /*
 |-------------------------------------------------------
@@ -402,7 +402,7 @@ $config['unameArr'] = array('admin','administrator','user','settings','pages','g
 |
 |
  */
-$config['adminPrev'] = array('Members','Host','Properties','Orders','List','Listspace','Listing','Couponcode','Newsletter','Location','Pages','City','Commission','Payment_gateway','Language','Slider','Prefooter','Backup','Review','Currency','Contact_Us');
+$config['adminPrev'] = array('Members','Host','Properties','Orders','List','Listspace','Listing','Couponcode','Newsletter','Location','Pages','City','Commission','Payment_gateway','Language','Slider','Advert','Prefooter','Backup','Review','Currency','Contact_Us');
 
 //$config['adminPrev'] = array('user','rental','renter','membership','order','contact','attribute','newsletter','multilang','location','cms','city','neighborhood','productattribute','statistics','testimonials');
 

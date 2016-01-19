@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * 
+ *
  * Landing page functions
  * @author Teamtweaks
  *
@@ -9,41 +9,41 @@
 
 class Landing extends MY_Controller {
 	function __construct(){
-        parent::__construct();
+    parent::__construct();
 		$this->load->helper(array('cookie','date','form','email','text'));
-		$this->load->library(array('encrypt','form_validation'));		
+		$this->load->library(array('encrypt','form_validation'));
 		$this->load->library( 'jquery_stars' );
-		$this->load->model(array('product_model','city_model','admin_model','cms_model','landing_model','slider_model'));
-		
+		$this->load->model(array('product_model','city_model','admin_model','cms_model','landing_model','slider_model','advert_model'));
+
 		if($_SESSION['sMainCategories'] == ''){
 			$sortArr1 = array('field'=>'cat_position','type'=>'asc');
 			$sortArr = array($sortArr1);
 			$_SESSION['sMainCategories'] = $this->product_model->get_all_details(CATEGORY,array('rootID'=>'0','status'=>'Active'),$sortArr);
 		}
 		$this->data['mainCategories'] = $_SESSION['sMainCategories'];
-		
+
 		if($_SESSION['sColorLists'] == ''){
 			$_SESSION['sColorLists'] = $this->product_model->get_all_details(LIST_VALUES,array('list_id'=>'1'));
 		}
 		$this->data['mainColorLists'] = $_SESSION['sColorLists'];
-		
+
 		$this->data['loginCheck'] = $this->checkLogin('U');
-//		echo $this->session->userdata('fc_session_user_id');die;
+    //echo $this->session->userdata('fc_session_user_id');die;
 		$this->data['likedProducts'] = array();
-	 	if ($this->data['loginCheck'] != ''){
-	 		$this->data['likedProducts'] = $this->product_model->get_all_details(PRODUCT_LIKES,array('user_id'=>$this->checkLogin('U')));
-	 	}
+  	 	if ($this->data['loginCheck'] != ''){
+  	 		$this->data['likedProducts'] = $this->product_model->get_all_details(PRODUCT_LIKES,array('user_id'=>$this->checkLogin('U')));
+  	 	}
     }
-    
+
     /**
-     * 
-     * 
+     *
+     *
      */
 	 	/*Autocomplete  Start */
 	 function home_search_auto(){
-	 
+
 		if (isset($_GET['term'])){
-			 $q = strtolower($_GET['term']); 
+			 $q = strtolower($_GET['term']);
 			$autovalue = $this->landing_model->get_city_details($q);
 			$row_set = array();
 			$state_arr = array();
@@ -59,25 +59,30 @@ class Landing extends MY_Controller {
 					'label' => htmlentities(stripslashes(ucwords($row['name'].','.ucfirst($row['State']).','.strtoupper($row['country_name']).''))).'',
 					'value' => htmlentities(stripslashes(ucwords(strtolower($row['name'])))).''.' ,'.ucfirst($row['State']).','.$row['country_code']
 				);
-      
+
       		}
      			 echo json_encode($row_set);
 		}
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 		/*Autocomplete  End */
    	public function index(){
-	
+
 	//echo $this->session->userdata('currency_s');die;
 	 	$this->data['heading'] = '';
+
+    $this->data['admin_settings'] = $this->admin_model->getAdminSettings();
+
 	 	$this->data['totalProducts'] = $this->product_model->get_total_records(PRODUCT);
-		
+
 		$this->data['CityDetails'] = $this->city_model->Featured_city();
-		
+
+    $this->data['advertCrousel'] = $this->advert_model->get_advert_details('WHERE status="Active"');
+
 		$this->data['CityCountDetails'] = $this->city_model->CityCountDisplay('neighborhoods,count(neighborhoods) as CityCountVal','neighborhoods',NEIGHBORHOOD);
 		$this->data['SliderList'] = $this->slider_model->get_slider_details('WHERE status="Active"');
 		$this->data['sliderList'] = $this->slider_model->get_all_details(SLIDER,$condition);
@@ -91,7 +96,7 @@ class Landing extends MY_Controller {
 		$this->data['adminList'] = $enableRslt->row();
 		$this->load->view('site/landing/landing',$this->data);
 	}
-	
+
 	public function ajax_load_more(){
 		$pageloaded = $this->input->post('group_no');
 		$limit = 39;
@@ -135,18 +140,18 @@ class Landing extends MY_Controller {
                 	$resultVal .= '<img src="images/users/'.$productArr[$i]['image'].'">';
                 	}
                 $resultVal .= '</a>
-                <a href="things/'.$productArr[$i]['id'].'/'.url_title($productArr[$i]['product_name'],'-').'" class="figure-img"> 
+                <a href="things/'.$productArr[$i]['id'].'/'.url_title($productArr[$i]['product_name'],'-').'" class="figure-img">
                 	<span class="figure grid" style="background-size:cover;" data-ori-url="images/product/'.$img.'" data-310-url="images/product/'.$img.'"><em class="back"></em></span>
-                	<span class="figure classic"> <em class="back"></em> 
-                		<img src="images/product/'.$img.'" data-width="640" data-height="640"> 
-                	</span> 
-                	<span class="figure vertical"> <em class="back"></em> 
-                		<img src="images/product/'.$img.'" data-width="310" data-height="310"> 
-                	</span> 
-                	<span class="figcaption">'.$productArr[$i]['product_name'].'</span> 
-                </a> 
-                <em class="figure-detail"> 
-                	<span class="price">'.$this->data['currencySymbol'].' '.$productArr[$i]['sale_price'].' <small>'.$this->data['currencyType'].'</small></span> 
+                	<span class="figure classic"> <em class="back"></em>
+                		<img src="images/product/'.$img.'" data-width="640" data-height="640">
+                	</span>
+                	<span class="figure vertical"> <em class="back"></em>
+                		<img src="images/product/'.$img.'" data-width="310" data-height="310">
+                	</span>
+                	<span class="figcaption">'.$productArr[$i]['product_name'].'</span>
+                </a>
+                <em class="figure-detail">
+                	<span class="price">'.$this->data['currencySymbol'].' '.$productArr[$i]['sale_price'].' <small>'.$this->data['currencyType'].'</small></span>
                 	<span class="username"><em><i> by </i><a href="';
                 	if ($productArr[$i]['user_id'] != '0'){
                 		$resultVal .= base_url().'user/'.$productArr[$i]['user_name'];
@@ -159,7 +164,7 @@ class Landing extends MY_Controller {
 	          	}else {
 	          		$resultVal .= 'administrator';
 	          	}
-	          	$resultVal .= '</a> + '.$productArr[$i]['likes'].'</em></span> 
+	          	$resultVal .= '</a> + '.$productArr[$i]['likes'].'</em></span>
                 </em>
                 <ul class="function">
                   <li class="list"><a href="#">Add to List</a></li>
@@ -213,24 +218,24 @@ class Landing extends MY_Controller {
 	                }else {
 	                $resultVal .= '<img src="images/users/'.$productArr[$i+1]['image'].'">';
 	                }
-                $resultVal .= '</a> 
-                <a href="things/'.$productArr[$i+1]['id'].'/'.url_title($productArr[$i+1]['product_name'],'-').'" class="figure-img"> 
-                	<span class="figure grid" style="background-size:cover;" data-ori-url="images/product/'.$img.'" data-310-url="images/product/'.$img.'"><em class="back"></em></span> 
-                	<span class="figure classic"> <em class="back"></em> 
-                		<img src="images/product/'.$img.'" data-width="310" data-height="310"> 
-                	</span> 
-                	<span class="figure vertical"> <em class="back"></em> 
-                		<img src="images/product/'.$img.'" data-width="310" data-height="310"> 
-                	</span> 
-                	<span class="figcaption">'.$productArr[$i+1]['product_name'].'</span> 
-                </a> 
-                <em class="figure-detail"> 
-                	<span class="price">'.$this->data['currencySymbol'].' '.$productArr[$i+1]['sale_price'].' <small>'.$this->data['currencyType'].'</small></span> 
+                $resultVal .= '</a>
+                <a href="things/'.$productArr[$i+1]['id'].'/'.url_title($productArr[$i+1]['product_name'],'-').'" class="figure-img">
+                	<span class="figure grid" style="background-size:cover;" data-ori-url="images/product/'.$img.'" data-310-url="images/product/'.$img.'"><em class="back"></em></span>
+                	<span class="figure classic"> <em class="back"></em>
+                		<img src="images/product/'.$img.'" data-width="310" data-height="310">
+                	</span>
+                	<span class="figure vertical"> <em class="back"></em>
+                		<img src="images/product/'.$img.'" data-width="310" data-height="310">
+                	</span>
+                	<span class="figcaption">'.$productArr[$i+1]['product_name'].'</span>
+                </a>
+                <em class="figure-detail">
+                	<span class="price">'.$this->data['currencySymbol'].' '.$productArr[$i+1]['sale_price'].' <small>'.$this->data['currencyType'].'</small></span>
                 	<span class="username"><em><i> by </i><a href="';
                 if ($productArr[$i+1]['user_id'] != '0'){$resultVal .= base_url().'user/'.$productArr[$i+1]['user_name'];}else {$resultVal .= base_url().'user/administrator';}
                 $resultVal .= '">';
                 if ($productArr[$i+1]['user_id'] != '0'){$resultVal .= $productArr[$i+1]['full_name'];}else {$resultVal .= 'administrator';}
-                $resultVal .= '</a> + '.$productArr[$i+1]['likes'].'</em></span> 
+                $resultVal .= '</a> + '.$productArr[$i+1]['likes'].'</em></span>
                 </em>
                 <ul class="function">
                   <li class="list"><a href="#">Add to List</a></li>
@@ -270,23 +275,23 @@ class Landing extends MY_Controller {
           		$resultVal .= '<li  class="mid "  tid="'.$productArr[$i+2]['seller_product_id'].'" tuserid="'.$productArr[$i+2]['user_id'].'">
               <div class="figure-item">
                 <!-- span class="pre"></span -->
-                <a href="things/'.$productArr[$i+2]['id'].'/'.url_title($productArr[$i+2]['product_name'],'-').'" class="figure-img"> 
-                	<span class="figure grid" style="background-size:cover;" data-ori-url="images/product/'.$img.'" data-310-url="images/product/'.$img.'"><em class="back"></em></span> 
-                	<span class="figure classic"> <em class="back"></em> 
-                		<img src="images/product/'.$img.'" data-width="310" data-height="310"> 
-                	</span> 
-                	<span class="figure vertical"> <em class="back"></em> 
-                		<img src="images/product/'.$img.'" data-width="310" data-height="310"> 
-                	</span> 
-                	<span class="figcaption">'.$productArr[$i+2]['product_name'].'</span> 
-                </a> 
-                <em class="figure-detail"> 
-                	<span class="price">'.$this->data['currencySymbol'].' '.$productArr[$i+2]['sale_price'].' <small>'.$this->data['currencyType'].'</small></span> 
+                <a href="things/'.$productArr[$i+2]['id'].'/'.url_title($productArr[$i+2]['product_name'],'-').'" class="figure-img">
+                	<span class="figure grid" style="background-size:cover;" data-ori-url="images/product/'.$img.'" data-310-url="images/product/'.$img.'"><em class="back"></em></span>
+                	<span class="figure classic"> <em class="back"></em>
+                		<img src="images/product/'.$img.'" data-width="310" data-height="310">
+                	</span>
+                	<span class="figure vertical"> <em class="back"></em>
+                		<img src="images/product/'.$img.'" data-width="310" data-height="310">
+                	</span>
+                	<span class="figcaption">'.$productArr[$i+2]['product_name'].'</span>
+                </a>
+                <em class="figure-detail">
+                	<span class="price">'.$this->data['currencySymbol'].' '.$productArr[$i+2]['sale_price'].' <small>'.$this->data['currencyType'].'</small></span>
                 	<span class="username"><em><i> by </i><a href="';
           		if ($productArr[$i+2]['user_id'] != '0'){$resultVal .= base_url().'user/'.$productArr[$i+2]['user_name'];}else {$resultVal .= base_url().'user/administrator';}
   	    		$resultVal .= '">';
           		if ($productArr[$i+2]['user_id'] != '0'){$resultVal .= $productArr[$i+2]['full_name'];}else {$resultVal .= 'administrator';}
-          		$resultVal .= '</a> + '.$productArr[$i+2]['likes'].'</em></span> 
+          		$resultVal .= '</a> + '.$productArr[$i+2]['likes'].'</em></span>
                 </em>
                 <ul class="function">
                   <li class="list"><a href="#">Add to List</a></li>
@@ -307,16 +312,16 @@ class Landing extends MY_Controller {
 				}
 			}
 		}
-		
+
 		echo $resultVal;
 	}
-	
+
 	public function display_cms_trips($product_id,$reviewer_id)
 	{
 		$product_id = $this->input->post('product_id');
 		$reviewer_id = $this->input->post('reviewer_id');
 		$this->data['reviewData'] = $this->product_model->get_trip_review($product_id,$reviewer_id);
-		
+
 		$data = $this->load->view('site/cms/rating',$this->data);
 		if($this->data['reviewData']->num_rows>0)
 		{
@@ -329,26 +334,26 @@ class Landing extends MY_Controller {
 		}
 		echo json_encode($res);
 	}
-	
+
 	public function display_product_detail($seourl)
 	{
-		
-		$where1 = array('p.status'=>'Publish','p.id'=>$seourl);	
+
+		$where1 = array('p.status'=>'Publish','p.id'=>$seourl);
 		$where_or = array('p.status'=>'Publish') ;
 		$where2 = array('p.status'=>'Publish','p.id'=>$seourl);
 		$this->load->model('admin_model');
 		$this->data['admin_settings'] = $result = $this->admin_model->getAdminSettings();
 		$this->data['productDetails'] = $this->product_model->view_product_details_site_one($where1,$where_or,$where2);
-		
+
 		if($this->data['productDetails']->row()->id==''){
 		$this->setErrorMessage('error','List details not available');
 		redirect(base_url());
 		}
-		
+
 		$this->data['productImages'] = $this->product_model->get_images($this->data['productDetails']->row()->id);
-		
+
 		$this->data['reviewData'] = $this->product_model->get_review($this->data['productDetails']->row()->id);
-		
+
 		if($this->checkLogin('U') != '')
 		{
 		$this->data['user_reviewData'] = $this->product_model->get_review($this->data['productDetails']->row()->id,$this->checkLogin('U'));
@@ -356,13 +361,13 @@ class Landing extends MY_Controller {
 		}
 
 		$this->data['reviewTotal'] = $this->product_model->get_review_tot($this->data['productDetails']->row()->id);
-				
-	
+
+
 		$product_id = $this->data['productDetails']->row()->id;
 		$this->data['product_details'] = $this->product_model->view_product1($product_id);
-		
+
 		$this->data['RatePackage']='';
-		
+
 		$this->data['heading'] = $this->data['productDetails']->row()->meta_title;
 		if ($this->data['productDetails']->row()->meta_title != ''){
 			$this->data['meta_title'] = $this->data['productDetails']->row()->meta_title;
@@ -373,7 +378,7 @@ class Landing extends MY_Controller {
 		if ($this->data['productDetails']->row()->meta_description != ''){
 	    	$this->data['meta_description'] = $this->data['productDetails']->row()->meta_description;
 		}
-		
+
 		//------------------------------------------------cat list
 				$this->data['listDetail'] = $this->product_model->get_all_details(PRODUCT,array('status'=>'Active'));
 		        $this->data['listNameCnt'] = $this->product_model->get_all_details(ATTRIBUTE,array('status'=>'Active'));
@@ -388,14 +393,14 @@ class Landing extends MY_Controller {
 				foreach($this->data['listValueCnt']->result_array() as $listCountryValue){
 				$listIdArr[]=$listCountryValue['list_id'];
 				}
-				
-				
-			
+
+
+
 			//var_dump($this->data['listCountryValue']);die;
-			
+
 			$this->data['CalendarBooking'] = $this->product_model->get_all_details(CALENDARBOOKING,array('PropId'=>$this->data['productDetails']->row()->id));
-		
-		
+
+
 		if($this->data['CalendarBooking']->num_rows() > 0){
 			foreach($this->data['CalendarBooking']->result()  as $CRow){
 			$DisableCalDate .='"'.$CRow->the_date.'",';
@@ -404,11 +409,11 @@ class Landing extends MY_Controller {
 		}else{
 			$this->data['CalendarBookingDate']='["2013-09-11"]';
 		}
-			
+
 			//print_r($this->data['CalendarBookingDate']);die;
-			
+
 			$this->data['ChkWishlist']='0';
-			
+
 			if($this->checkLogin('U') > 0 ){
 			$this->data['getWishList'] = $this->product_model->ChkWishlistProduct($this->data['productDetails']->row()->id,$this->checkLogin('U'));
 			$this->data['ChkWishlist']=$this->data['getWishList']->num_rows();
@@ -416,21 +421,21 @@ class Landing extends MY_Controller {
 		//echo $this->data['productDetails']->row()->latitude;
 		//echo $this->data['productDetails']->row()->longitude;die;
 		//$cityId = $this->data['productDetails']->row()->city;
-		
+
 		$this->data['DistanceQryArr'] = $this->product_model->view_product_details_distance_list($this->data['productDetails']->row()->latitude,$this->data['productDetails']->row()->longitude,' p.id <> '.$this->data['productDetails']->row()->id.' and  p.status="Publish" group by p.id order by p.id  DESC');
 		//echo '<pre>';print_r($this->data['DistanceQryArr']->result_array());die;
 		//echo $this->data['productDetails']->row()->city;die;
 		//echo $this->db->last_query();die;
 		$this->data['ConfigBooking'] = $this->product_model->get_all_details(BOOKINGCONFIG,array('cal_url'=>base_url()));
-		
+
 		if($this->data['ConfigBooking']->num_rows()==''){
 			$this->product_model->update_details(BOOKINGCONFIG,array('cal_url'=>base_url()),array());
 		}
-		
+
 		$this->data['CalendarBooking'] = $this->product_model->get_all_details(CALENDARBOOKING,array('PropId'=>$this->data['productDetails']->row()->id));
-		
+
 		/*-Muthu-*/
-		
+
 		if($this->data['CalendarBooking']->num_rows() > 0){
 			foreach($this->data['CalendarBooking']->result()  as $CRow){
 			$DisableCalDate .='"'.$CRow->the_date.'",';
@@ -439,7 +444,7 @@ class Landing extends MY_Controller {
 		}else{
 			$this->data['CalendarBookingDate']='["2013-09-11"]';
 		}
-		
+
 		/*-Muthu-*/
 		$service_tax_query='SELECT * FROM '.COMMISSION.' WHERE commission_type="Guest Booking" AND status="Active"';
 		$this->data['service_tax']=$this->product_model->ExecuteQuery($service_tax_query);
@@ -447,16 +452,16 @@ class Landing extends MY_Controller {
 		$this->data['ProductDealPrice']=$this->product_model->get_all_details(PRODUCT_DEALPRICE,array('product_id'=>$seourl));
 		$this->load->view('site/rentals/product_detailCopy',$this->data);
 
-		
+
 	}
-	
+
 	function fbLogin()
 	{
 		$rUrl = $this->input->post('rUrl');
 		$userdata = array('rUrl'=>$rUrl);
 		$this->session->set_userdata($userdata);
 	}
-	
+
 }
 
 /* End of file landing.php */
