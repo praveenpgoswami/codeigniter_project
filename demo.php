@@ -16,7 +16,7 @@ try {
     throw new LinkedInException('This script requires session support, which appears to be disabled according to session_start().');
   }
   
-  // display constants etc
+  // display constants etc.
   $API_CONFIG = array(
     'appKey'       => '75wpz389ifrzbq',
 	  'appSecret'    => 'ZYEG6gBlFhhUAkfR',
